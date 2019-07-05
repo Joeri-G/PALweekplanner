@@ -1,2 +1,2 @@
 # PALweekplanner
-planner voor plaweken
+planner voor palweken
