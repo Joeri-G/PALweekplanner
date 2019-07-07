@@ -1,0 +1,193 @@
+html, body {
+  font-family: 'Barlow Semi Condensed',
+  sans-serif;
+  margin: 0;
+  height: 100%;
+}
+
+* {
+ box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: rgba(96, 96, 96, 1);
+}
+
+select {
+  display: inline-block;
+}
+
+nav {
+  padding: 8px;
+  top: 0;
+  position: sticky;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 1);
+  display: flex;
+  align-items: center;
+}
+
+nav > * {
+  margin: 4px 16px;
+  display: inline-block;
+}
+
+nav > p > a {
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+nav * {
+  max-height: 32px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+main {
+  display: grid;
+  margin: 0 auto;
+  max-width: 1450px;
+  min-height: 1440px;
+  border: dashed 1px black;
+}
+section > p {
+  text-align: center;
+}
+
+section {
+  display: inline-block;
+  margin: 0 auto;
+  width: 256px;
+  margin: 8px 16px;
+}
+
+
+.hour {
+  background: rgba(255, 236, 160, 1);
+  padding: 16px;
+}
+
+.hour * {
+  max-width: 90%;
+}
+
+.pause, .hour {
+  margin: 8px 0;
+  width: 256px;
+}
+
+.pause {
+  background: rgba(160, 236, 255, 1);
+  /* margin: 8px 16px; */
+  height: 32px;
+  /* border: black 1px solid; */
+}
+.hour > select {
+  display: inline-block;
+
+}
+.hour > p {
+  margin-top: 0;
+  text-align: left;
+}
+
+.selected {
+  background: rgba(160, 255, 160, 1);
+}
+
+footer {
+  margin-top: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 1);
+  height: 100px;
+}
+
+/* loading css */
+/* The Modal (background) */
+#loading, #messageModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+/* Modal Content */
+#loading > div {
+  margin: auto;
+  text-align: center;
+}
+
+#loading img {
+  width: 25%;
+}
+
+.fade-in {
+  animation: animateFadeIn 0.2s;
+}
+@keyframes animateFadeIn {
+  from {
+    transform:scale(0);
+  }
+  to {
+    transform:scale(1);
+    display: none;
+  }
+}
+
+.fade-out {
+  animation: animateFadeOut 0.2s;
+}
+@keyframes animateFadeOut {
+  from {
+    transform:scale(1);
+  }
+  to {
+    transform:scale(0);
+    display: none;
+  }
+}
+
+#messageModalContent {
+  margin: 0 auto 32px auto;
+  width: 40%;
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+}
+
+select, input, button {
+  background: #f2f1f0;
+  padding: 4px;
+  margin: 2px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+button {
+  padding: 8px;
+}
+
+.select {
+  display: block;
+  text-align: center;
+  margin: 16px auto;
+  max-width: 1280px;
+}
+
+ .select select {
+   font-size: 1.5em;
+ }

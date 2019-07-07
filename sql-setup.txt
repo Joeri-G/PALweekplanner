@@ -1,0 +1,36 @@
+planner -> week
+  - daypart | NOT NULL
+
+
+  - docent1 | NOT NULL
+  - docent2 | NONE
+  - klas1 | NOT NULL
+  - klas2 | NONE
+  - lokaal1 | NOT NULL
+  - lokaal2 | NONE
+  - laptops | NONE
+  - notes | NONE
+
+
+  - USER
+  - TIME
+  - IP
+
+
+SQL:
+
+CREATE TABLE `week` (
+  `daypart` varchar(4) NOT NULL COMMENT 'day and part of day',
+  `docent1` varchar(16) NOT NULL,
+  `docent2` varchar(16) NOT NULL,
+  `klas1` varchar(16) NOT NULL,
+  `klas2` varchar(16) NOT NULL,
+  `lokaal1` varchar(16) NOT NULL,
+  `lokaal2` varchar(16) NOT NULL,
+  `laptops` varchar(32) NOT NULL COMMENT 'laptops',
+  `notes` varchar(128) NOT NULL COMMENT 'notes',
+  `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
+  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was added',
+  `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+COMMIT;
