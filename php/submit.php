@@ -109,7 +109,7 @@ $stmt->store_result();
 //res for result
 $stmt->bind_result($resDocent1, $resDocent2, $resKlas1, $resKlas2, $resLokaal1, $resLokaal2);
 
-while($stmt->fetch()) {
+while ($stmt->fetch()) {
     //compare input to stored variables
     //place docent, klas and lokaal in groups since klas2 and klas2 will both have to be checked against resKlas1 and resKlas2
     $resDocentGroup = array($resDocent1, $resDocent2);
