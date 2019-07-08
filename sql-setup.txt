@@ -31,6 +31,6 @@ CREATE TABLE `week` (
   `notes` varchar(128) NOT NULL COMMENT 'notes',
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
   `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was added',
-  `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added'
+  `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added',
+  `ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-COMMIT;

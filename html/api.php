@@ -42,6 +42,15 @@ if (isset($_GET['submit']) && $_GET['submit'] == true) {
   die();
 }
 
+
+//check if user wants to update entry
+
+if (isset($_GET['update']) && $_GET['update'] == true) {
+  require('../php/update.php');
+  die();
+}
+
+
 //just dump the _GET as a test or something
 print_r($_GET);
  ?>
