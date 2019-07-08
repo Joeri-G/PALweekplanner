@@ -23,7 +23,7 @@ function isOverlap($arr1, $arr2) {
       }
     }
   }
-  return false;;
+  return false;
 }
 
 
