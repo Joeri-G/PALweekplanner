@@ -29,7 +29,7 @@ function isOverlap($arr1, $arr2) {
 
 //check if any other value than none occurs in array
 function notNone($input) {
-  if ($input === "none" || $input === "" || $input === "None") {
+  if ($input == "none" || $input == "" || $input == "None" || $input == false) {
     return false;
   }
   return true;
