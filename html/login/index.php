@@ -8,6 +8,10 @@ if (!isset($_SESSION['loggedin'])) {
   //user 'level' (user, admin etc)
   $_SESSION['userLVL'] = 3;
 }
+if (isset($_GET['r'])) {
+  header('location: '.$_GET['r']);
+  die();
+}
 header("location: /");
 die();
 // </tmp>

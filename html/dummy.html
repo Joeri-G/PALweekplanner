@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <!-- icon -->
+    <link rel="shortcut icon" href="/img/logo.png">
+    <!-- css -->
+    <link rel="stylesheet" href="/css/master.css">
+    <link rel="stylesheet" media="(min-width: 992px)" href="/css/desktop.css">
+    <link rel="stylesheet" media="(max-width: 991px)" href="/css/mobile.css">
+    <!-- title -->
+    <title>Rooster</title>
+    <!-- CDN -->
+  </head>
+  <body>
+    <script type="text/javascript">
+    document.body.innerHTML += "<main></main>";
+    for (var i = 0; i < 5; i++) {
+       document.getElementsByTagName("main")[0].innerHTML += '<section><div class="hour"></div><div class="pause"></div><div class="hour"></div><div class="pause"></div><div class="hour"></div><div class="pause"></div><div class="hour"></div></section>';
+    }
+    let hours = document.getElementsByClassName("hour");
+    for (var i = 0; i < hours.length; i++) {
+      hours[i].innerHTML += '<div class="options"></div>';
+    }
+    let options = document.getElementsByClassName("options");
+    for (var i = 0; i < options.length; i++) {
+      for (var x = 0; x < 9; x++) {
+        options[i].innerHTML += '<select class="" name="">\n\t<option value="smth">Test</option>\n\t</select>';
+      }
+    }
+    </script>
+  </body>
+</html>
