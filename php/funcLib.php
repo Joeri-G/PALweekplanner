@@ -1,7 +1,7 @@
 <?php
 
 //function om snel te checken of alle inputs gezet zijn
-function _GETIsset($input) {
+function _GETIsset($input = null) {
   //loop door array
   for ($i=0; $i < count($input); $i++) {
     //if de key net gezet is return false
@@ -13,7 +13,7 @@ function _GETIsset($input) {
 }
 
 //functie om te checken of er overlap is tussen twee arrays
-function isOverlap($arr1, $arr2) {
+function isOverlap($arr1 = null, $arr2 = null) {
   //loop door eerste array
   for ($i=0; $i < count($arr1); $i++) {
     //loop door tweede array
@@ -31,7 +31,7 @@ function isOverlap($arr1, $arr2) {
 //functie om voor overlap te kiezen maar dan speciaal voor klassen
 //dit is omdat de klassen een object zijn in plaats van een string
 //vrijwel identiek aan isOverlap()
-function isOverlapKlas($arr1, $arr2) {
+function isOverlapKlas($arr1 = null, $arr2 = null) {
   //loop door eerste array
   for ($i=0; $i < count($arr1); $i++) {
     //loop door tweede array
@@ -46,7 +46,7 @@ function isOverlapKlas($arr1, $arr2) {
 
 
 //check of de input none is (of iets gelijkwaardigs)
-function notNone($in) {
+function notNone($in = null) {
   if (
     $in == "none" ||
     $in == "" ||
@@ -60,8 +60,16 @@ function notNone($in) {
 }
 
 
+//notNone maar dan voor klas
+function notNoneKlas($in) {
+  if (notNone($in->jaar) && notNone($in->niveau) && notNone($in->nummer)) {
+    return true;
+  }
+  return false;
+}
+
 //check of op zijn minst een van de entries in een array niet None is en of dit array dus een mogelijke input voor het rooster is
-function isPossible($input) {
+function isPossible($input = null) {
   //loop door het array
   for ($i=0; $i < count($input); $i++) {
     //als de input niet None is return dan true
@@ -73,7 +81,7 @@ function isPossible($input) {
 }
 
 //zelfde als isPossible() maar dan voor klas omdat dit een object is in plaats van een string
-function isPossibleKlas($input) {
+function isPossibleKlas($input = null) {
   for ($i=0; $i < count($input); $i++) {
     if (notNone($input[$i]->jaar) && notNone($input[$i]->niveau) && notNone($input[$i]->nummer)) {
       return true;
@@ -83,7 +91,7 @@ function isPossibleKlas($input) {
 }
 
 //alle drie de waardes voor een klas moeten gezet zijn anders worden deze naar None / 0 gezet
-function checkKlas($in) {
+function checkKlas($in = null) {
   //maak leeg object voor output
   //loop door input array
   for ($i=0; $i < count($in); $i++) {
@@ -95,6 +103,36 @@ function checkKlas($in) {
     }
   }
   return $in;
+}
+
+//check of het opgegeven dagdeel wel bestaat
+function daypartCheck($daypart = null) {
+  //check of de input format klopt
+  if (strlen($daypart) !== 3 || !notNone($daypart)) {
+    return false;
+  }
+  //haal het dagdeel uit de input string
+  $dag = substr($daypart, 0, 2);
+  //type shift zodat we kunnen checken of het in de range is
+  $uur = (int) substr($daypart, 2);
+
+  //lees config file met alle dagen en uren
+  $file = file_get_contents('../conf/conf.json');
+  //parse de JSON
+  $json = json_decode($file);
+  //haal dagen en uren uit config file
+  $dagen = $json->dagen;
+  $uren = $json->uren;
+
+  //check of uur in de config file zit
+  if (!in_array($dag, $dagen)) {
+    return false;
+  }
+  //check of uur wel in de range zit
+  if ($uur < 0 || $uur > $uren) {
+    return false;
+  }
+  return true;
 }
 
  ?>

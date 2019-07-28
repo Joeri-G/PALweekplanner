@@ -101,3 +101,22 @@ ALTER TABLE `klassen`
 ALTER TABLE `klassen`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 COMMIT;
+
+
+
+/*
+planner -> lokalen
+  - lokaal
+  - created
+  - ID
+*/
+CREATE TABLE `lokalen` (
+  `lokaal` varchar(16) NOT NULL,
+  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `lokalen`
+  ADD PRIMARY KEY (`ID`);
+ALTER TABLE `lokalen`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+COMMIT;

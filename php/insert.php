@@ -1,44 +1,44 @@
 <?php
-//script om roosterdata in database te 'inserten'
+//script om roosterdata in database te "inserten"
 //stap 1: check of alle benodigde data gegeven is (een of meer docenten, klassen, lokalen en een dagdeel)
 //stap 2: verwerk de data
 //        2.1 check of de lokalen, docenten en klassen bestaan
 //        2.2 check of de lokalen, docenten of klassen al bezet zijn
 //stap 3: push naar database
-require('funcLib.php');
+require("funcLib.php");
 
 //check of alle velder ingevuld zijn
 //lege velden mogen niet, in plaats daar van moet er None worden ingevuld
-if (!_GETIsset(['daypart', 'lokaal1', 'lokaal2', 'klas1jaar', 'klas1niveau', 'klas1nummer', 'klas2jaar', 'klas2niveau', 'klas2nummer', 'docent1', 'docent2', 'laptops'])) {
-  die('Not all parameters set');
+if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", "klas2jaar", "klas2niveau", "klas2nummer", "docent1", "docent2", "laptops"])) {
+  die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 
 //api.php?insert=true&daypart=MA0&lokaal1=101&lokaal2=None&klas1jaar=None&klas1niveau=V&klas1nummer=None&klas2jaar=None&klas2niveau=None&klas2nummer=None&docent1=None&docent2=BEG&laptops=2
 
 
-$daypart = $_GET['daypart'];
+$daypart = $_GET["daypart"];
 
-$docent1 = $_GET['docent1'];
-$docent2 = $_GET['docent2'];
+$docent1 = $_GET["docent1"];
+$docent2 = $_GET["docent2"];
 
 $klas1 = new stdClass;
-$klas1->jaar = $_GET['klas1jaar'];
-$klas1->niveau = $_GET['klas1niveau'];
-$klas1->nummer = $_GET['klas1nummer'];
+$klas1->jaar = $_GET["klas1jaar"];
+$klas1->niveau = $_GET["klas1niveau"];
+$klas1->nummer = $_GET["klas1nummer"];
 
 $klas2 = new stdClass;
-$klas2->jaar = $_GET['klas2jaar'];
-$klas2->niveau = $_GET['klas2niveau'];
-$klas2->nummer = $_GET['klas2nummer'];
+$klas2->jaar = $_GET["klas2jaar"];
+$klas2->niveau = $_GET["klas2niveau"];
+$klas2->nummer = $_GET["klas2nummer"];
 
-$lokaal1 = $_GET['lokaal1'];
-$lokaal2 = $_GET['lokaal2'];
+$lokaal1 = $_GET["lokaal1"];
+$lokaal2 = $_GET["lokaal2"];
 
-$laptops = $_GET['laptops'];
+$laptops = $_GET["laptops"];
 
 //omdat sommige browsers geen leeg item in de url plaatsen worden notes zo gedaan
-$note = '';
-if (isset($_GET['note'])) {$note = $_GET['note'];}
+$note = "";
+if (isset($_GET["note"])) {$note = $_GET["note"];}
 
 
 $docentenGroep = array($docent1, $docent2);
@@ -49,25 +49,101 @@ $klassenGroep = checkKlas(array($klas1, $klas2));
 
 //Op zijn minst een van de gegeven inputs moet niet none zijn
 if (!isPossible($docentenGroep)) {
-  die('Minimaal een van de geselecteerde docenten moet niet None zijn');
+  die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE DOCENTEN MOET NIET NONE ZIJN");
 }
 //de klas is anders omdat dit al een object is
 if (!isPossibleKlas($klassenGroep)) {
-  die('Minimaal een van de geselecteerde klassen moet niet None zijn');
+  die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
 }
 if (!isPossible($lokalenGroep)) {
-  die('Minimaal een van de geselecteerde lokalen moet niet None zijn');
+  die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE LOKALEN MOET NIET NONE ZIJN");
 }
-echo "[DATA] OK\n";
+echo "[INPUT]\tOK\n";
 
+//check of het dagdeel wel mogelijk is
+if(!daypartCheck($daypart)) {
+  die("[DAGDEEL] BESTAAT NIET\n\nTERMINATING...");
+}
+echo "[DAGDEEL] OK\n";
 
 //connect met database
-require('db-connect.php');
+require("db-connect.php");
+
+//check of docent wel bestaat en beschikbaar is op tijdstip
+for ($i=0; $i < count($docentenGroep); $i++) {
+  if (notNone($docentenGroep[$i])) {
+    //maak een query om de userAvailability te selecteren waar de username matcht, de role docent is en de username niet none
+    $stmt = $conn->prepare("SELECT userAvailability FROM users WHERE role='docent' AND username=?");
+    $stmt->bind_param("s", $docentenGroep[$i]);
+    $stmt->execute();
+    $stmt->store_result();
+    //als er geen / meer dan 1 hits zijn geef dan een error
+    if ($stmt->num_rows !== 1) {
+      $stmt->close();
+      $conn->close();
+      die("[DOCENT] BESTAAT NIET\n");
+    }
+    //nu we weten dat er een result is kunnen we gaan fetchen
+    //res voor result
+    $stmt->bind_result($resUserAvailability);
+    $stmt->fetch();
+
+    //format waarin de userAvailability komt is een json array {"DAG": BOOL}
+    $userAvailability = json_decode($resUserAvailability);
+    //haal de dag uit $daypart
+    $dag = substr($daypart, 0, 2);
+    //check of er een key is (zou er moeten zijn maar idk wat de sysadmin allemaal gaat doen)
+    if (!isset($userAvailability->$dag)) {
+      $stmt->close();
+      $conn->close();
+      die("[DOCENTEN] KEY ERROR. PLEASE CONTACT YOUR SYSADMIN");
+    }
+    if (!$userAvailability->$dag) {
+      $stmt->close();
+      $conn->close();
+      die("[DOPCENTEN] DOCENT IS NIET AANWEZIG OP OPGEGEVEN DAG");
+    }
+    $stmt->close();
+  }
+}
+
+//check of klas bestaat
+for ($i=0; $i < count($klassenGroep); $i++) {
+  //plaats in array, checkKlas verwacht een array
+  if (notNoneKlas($klassenGroep[$i])) {
+    //select 1 omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
+    $stmt = $conn->prepare('SELECT 1 FROM klassen WHERE jaar=? AND niveau=? AND nummer=?');
+    $stmt->bind_param("isi", $klassenGroep[$i]->jaar, $klassenGroep[$i]->niveau, $klassenGroep[$i]->nummer);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows !== 1) {
+      $stmt->close();
+      $conn->close();
+      die("[KLASSEN] KLAS BESTAAT NIET");
+    }
+  }
+}
+
+//check of lokaal bestaat
+for ($i=0; $i < count($lokalenGroep); $i++) {
+  if (notNone($lokalenGroep[$i])) {
+    //select 1 omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
+    $stmt = $conn->prepare('SELECT 1 FROM lokalen WHERE lokaal = ?');
+    $stmt->bind_param("s", $lokalenGroep[$i]);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows !== 1) {
+      $stmt->close();
+      $conn->close();
+      die("[LOKALEN] LOKAAL BESTAAT NIET");
+    }
+  }
+}
 
 //laad alle data van het geselecteerde dagdeel
 //gebruik prepared statement om SQL injections te vermijden
-$stmt = $conn->prepare('SELECT docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2 FROM week WHERE `daypart` = ?');
-$stmt->bind_param('s', $daypart);
+$stmt = $conn->prepare("SELECT docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2 FROM week WHERE `daypart` = ?");
+$stmt->bind_param("s", $daypart);
 
 //execute SQL query
 $stmt->execute();
@@ -105,25 +181,32 @@ while ($stmt->fetch()) {
   if(isOverlap($docentenGroep, $resDocentenGroep)) {
     $stmt->close();
     $conn->close();
-    die('Een of meer van de geselecteerde docenten is bezet op het gekozen tijdstip');
+    die("[DOCENTEN]\tBEZET\n\nTERMINATING...");
   }
   if(isOverlapKlas($klassenGroep, $resKlassenGroep)) {
     $stmt->close();
     $conn->close();
-    die('Een of meer van de geselecteerde klassen is bezet op het gekozen tijdstip');
+    die("[KLASSEN]\tBEZET\n\nTERMINATING...");
   }
   if(isOverlap($lokalenGroep, $resLokalenGroep)) {
     $stmt->close();
     $conn->close();
-    die('Een of meer van de geselecteerde lokalen is bezet op het gekozen tijdstip');
+    die("[LOKALEN]\tBEZET\n\nTERMINATING...");
   }
 }
-//nu we zeker weten dat er geen overlap is kunnen we de data in de database 'inserten'
-$stmt = $conn->prepare('INSERT INTO week (daypart, docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2, laptops, notes, `USER`, `IP`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+//feedback
+echo "[DOCENTEN]\tOK\n";
+echo "[KLASSEN]\tOK\n";
+echo "[LOKALEN]\tOK\n";
+
+echo "\nINSERTING...\n";
+
+//nu we zeker weten dat er geen overlap is kunnen we de data in de database "inserten"
+$stmt = $conn->prepare("INSERT INTO week (daypart, docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2, laptops, notes, `USER`, `IP`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 //s voor string en i voor integer
 $stmt->bind_param(
-  'sssisiisissssss',
+  "sssisiisissssss",
   $daypart,
   $docent1,
   $docent2,
@@ -137,8 +220,8 @@ $stmt->bind_param(
   $lokaal2,
   $laptops,
   $note,
-  $_SESSION['username'],
-  $_SERVER['REMOTE_ADDR']
+  $_SESSION["username"],
+  $_SERVER["REMOTE_ADDR"]
 );
 
 //execute query
@@ -148,6 +231,6 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-echo "[INSERT] OK";
+echo "[INSERT]\tOK";
 
  ?>

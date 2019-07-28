@@ -29,13 +29,13 @@ main {
 }
 
 .hour {
-  background: rgba(255, 236, 160, 1);
+  background: #ffeca0;
   padding: 16px;
   min-height: 200px;
 }
 
 .pause {
-  background: rgba(160, 236, 255, 1);
+  background: #a0ecff;
   min-height: 32px;
 }
 .options > * {
