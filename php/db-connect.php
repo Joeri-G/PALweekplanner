@@ -1,4 +1,5 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 $servername = "localhost";
 $username = "root";
 $password = "";

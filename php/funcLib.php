@@ -1,5 +1,5 @@
 <?php
-
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 //function om snel te checken of alle inputs gezet zijn
 function _GETIsset($input = null) {
   //loop door array

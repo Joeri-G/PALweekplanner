@@ -1,4 +1,5 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 if (!isset($_SESSION['loggedin'])) {
   header("location: /login");

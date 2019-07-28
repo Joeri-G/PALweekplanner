@@ -1,6 +1,0 @@
-{
-  "klassen": ["4v1", "4v2", "4v3"],
-  "docenten": ["BER", "BEG", "BLM"],
-  "hours": 9,
-  "days": ["MA", "DI", "WO", "DO", "VR"]
-}

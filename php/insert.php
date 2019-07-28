@@ -1,4 +1,5 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 //script om roosterdata in database te "inserten"
 //stap 1: check of alle benodigde data gegeven is (een of meer docenten, klassen, lokalen en een dagdeel)
 //stap 2: verwerk de data
@@ -13,7 +14,7 @@ if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "kl
   die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 
-//api.php?insert=true&daypart=MA0&lokaal1=101&lokaal2=None&klas1jaar=None&klas1niveau=V&klas1nummer=None&klas2jaar=None&klas2niveau=None&klas2nummer=None&docent1=None&docent2=BEG&laptops=2
+//http://localhost/api.php?insert=true&daypart=MA1&lokaal1=101&lokaal2=101&klas1jaar=1&klas1niveau=v&klas1nummer=3&klas2jaar=2&klas2niveau=h&klas2nummer=1&docent1=None&docent2=BEG&laptops=4&note=meh
 
 
 $daypart = $_GET["daypart"];
@@ -231,6 +232,7 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-echo "[INSERT]\tOK";
+die("[INSERT]\tOK");
+
 
  ?>
