@@ -37,10 +37,15 @@ $lokaal2 = $_GET["lokaal2"];
 
 $laptops = $_GET["laptops"];
 
-//omdat sommige browsers geen leeg item in de url plaatsen worden notes zo gedaan
-$note = "";
-if (isset($_GET["note"])) {$note = $_GET["note"];}
-
+//omdat sommige browsers geen leeg item in de url plaatsen worden notes en project codes zo gedaan
+$note = "None";
+$projectCode = "None";
+if (isset($_GET["note"]) && !empty($_GET['note'])) {
+  $note = $_GET["note"];
+}
+if (isset($_GET["projectCode"]) && !empty($_GET['projectCode'])) {
+  $projectCode = $_GET['projectCode'];
+}
 
 $docentenGroep = array($docent1, $docent2);
 $lokalenGroep = array($lokaal1, $lokaal2);
@@ -102,7 +107,7 @@ for ($i=0; $i < count($docentenGroep); $i++) {
     if (!$userAvailability->$dag) {
       $stmt->close();
       $conn->close();
-      die("[DOPCENTEN] DOCENT IS NIET AANWEZIG OP OPGEGEVEN DAG");
+      die("[DOCENTEN] DOCENT IS NIET AANWEZIG OP OPGEGEVEN DAG");
     }
     $stmt->close();
   }
@@ -203,7 +208,28 @@ echo "[LOKALEN]\tOK\n";
 echo "\nINSERTING...\n";
 
 //nu we zeker weten dat er geen overlap is kunnen we de data in de database "inserten"
-$stmt = $conn->prepare("INSERT INTO week (daypart, docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2, laptops, notes, `USER`, `IP`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO
+  week (
+    daypart,
+    docent1,
+    docent2,
+    klas1jaar,
+    klas1niveau,
+    klas1nummer,
+    klas2jaar,
+    klas2niveau,
+    klas2nummer,
+    lokaal1,
+    lokaal2,
+    laptops,
+    projectCode,
+    notes,
+    `USER`,
+    `IP`
+  )
+VALUES
+  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
 
 //s voor string en i voor integer
 $stmt->bind_param(
@@ -220,6 +246,7 @@ $stmt->bind_param(
   $lokaal1,
   $lokaal2,
   $laptops,
+  $projectCode,
   $note,
   $_SESSION["username"],
   $_SERVER["REMOTE_ADDR"]

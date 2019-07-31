@@ -1,5 +1,9 @@
 -- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
+maak database
+*/
+CREATE DATABASE planner;
+/*
 planner -> week
   - daypart
 
@@ -42,6 +46,7 @@ CREATE TABLE `week` (
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
   `laptops` varchar(32) NOT NULL COMMENT 'laptops',
+  `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
   `notes` varchar(128) NOT NULL COMMENT 'notes',
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
   `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was added',
@@ -71,7 +76,6 @@ CREATE TABLE `users` (
   `role` varchar(16) NOT NULL,
   `userLVL` int(1) NOT NULL,
   `userAvailability` varchar(64) NOT NULL,
-  `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `lastLoginIP` varchar(64) NOT NULL,
   `ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -119,5 +123,38 @@ CREATE TABLE `lokalen` (
 ALTER TABLE `lokalen`
   ADD PRIMARY KEY (`ID`);
 ALTER TABLE `lokalen`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+COMMIT;
+
+
+
+/*
+planner -> deleted
+Hier komen alle entries die verwijderd worden uit de table week
+*/
+CREATE TABLE `deleted` (
+  `daypart` varchar(4) NOT NULL,
+  `docent1` varchar(16) NOT NULL,
+  `docent2` varchar(16) NOT NULL,
+  `klas1jaar` int(4) NOT NULL,
+  `klas1niveau` varchar(16) NOT NULL,
+  `klas1nummer` int(4) NOT NULL,
+  `klas2jaar` int(4) NOT NULL,
+  `klas2niveau` varchar(16) NOT NULL,
+  `klas2nummer` int(4) NOT NULL,
+  `lokaal1` varchar(16) NOT NULL,
+  `lokaal2` varchar(16) NOT NULL,
+  `laptops` varchar(32) NOT NULL,
+  `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
+  `notes` varchar(128) NOT NULL,
+  `userCreate` varchar(16) NOT NULL COMMENT 'user who added original entry',
+  `userDelete` varchar(16) NOT NULL COMMENT 'user who deleted original entry',
+  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was deleted',
+  `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
+  `ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `deleted`
+  ADD PRIMARY KEY (`ID`);
+ALTER TABLE `deleted`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 COMMIT;

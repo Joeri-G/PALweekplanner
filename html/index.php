@@ -24,5 +24,25 @@ if (!isset($_SESSION['loggedin'])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
   </head>
   <body>
+    <nav>
+      <img src="/img/logo.png" alt="Logo">
+      <p>FOO</p>
+      <p>FOO</p>
+      <p>FOO</p>
+      <p>FOO</p>
+    </nav>
+    <div class="select">
+      <select name="displayMode" onchange="buildSelect(this.value);">
+        <option value="klas">Klassen</option>
+        <option value="docent">Docenten</option>
+      </select>
+      <select name="displayModeFinal" onchange="setTimetable(this.value);">
+        <option>Klas</option>
+      </select>
+    </div>
+    <main>
+    </main>
+    <script src="/js/roosterMaster.js" charset="utf-8"></script>
+    <script src="/js/rooster.js" charset="utf-8"></script>
   </body>
 </html>
