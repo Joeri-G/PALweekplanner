@@ -207,6 +207,7 @@ echo "[LOKALEN]\tOK\n";
 
 echo "\nINSERTING...\n";
 
+$stmt->close();
 //nu we zeker weten dat er geen overlap is kunnen we de data in de database "inserten"
 $stmt = $conn->prepare("INSERT INTO
   week (
@@ -228,12 +229,11 @@ $stmt = $conn->prepare("INSERT INTO
     `IP`
   )
 VALUES
-  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
-
 //s voor string en i voor integer
 $stmt->bind_param(
-  "sssisiisissssss",
+  "sssisiisisssssss",
   $daypart,
   $docent1,
   $docent2,

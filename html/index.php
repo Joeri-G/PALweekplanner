@@ -1,5 +1,5 @@
 <?php
-// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+//BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 if (!isset($_SESSION['loggedin'])) {
   header("location: /login");
@@ -8,6 +8,7 @@ if (!isset($_SESSION['loggedin'])) {
  ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+<!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
     <!-- icon -->
@@ -33,7 +34,7 @@ if (!isset($_SESSION['loggedin'])) {
     </nav>
     <div class="select">
       <select name="displayMode" onchange="buildSelect(this.value);">
-        <option value="klas">Klassen</option>
+        <option value="klas" selected>Klassen</option>
         <option value="docent">Docenten</option>
       </select>
       <select name="displayModeFinal" onchange="setTimetable(this.value);">
@@ -42,6 +43,19 @@ if (!isset($_SESSION['loggedin'])) {
     </div>
     <main>
     </main>
+    <!-- Loading svg -->
+    <div id="loading">
+      <div id="loadingContent">
+        <img src="/img/loading.svg" alt="Loading...">
+      </div>
+    </div>
+    <div id="messageModal">
+      <div id="messageModalContent">
+      </div>
+    </div>
+    <footer>
+      <p><a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">&copy; Joeri Geuzinge</a></p>
+    </footer>
     <script src="/js/roosterMaster.js" charset="utf-8"></script>
     <script src="/js/rooster.js" charset="utf-8"></script>
   </body>

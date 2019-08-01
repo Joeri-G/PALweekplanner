@@ -42,6 +42,7 @@ if (isset($_GET['loadconfig']) && $_GET['loadconfig'] == 'true') {
   $out = new stdClass;
   $out->uren = $conf->uren;
   $out->dagen = $conf->dagen;
+  $out->lestijden = $conf->lestijden;
   die(json_encode($out));
 }
 
