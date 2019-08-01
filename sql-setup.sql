@@ -40,9 +40,9 @@ CREATE TABLE `week` (
   `klas1jaar` int(4) NOT NULL,
   `klas1niveau` varchar(16) NOT NULL,
   `klas1nummer` int(4) NOT NULL,
-  `klas2jaar` int(4) NOT NULL,
+  /*`klas2jaar` int(4) NOT NULL,
   `klas2niveau` varchar(16) NOT NULL,
-  `klas2nummer` int(4) NOT NULL,
+  `klas2nummer` int(4) NOT NULL,*/
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
   `laptops` varchar(32) NOT NULL COMMENT 'laptops',
@@ -139,9 +139,9 @@ CREATE TABLE `deleted` (
   `klas1jaar` int(4) NOT NULL,
   `klas1niveau` varchar(16) NOT NULL,
   `klas1nummer` int(4) NOT NULL,
-  `klas2jaar` int(4) NOT NULL,
+  /*`klas2jaar` int(4) NOT NULL,
   `klas2niveau` varchar(16) NOT NULL,
-  `klas2nummer` int(4) NOT NULL,
+  `klas2nummer` int(4) NOT NULL,*/
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
   `laptops` varchar(32) NOT NULL,

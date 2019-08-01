@@ -6,7 +6,12 @@ let mode, config, uren, dagen, listAvailiable;
 
 //start loading animatie
 load(true);
-// LATER
+
+//bouw selection dropdown
+document.getElementsByName('displayMode')[0].innerHTML = '<option value="klas" selected>Klassen</option><option value="docent">Docenten</option>';
+
+
+
 //laad config file
 let xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function() {
@@ -51,5 +56,3 @@ xhttp2.onreadystatechange = function() {
 xhttp2.open("GET", "/api.php?listAll=true", true);
 xhttp2.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
 xhttp2.send();
-
-// LATER

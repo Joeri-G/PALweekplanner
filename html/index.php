@@ -14,9 +14,7 @@ if (!isset($_SESSION['loggedin'])) {
     <!-- icon -->
     <link rel="shortcut icon" href="/img/logo.png">
     <!-- css -->
-    <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" media="(min-width: 992px)" href="/css/desktop.css">
-    <link rel="stylesheet" media="(max-width: 991px)" href="/css/mobile.css">
+    <link rel="stylesheet" href="/css/masterFile.css">
     <!-- <link rel="stylesheet" href="/css/fork.css"> -->
     <!-- title -->
     <title>Rooster</title>
@@ -28,14 +26,10 @@ if (!isset($_SESSION['loggedin'])) {
     <nav>
       <img src="/img/logo.png" alt="Logo">
       <p>FOO</p>
-      <p>FOO</p>
-      <p>FOO</p>
-      <p>FOO</p>
     </nav>
     <div class="select">
       <select name="displayMode" onchange="buildSelect(this.value);">
         <option value="klas" selected>Klassen</option>
-        <option value="docent">Docenten</option>
       </select>
       <select name="displayModeFinal" onchange="setTimetable(this.value);">
         <option>Klas</option>

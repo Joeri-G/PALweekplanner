@@ -123,15 +123,15 @@ $stmt->close();
 
 //laad nu de rooster data
 $klas1 = new stdClass;
-$klas2 = new stdClass;
+// $klas2 = new stdClass;
 $klassenBezet = new stdClass;
 $stmt = $conn->prepare('SELECT
   klas1jaar,
   klas1niveau,
   klas1nummer,
-  klas2jaar,
+  /*klas2jaar,
   klas2niveau,
-  klas2nummer,
+  klas2nummer,*/
   daypart
   FROM week');
 $stmt->execute();
@@ -140,9 +140,9 @@ $stmt->bind_result(
   $klas1->jaar,
   $klas1->niveau,
   $klas1->nummer,
-  $klas2->jaar,
-  $klas2->niveau,
-  $klas2->nummer,
+  // $klas2->jaar,
+  // $klas2->niveau,
+  // $klas2->nummer,
   $resDaypart);
 while ($stmt->fetch()) {
   if (!isset($resDaypart)) {
@@ -151,9 +151,9 @@ while ($stmt->fetch()) {
   if (notNone($klas1->niveau)) {
     $klassenBezet->$resDaypart[] = $klas1;
   }
-  if (notNone($klas2->niveau)) {
-    $klassenBezet->$resDaypart[] = $klas2;
-  }
+  // if (notNone($klas2->niveau)) {
+  //   $klassenBezet->$resDaypart[] = $klas2;
+  // }
 }
 //</TMP FIX>
 
@@ -197,7 +197,7 @@ WHERE
     //haal de dag uit $daypart
     $dag = substr($dagdeelTMP, 0, 2);
     //check of er een key is (zou er moeten zijn maar idk wat de sysadmin allemaal gaat doen)
-    if (isset($beschikbaar->$dag) && $beschikbaar->$dag) {
+    if (isset($beschikbaar->$dag) && $beschikbaar->$dag == true) {
       //plaats ieder result in de docenten array in het $out object
       $out->docent->$dagdeelTMP[] = $resDocent;
     }

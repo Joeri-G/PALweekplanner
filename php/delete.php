@@ -21,9 +21,9 @@ $stmt = $conn->prepare('SELECT daypart,
   klas1jaar,
   klas1niveau,
   klas1nummer,
-  klas2jaar,
+  /*klas2jaar,
   klas2niveau,
-  klas2nummer,
+  klas2nummer,*/
   lokaal1,
   lokaal2,
   laptops,
@@ -49,9 +49,9 @@ $stmt->bind_result(
   $resKlas1jaar,
   $resKlas1niveau,
   $resKlas1nummer,
-  $resKlas2jaar,
+  /*$resKlas2jaar,
   $resKlas2niveau,
-  $resKlas2nummer,
+  $resKlas2nummer,*/
   $resLokaal1,
   $resLokaal2,
   $resLaptop,
@@ -69,9 +69,9 @@ $stmt = $conn->prepare('INSERT INTO deleted (
   klas1jaar,
   klas1niveau,
   klas1nummer,
-  klas2jaar,
+  /*klas2jaar,
   klas2niveau,
-  klas2nummer,
+  klas2nummer,*/
   lokaal1,
   lokaal2,
   laptops,
@@ -80,7 +80,7 @@ $stmt = $conn->prepare('INSERT INTO deleted (
   userCreate,
   userDelete,
   IP
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?/*, ?, ?, ?*/)');
 echo "$conn->error";
 $stmt->bind_param('ssisiisissiisssss',
   $resDaypart,
@@ -89,9 +89,9 @@ $stmt->bind_param('ssisiisissiisssss',
   $resKlas1jaar,
   $resKlas1niveau,
   $resKlas1nummer,
-  $resKlas2jaar,
+  /*$resKlas2jaar,
   $resKlas2niveau,
-  $resKlas2nummer,
+  $resKlas2nummer,*/
   $resLokaal1,
   $resLokaal2,
   $resLaptop,

@@ -13,9 +13,9 @@ $stmt = $conn->prepare('SELECT
   klas1jaar,
   klas1niveau,
   klas1nummer,
-  klas2jaar,
+  /*klas2jaar,
   klas2niveau,
-  klas2nummer,
+  klas2nummer,*/
   lokaal1,
   lokaal2,
   laptops,
@@ -45,9 +45,9 @@ $stmt->bind_result(
   $resKlas1jaar,
   $resKlas1niveau,
   $resKlas1nummer,
-  $resKlas2jaar,
-  $resKlas2niveau,
-  $resKlas2nummer,
+  // $resKlas2jaar,
+  // $resKlas2niveau,
+  // $resKlas2nummer,
   $resLokaal1,
   $resLokaal2,
   $resLaptop,
@@ -58,7 +58,7 @@ $stmt->bind_result(
 
 while($stmt->fetch()) {
   $klas1 = new stdClass;
-  $klas2 = new stdClass;
+  // $klas2 = new stdClass;
   //object daarin alle data en loop er door zolang er nog entries terug komen
   $data->$resDaypart = new stdClass;
   $data->$resDaypart->docent = array($resDocent1, $resDocent2);
@@ -67,13 +67,13 @@ while($stmt->fetch()) {
   $klas1->niveau = $resKlas1niveau;
   $klas1->nummer = $resKlas1nummer;
 
-  $klas2->jaar = $resKlas2jaar;
-  $klas2->niveau = $resKlas2niveau;
-  $klas2->nummer = $resKlas2nummer;
+  // $klas2->jaar = $resKlas2jaar;
+  // $klas2->niveau = $resKlas2niveau;
+  // $klas2->nummer = $resKlas2nummer;
 
   $data->$resDaypart->klas = array(
     $klas1,
-    $klas2
+    // $klas2
   );
   $data->$resDaypart->lokaal = array($resLokaal1, $resLokaal2);
   $data->$resDaypart->laptop = $resLaptop;

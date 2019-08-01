@@ -96,6 +96,19 @@ function buildTimetable(data) {
 }
 
 function buildDay(data, dag, listAvailable) {
+  //als de mode docent is check dan of de docent wel op school is
+  if (mode == 'docent' && typeof selector.availability[dag] !== undefined && !selector.availability[dag]) {
+    let html = '<section>\n<p>'+dag+'</p>';
+    for (var i = 0; i < uren; i++) {
+      //fucntie om uur te maken
+      html += '<div class="hour afwezig"><p>Docent is niet op school</p></div>\n';
+      if (i < uren - 1) {
+        html += '<div class="pause"></div>\n';
+      }
+    }
+    html += '</section>';
+    return html;
+  }
   let html = '<section>\n';
   html += "<p>"+dag+"</p>";
   for (var i = 0; i < uren; i++) {
@@ -113,7 +126,7 @@ function buildHour(data, dag, uur, listAvailable) {
   if (typeof data[dag+uur] !== 'undefined' && data[dag+uur] !== null) {
     let inside = {};
     nu = data[dag+uur];
-    html = '<div class="hour" data-hour=\''+JSON.stringify(nu)+'\'">';
+    html = '<div class="hour afspraak" data-hour=\''+JSON.stringify(nu)+'\'">';
     for (var i = 0; i < nu.klas.length; i++) {
       if (nu.klas[i].niveau == 'None') {
         nu.klas[i].jaar = '';
@@ -123,8 +136,10 @@ function buildHour(data, dag, uur, listAvailable) {
     inside.docent1 = '<span>Docent1:</span><span>'+nu.docent[0]+'</span>\n';
     inside.docent2 = '<span>Docent2:</span><span>'+nu.docent[1]+'</span>\n';
 
-    inside.klas1 = '<span>Klas1:</span><span>'+nu.klas[0].jaar+nu.klas[0].niveau+nu.klas[0].nummer+'</span>\n';
-    inside.klas2 = '<span>Klas2:</span><span>'+nu.klas[1].jaar+nu.klas[1].niveau+nu.klas[1].nummer+'</span>\n';
+    inside.klas = '<span>Klas:</span><span>'+nu.klas[0].jaar+nu.klas[0].niveau+nu.klas[0].nummer+'</span>\n';
+
+    // inside.klas1 = '<span>Klas1:</span><span>'+nu.klas[0].jaar+nu.klas[0].niveau+nu.klas[0].nummer+'</span>\n';
+    // inside.klas2 = '<span>Klas2:</span><span>'+nu.klas[1].jaar+nu.klas[1].niveau+nu.klas[1].nummer+'</span>\n';
 
     inside.lokaal1 = '<span>Lokaal1:</span><span>'+nu.lokaal[0]+'</span>\n';
     inside.lokaal2 = '<span>Lokaal2:</span><span>'+nu.lokaal[1]+'</span>\n';
@@ -135,8 +150,9 @@ function buildHour(data, dag, uur, listAvailable) {
     html += '<button type="button" class="close" onclick="deleteHour(this.parentElement.dataset.hour)">&#10799;</button>\n<p>\n'+lestijden[uur]+'</p><div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour);">\n'+
             inside.docent1+
             inside.docent2+
-            inside.klas1+
-            inside.klas2+
+            inside.klas+
+            // inside.klas1+
+            // inside.klas2+
             inside.lokaal1+
             inside.lokaal2+
             inside.projectCode+
@@ -154,9 +170,9 @@ function buildHour(data, dag, uur, listAvailable) {
       html += makeList(dag+uur, 'docent', 'docent2', listAvailable);
       html += '</select>\n';
       html += '<select name="'+dag+uur+'klas1" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dag+uur])+'}\'>';
-      html += makeList(dag+uur, 'klas', 'klas1', listAvailable);
-      html += '</select>\n<select name="'+dag+uur+'klas2" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dag+uur])+'}\'>';
-      html += makeList(dag+uur, 'klas', 'klas2', listAvailable);
+      html += makeList(dag+uur, 'klas', 'klas', listAvailable);
+      // html += '</select>\n<select name="'+dag+uur+'klas2" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dag+uur])+'}\'>';
+      // html += makeList(dag+uur, 'klas', 'klas2', listAvailable);
       html += '</select>\n';
       html += '\n<select name="'+dag+uur+'lokaal1">';
       html += makeList(dag+uur, 'lokaal', 'lokaal1', listAvailable);
@@ -170,8 +186,8 @@ function buildHour(data, dag, uur, listAvailable) {
       html += makeList(dag+uur, 'docent', 'docent1', listAvailable);
       html += '</select><select name="'+dag+uur+'docent2">';
       html += makeList(dag+uur, 'docent', 'docent2', listAvailable);
-      html += '</select><select name="'+dag+uur+'klas2" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dag+uur])+'}\'>';
-      html += makeList(dag+uur, 'klas', 'klas2', listAvailable);
+      // html += '</select><select name="'+dag+uur+'klas2" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dag+uur])+'}\'>';
+      // html += makeList(dag+uur, 'klas', 'klas2', listAvailable);
       html += '</select>\n';
       html += '\n<select name="'+dag+uur+'lokaal1">';
       html += makeList(dag+uur, 'lokaal', 'lokaal1', listAvailable);
@@ -180,7 +196,7 @@ function buildHour(data, dag, uur, listAvailable) {
       html += '</select>\n<input type="number" name="'+dag+uur+'laptops" min="0" max="1000" placeholder="laptops">\n';
     }
 
-    html += '<input type="text" name="'+dag+uur+'projectCode" placeholder="ProjectCode">\n<input type="text" name="'+dag+uur+'note" placeholder="Note">\n</div><button type="button" onclick="sendHour(\''+dag+uur+'\', \''+dag+uur+'\')">Go</button>';
+    html += '<input type="text" name="'+dag+uur+'projectCode" placeholder="ProjectCode">\n</div><input type="text" name="'+dag+uur+'note" placeholder="Note">\n<button type="button" onclick="sendHour(\''+dag+uur+'\', \''+dag+uur+'\')">Go</button>';
   }
   html += '</div>\n';
   if (uur < uren - 1) {
@@ -210,7 +226,7 @@ function makeList(dagdeel, type, lable, listAvailable) {
 function sendHour(name, dagdeel) {
   load(true);
   //we moeten nu de values van alle selections/input uit het parent element halen
-  let inputs = ['docent1', 'docent2', 'klas1', 'klas2', 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
+  let inputs = ['docent1', 'docent2', 'klas1',/* 'klas2',*/ 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
   let url = '/api.php?insert=true&daypart='+dagdeel;
   let value;
   let klassen = 0;
@@ -248,7 +264,7 @@ function sendHour(name, dagdeel) {
     if (this.readyState == 4 && this.status == 200) {
       alert(this.responseText);
       setTimetable(document.getElementsByName('displayModeFinal')[0].value);
-      return null;;
+      return null;
     }
   };
   xhttp4.open("GET", url, true);
@@ -274,7 +290,15 @@ function deleteHour(data) {
 }
 
 function enlargeHour(data) {
-  alert(data);
+  let json = JSON.parse(data);
+  let text = 'Docent1:\t\t'+json.docent[0];
+  text += '\nDocent2:\t\t'+json.docent[1];
+  text += '\n\nKlas:\t\t'+json.klas[0].jaar+json.klas[0].niveau+json.klas[0].nummer;
+  text += '\n\nLokaal1:\t\t'+json.lokaal[0];
+  text += '\nLokaal2:\t\t'+json.lokaal[0];
+  text += '\n\nProjectCode:\t'+json.projectCode;
+  text += '\nNote:\t\t'+json.note;
+  alert(text);
 }
 
 function load(mode) {

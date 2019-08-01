@@ -10,7 +10,7 @@ require("funcLib.php");
 
 //check of alle velder ingevuld zijn
 //lege velden mogen niet, in plaats daar van moet er None worden ingevuld
-if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", "klas2jaar", "klas2niveau", "klas2nummer", "docent1", "docent2", "laptops"])) {
+if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", /*"klas2jaar", "klas2niveau", "klas2nummer",*/ "docent1", "docent2", "laptops"])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 
@@ -27,10 +27,10 @@ $klas1->jaar = $_GET["klas1jaar"];
 $klas1->niveau = $_GET["klas1niveau"];
 $klas1->nummer = $_GET["klas1nummer"];
 
-$klas2 = new stdClass;
-$klas2->jaar = $_GET["klas2jaar"];
-$klas2->niveau = $_GET["klas2niveau"];
-$klas2->nummer = $_GET["klas2nummer"];
+// $klas2 = new stdClass;
+// $klas2->jaar = $_GET["klas2jaar"];
+// $klas2->niveau = $_GET["klas2niveau"];
+// $klas2->nummer = $_GET["klas2nummer"];
 
 $lokaal1 = $_GET["lokaal1"];
 $lokaal2 = $_GET["lokaal2"];
@@ -51,7 +51,7 @@ $docentenGroep = array($docent1, $docent2);
 $lokalenGroep = array($lokaal1, $lokaal2);
 
 //zorg dat voor de klas of een hele klas gezet is of de hele klas None is
-$klassenGroep = checkKlas(array($klas1, $klas2));
+$klassenGroep = checkKlas(array($klas1/*, $klas2*/));
 
 //Op zijn minst een van de gegeven inputs moet niet none zijn
 if (!isPossible($docentenGroep)) {
@@ -148,7 +148,7 @@ for ($i=0; $i < count($lokalenGroep); $i++) {
 
 //laad alle data van het geselecteerde dagdeel
 //gebruik prepared statement om SQL injections te vermijden
-$stmt = $conn->prepare("SELECT docent1, docent2, klas1jaar, klas1niveau, klas1nummer, klas2jaar, klas2niveau, klas2nummer, lokaal1, lokaal2 FROM week WHERE `daypart` = ?");
+$stmt = $conn->prepare("SELECT docent1, docent2, klas1jaar, klas1niveau, klas1nummer, /*klas2jaar, klas2niveau, klas2nummer,*/ lokaal1, lokaal2 FROM week WHERE `daypart` = ?");
 $stmt->bind_param("s", $daypart);
 
 //execute SQL query
@@ -159,7 +159,7 @@ $stmt->store_result();
 //res voor result
 //maak legen objects voor result klassen
 $resKlas1 = new stdClass;
-$resKlas2 = new stdClass;
+// $resKlas2 = new stdClass;
 
 //bind alle results aan variabelen
 $stmt->bind_result(
@@ -168,9 +168,9 @@ $stmt->bind_result(
   $resKlas1->jaar,
   $resKlas1->niveau,
   $resKlas1->nummer,
-  $resKlas2->jaar,
-  $resKlas2->niveau,
-  $resKlas2->nummer,
+  // $resKlas2->jaar,
+  // $resKlas2->niveau,
+  // $resKlas2->nummer,
   $resLokaal1,
   $resLokaal2
 );
@@ -180,7 +180,7 @@ while ($stmt->fetch()) {
   //place docent, klas and lokaal in groups since klas2 and klas2 will both have to be checked against resKlas1 and resKlas2
   $resDocentenGroep = array($resDocent1, $resDocent2);
 
-  $resKlassenGroep = array($resKlas1, $resKlas2);
+$resKlassenGroep = array($resKlas1/*, $resKlas2*/);
 
   $resLokalenGroep = array($resLokaal1, $resLokaal2);
 
@@ -216,10 +216,10 @@ $stmt = $conn->prepare("INSERT INTO
     docent2,
     klas1jaar,
     klas1niveau,
-    klas1nummer,
+    klas1nummer,/*
     klas2jaar,
     klas2niveau,
-    klas2nummer,
+    klas2nummer,*/
     lokaal1,
     lokaal2,
     laptops,
@@ -229,20 +229,22 @@ $stmt = $conn->prepare("INSERT INTO
     `IP`
   )
 VALUES
-  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?/*, ?, ?, ?*/)
 ");
 //s voor string en i voor integer
+echo "$conn->error";
 $stmt->bind_param(
-  "sssisiisisssssss",
+  //"sssisiisisssssss",
+  "sssisiisissss",
   $daypart,
   $docent1,
   $docent2,
   $klas1->jaar,
   $klas1->niveau,
   $klas1->nummer,
-  $klas2->jaar,
-  $klas2->niveau,
-  $klas2->nummer,
+  // $klas2->jaar,
+  // $klas2->niveau,
+  // $klas2->nummer,
   $lokaal1,
   $lokaal2,
   $laptops,
@@ -254,7 +256,6 @@ $stmt->bind_param(
 
 //execute query
 $stmt->execute();
-
 //sluit alles
 $stmt->close();
 $conn->close();
