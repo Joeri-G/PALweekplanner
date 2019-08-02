@@ -14,7 +14,7 @@ if (!isset($_SESSION['loggedin'])) {
     <!-- icon -->
     <link rel="shortcut icon" href="/img/logo.png">
     <!-- css -->
-    <link rel="stylesheet" href="/css/masterFile.css">
+    <link rel="stylesheet" href="/css/rooster.css">
     <!-- <link rel="stylesheet" href="/css/fork.css"> -->
     <!-- title -->
     <title>Rooster</title>
@@ -35,7 +35,8 @@ if (!isset($_SESSION['loggedin'])) {
         <option>Klas</option>
       </select>
     </div>
-    <main>
+    <main style="display:block">
+      <p style="font-size:1.5em;text-align:center">Selecteer een docent of klas met de dropdown</p>
     </main>
     <!-- Loading svg -->
     <div id="loading">

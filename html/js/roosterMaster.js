@@ -45,7 +45,7 @@ function setTimetable(selected) {
         buildTimetable(data);
       }
       catch (e) {
-        load(false);
+        setTimeout(function() {load(false);}, 500);
         errorMessage(e);
       }
     }
@@ -76,8 +76,10 @@ function buildTimetable(data) {
          //functie om door dagen te loopen
          html += buildDay(data, dagen[i], listAvailable);
          //stop loading animatie
-         load(false);
+         setTimeout(function() {load(false);}, 500);
        }
+       //haal de random text uit css rules uit de main
+       main.style.display = 'grid';
        //plaats de HTML het document
        main.innerHTML = html;
        //zorg dat de footer onder de timetable zit
@@ -85,7 +87,7 @@ function buildTimetable(data) {
      }
      catch (e) {
        //stop loading animatie
-       load(false);
+       setTimeout(function() {load(false);}, 500);
        errorMessage(e);
        listAvailable = {};
      }

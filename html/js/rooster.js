@@ -43,11 +43,11 @@ xhttp2.onreadystatechange = function() {
      //nu we de docent/klassen data hebben kunnen we de lijst maken
      buildSelect('klas');
      //stop loading animatie
-     load(false);
+     setTimeout(function() {load(false);}, 500);
    }
    catch (e) {
      //stop loading animatie
-     load(false);
+     setTimeout(function() {load(false);}, 500);
      errorMessage(e);
      list = {docenten: [], klassen: []};
    }
