@@ -47,7 +47,7 @@ if (!isset($_SESSION['loggedin'])) {
       <div id="messageModalContent">
       </div>
     </div>
-    <footer>
+    <footer style="position:absolute">
       <p><a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">&copy; Joeri Geuzinge</a></p>
     </footer>
     <script src="/js/roosterMaster.js" charset="utf-8"></script>

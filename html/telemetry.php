@@ -12,7 +12,6 @@ if (!isset($_SESSION['loggedin'])) {
    <meta charset="utf-8">
    <title>TEST PAGE</title>
    <style media="screen">
-
    html, body {
      font-family: 'Barlow Semi Condensed',sans-serif;
      margin: 0;

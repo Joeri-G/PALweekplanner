@@ -80,6 +80,8 @@ function buildTimetable(data) {
        }
        //plaats de HTML het document
        main.innerHTML = html;
+       //zorg dat de footer onder de timetable zit
+       document.getElementsByTagName('footer')[0].style.position = 'relative';
      }
      catch (e) {
        //stop loading animatie

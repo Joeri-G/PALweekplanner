@@ -8,6 +8,9 @@ html,body {
 
 * {
 	box-sizing: border-box;
+	/*idk waarom en hoe maar dit fixt problemen op Chrome for Android*/
+	max-width: 999999px;
+	max-height: 999999px;
 }
 
 a {
