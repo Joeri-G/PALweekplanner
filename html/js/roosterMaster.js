@@ -277,13 +277,17 @@ function sendHour(name, dagdeel) {
 }
 
 function deleteHour(data) {
+  load(true);
   if(confirm('Wilt u deze afspraak verwijderen?')) {
     let xhttp5= new XMLHttpRequest();
     //laad list met alle docenten en klassen
     xhttp5.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         alert(this.responseText);
-        setTimetable(document.getElementsByName('displayModeFinal')[0].value);
+        setTimeout(function() {load(false);}, 500);
+        setTimeout(function() {
+          setTimetable(document.getElementsByName('displayModeFinal')[0].value);
+        }, 1000);
       }
     };
     let id = JSON.parse(data).ID;
