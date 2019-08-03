@@ -1,0 +1,207 @@
+/* CSS door Joeri Geuzinge, minified door CSSPortal */
+html,body {
+	font-family: 'Barlow Semi Condensed',sans-serif;
+	height: 100%;
+	margin: 0;
+	font-size: 16px;
+}
+
+* {
+	box-sizing: border-box;
+	/*idk waarom en hoe maar dit fixt problemen op Chrome for Android*/
+	max-width: 999999px;
+	max-height: 999999px;
+}
+
+a {
+	color: inherit;
+}
+
+a:hover {
+	color: grey;
+}
+
+nav {
+	align-items: center;
+	background: #000;
+	color: #fff;
+	display: flex;
+	padding: 4px 16px;
+}
+
+nav > a, .items a {
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 4px;
+  background: #333;
+}
+
+nav * {
+  display: inline-block;
+  margin: 8px 16px;
+}
+
+nav > *:first-child {
+  margin: 8px 32px;
+}
+
+nav > *:last-child {
+	display: none;
+}
+
+nav img, nav span {
+	height: 2em;
+}
+
+/* css om menu opties op kleiner scherm te verbergen en in plaats daar van een hamburger menu te laten zien */
+@media (max-width: 1250px) {
+	nav {
+		font-size: 2em;
+	}
+  nav > a {
+    display: none;
+  }
+
+	nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+  nav > :last-child {
+		cursor: pointer;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+  }
+}
+
+/* full menu css */
+
+menu {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 2; /* Sit on top */
+  left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: #000;
+	color: #fff;
+	margin: 0;
+}
+
+.top {
+	display: block;
+	margin-top: 32px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.close {
+	cursor: pointer;
+}
+
+.top > span {
+	margin: 0 auto;
+}
+
+menu img {
+	height: 3em;
+	width: 3em;
+}
+
+.items {
+	margin: 32px;
+	font-size: 2em;
+	display: grid;
+	grid-template-columns: 1fr;
+	line-height: 2.5;
+	text-align: center;
+}
+
+/* loading css */
+/* The Modal (background) */
+#loading, #messageModal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.4);
+}
+/* Modal Content */
+#loading > div {
+	margin: auto;
+	text-align: center;
+}
+
+#loading img {
+	width: 25%;
+}
+
+.fade-in {
+	animation: animateFadeIn 0.2s;
+}
+
+@keyframes animateFadeIn {
+	from {
+		transform: scale(0);
+	}
+
+	to {
+		transform: scale(1);
+		display: none;
+	}
+}
+
+.fade-out {
+	animation: animateFadeOut 0.2s;
+}
+
+@keyframes animateFadeOut {
+	from {
+		transform: scale(1);
+	}
+
+	to {
+		transform: scale(0);
+		display: none;
+	}
+}
+
+#messageModalContent {
+	margin: 0 auto 32px auto;
+	width: 40%;
+	background: white;
+	border-radius: 24px;
+	padding: 32px;
+}
+
+select,input,button {
+	background: #f2f1f0;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	margin: 2px;
+	padding: 4px;
+	resize: vertical;
+}
+
+footer {
+	align-items: center;
+	background: #aaa;
+	bottom: 0;
+	display: flex;
+	height: 150px;
+	justify-content: center;
+	width: 100%;
+	font-size: 0.7em;
+	text-align: center;
+}
+
+footer > span > p:first-child {
+	font-size: 1.4em;
+}
