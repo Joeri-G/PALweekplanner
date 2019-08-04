@@ -1,0 +1,65 @@
+/* CSS door Joeri Geuzinge, minified door CSSPortal */
+main.full {
+	margin: auto;
+	margin: 48px;
+  border: 1px #888 solid;
+  overflow: auto;
+	max-width: none;
+	padding: 0;
+}
+
+.full table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.full td, th {
+  border: 1px solid #eee;
+  text-align: left;
+  padding: 8px;
+}
+
+.full tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+.full th {
+  text-align: center;
+	min-width: 200px;
+}
+
+
+.full th:first-of-type {
+	min-width: auto;
+	padding: 0px 16px;
+}
+
+.full td {
+	width: 50px;
+	text-align: center;
+}
+
+.full .dag {
+  font-size: 2em;
+}
+
+.full .tijd {
+	font-size: 1.5em;
+}
+.full input, .full select {
+	max-width: 75px;
+}
+
+.full img {
+	height: 1.5em;
+	cursor: pointer;
+}
+
+.full .close {
+	background: inherit;
+	border: none;
+	float: none;
+	height: auto;
+	width: auto;
+}

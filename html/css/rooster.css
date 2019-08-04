@@ -97,25 +97,28 @@ div p {
 	-webkit-box-orient: vertical;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1500px) {
 	main {
 		grid-template-columns: repeat(4,1fr);
 	}
+	.hour {
+		height: 300px;
+	}
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1300px) {
 	main {
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1050px) {
 	main {
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
-@media (max-width: 450px) {
+@media (max-width: 725px) {
 	main {
 		grid-template-columns: repeat(1, 1fr);
 	}

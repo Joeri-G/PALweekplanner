@@ -55,6 +55,9 @@ nav img, nav span {
 
 /* css om menu opties op kleiner scherm te verbergen en in plaats daar van een hamburger menu te laten zien */
 @media (max-width: 1250px) {
+	html, body {
+		font-size: 24px;
+	}
 	nav {
 		font-size: 2em;
 	}
@@ -75,6 +78,7 @@ nav img, nav span {
   }
 }
 
+
 /* full menu css */
 
 menu {
@@ -88,6 +92,7 @@ menu {
 	background-color: #000;
 	color: #fff;
 	margin: 0;
+	overflow: scroll;
 }
 
 .top {
@@ -184,10 +189,13 @@ menu img {
 select,input,button {
 	background: #f2f1f0;
 	border: 1px solid #ccc;
-	cursor: pointer;
 	margin: 2px;
 	padding: 4px;
 	resize: vertical;
+}
+
+button {
+	cursor: pointer;
 }
 
 footer {
@@ -195,7 +203,7 @@ footer {
 	background: #aaa;
 	bottom: 0;
 	display: flex;
-	height: 150px;
+	min-height: 100px;
 	justify-content: center;
 	width: 100%;
 	font-size: 0.7em;

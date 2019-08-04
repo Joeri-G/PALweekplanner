@@ -1,9 +1,4 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-//function om error modals weer te geven
-function errorMessage(error) {
-  console.log(error);
-}
-
 function buildSelect(value) {
   mode = value;
   if (value != 'klas' && value != 'docent') {
@@ -45,7 +40,7 @@ function setTimetable(selected) {
         buildTimetable(data);
       }
       catch (e) {
-        setTimeout(function() {load(false);}, 500);
+        load(false);
         errorMessage(e);
       }
     }
@@ -76,7 +71,7 @@ function buildTimetable(data) {
          //functie om door dagen te loopen
          html += buildDay(data, dagen[i], listAvailable);
          //stop loading animatie
-         setTimeout(function() {load(false);}, 500);
+         load(false);
        }
        //haal de random text uit css rules uit de main
        main.style.display = 'grid';
@@ -87,7 +82,7 @@ function buildTimetable(data) {
      }
      catch (e) {
        //stop loading animatie
-       setTimeout(function() {load(false);}, 500);
+       load(false);
        errorMessage(e);
        listAvailable = {};
      }
@@ -148,10 +143,11 @@ function buildHour(data, dag, uur, listAvailable) {
     inside.lokaal1 = '<span>Lokaal1:</span><span>'+nu.lokaal[0]+'</span>\n';
     inside.lokaal2 = '<span>Lokaal2:</span><span>'+nu.lokaal[1]+'</span>\n';
 
+    inside.laptops = '<span>laptops:</span><span>'+nu.laptop+'</span>\n';
     inside.projectCode = '<span>ProjectCode:</span><span>'+nu.projectCode+'</span>\n';
     inside.note = '<span>Note:</span><span class="note">'+nu.note+'</span>\n';
 
-    html += '<button type="button" class="close" onclick="deleteHour(this.parentElement.dataset.hour)">&#10799;</button>\n<p>\n'+lestijden[uur]+'</p><div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour);">\n'+
+    html += '<button type="button" class="close" onclick="deleteHour(this.parentElement.dataset.hour)"><img src="/img/closeBlack.svg"></button>\n<p>\n'+lestijden[uur]+'</p><div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour);">\n'+
             inside.docent1+
             inside.docent2+
             inside.klas+
@@ -159,6 +155,7 @@ function buildHour(data, dag, uur, listAvailable) {
             // inside.klas2+
             inside.lokaal1+
             inside.lokaal2+
+            inside.laptops+
             inside.projectCode+
             inside.note+
             '</div>\n';
@@ -209,24 +206,6 @@ function buildHour(data, dag, uur, listAvailable) {
   return html;
 }
 
-function makeList(dagdeel, type, lable, listAvailable) {
-  //haal de data uit de lijst met beschikbare docenten, klassen, etc
-  let lijst = listAvailable[type][dagdeel];
-  let html = '<option selected disabled value="None">'+lable+'</option>\n';
-  html += '<option value="None">Geen</option>';
-  //voor klassen moeten we het anders doen
-  if (type == 'klas') {
-    for (var i = 0; i < lijst.length; i++) {
-      html += '<option value="klas'+i+'">'+lijst[i].jaar+lijst[i].niveau+lijst[i].nummer+'</option>\n';
-    }
-    return html;
-  }
-  for (var i = 0; i < lijst.length; i++) {
-    html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
-  }
-  return html;
-}
-
 function sendHour(name, dagdeel) {
   load(true);
   //we moeten nu de values van alle selections/input uit het parent element halen
@@ -266,7 +245,7 @@ function sendHour(name, dagdeel) {
   //laad list met alle docenten en klassen
   xhttp4.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      alert(this.responseText);
+      message(this.responseText);
       setTimetable(document.getElementsByName('displayModeFinal')[0].value);
       return null;
     }
@@ -274,56 +253,4 @@ function sendHour(name, dagdeel) {
   xhttp4.open("GET", url, true);
   xhttp4.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp4.send();
-}
-
-function deleteHour(data) {
-  load(true);
-  if(confirm('Wilt u deze afspraak verwijderen?')) {
-    let xhttp5= new XMLHttpRequest();
-    //laad list met alle docenten en klassen
-    xhttp5.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        alert(this.responseText);
-        setTimeout(function() {load(false);}, 500);
-        setTimeout(function() {
-          setTimetable(document.getElementsByName('displayModeFinal')[0].value);
-        }, 1000);
-      }
-    };
-    let id = JSON.parse(data).ID;
-    xhttp5.open("GET", "/api.php?delete=true&ID="+encodeURIComponent(id), true);
-    xhttp5.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-    xhttp5.send();
-  }
-}
-
-function enlargeHour(data) {
-  let json = JSON.parse(data);
-  let text = 'Docent1:\t\t'+json.docent[0];
-  text += '\nDocent2:\t\t'+json.docent[1];
-  text += '\n\nKlas:\t\t'+json.klas[0].jaar+json.klas[0].niveau+json.klas[0].nummer;
-  text += '\n\nLokaal1:\t\t'+json.lokaal[0];
-  text += '\nLokaal2:\t\t'+json.lokaal[0];
-  text += '\n\nProjectCode:\t'+json.projectCode;
-  text += '\nNote:\t\t'+json.note;
-  alert(text);
-}
-
-function load(mode) {
-  //get image
-  let img = document.getElementById('loading');
-  let loadingContent = document.getElementById('loadingContent');
-  //if show
-  if (mode) {
-    img.style.display = 'block';
-    loadingContent.setAttribute('class', 'fade-in');
-    //start loading animation
-  }
-  //else
-  else {
-    //fade out
-    loadingContent.setAttribute('class', 'fade-out');
-    //remove fadeout
-    setTimeout(function(){img.style.display = "none"; img.setAttribute('class', '');}, 200);
-  }
 }

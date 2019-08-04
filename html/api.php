@@ -56,4 +56,21 @@ if (isset($_GET['listAll']) && $_GET['listAll'] =='true') {
 if (isset($_GET['listAvailable']) && $_GET['listAvailable'] == 'true') {
   require('../php/listAvailable.php');
 }
+
+//listJaarlaag
+//maak een lijst net alle jaarlagen
+if (isset($_GET['listJaarlaag']) && $_GET['listJaarlaag'] == 'true') {
+  require('../php/listJaarlaag.php');
+}
+
+//read alle klassen in een jaarlaag
+if (isset($_GET['readJaarlaag']) && $_GET['readJaarlaag'] == 'true') {
+  require('../php/readJaarlaag.php');
+}
+
+//read alle klassem
+if (isset($_GET['readAll']) && $_GET['readAll'] == 'true') {
+  require('../php/readAll.php');
+}
+
  ?>

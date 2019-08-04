@@ -36,11 +36,11 @@ while ($stmt->fetch()) {
   //tijdelijk object
   $klas = new stdClass;
   //jaar
-  $klas->jaar = htmlentities($resJaar);
+  $klas->jaar = $resJaar;
   //niveau
   $klas->niveau = htmlentities($resNiveau);
   //nummer
-  $klas->nummer = htmlentities($resNummer);
+  $klas->nummer = $resNummer;
   //plaats in klassen
   $klassen[] = $klas;
 }

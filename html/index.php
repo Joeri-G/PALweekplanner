@@ -5,28 +5,6 @@ if (!isset($_SESSION['loggedin'])) {
   header("location: /login");
   die();
 }
-/*
-0 = klas/docent
-1 = full
-2 = jaarlaag
-*/
-$mode = 0;
-
-$modes = array('default', 'full', 'jaarlaag');
-
-if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)) {
-  $mode = array_search($_GET['mode'], $modes);
-}
-
-
-if (isset($_GET['full']) && $_GET['full'] == 'true') {
-  $mode = 1;
-}
-
-if (isset($_GET['jaarlaag']) && $_GET['jaarlaag'] == 'true') {
-  $mode = 2;
-}
-
  ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -37,15 +15,10 @@ if (isset($_GET['jaarlaag']) && $_GET['jaarlaag'] == 'true') {
     <link rel="shortcut icon" href="/img/logo.png">
     <!-- css -->
     <link rel="stylesheet" href="/css/master.css">
-<?php
-//css style sheets depend on mode
-if ($mode == 0):?>
     <link rel="stylesheet" href="/css/rooster.css">
-<?php elseif ($mode == 1):?>
+
     <link rel="stylesheet" href="/css/fullRooster.css">
-<?php elseif ($mode == 2): ?>
     <link rel="stylesheet" href="/css/jaarlaagRooster.css">
-<?php endif;?>
     <!-- title -->
     <title>Rooster</title>
     <!-- CDN -->
@@ -55,9 +28,9 @@ if ($mode == 0):?>
   <body>
     <nav>
       <img src="/img/logo.png" alt="Logo">
-      <a href="/?mode=default" target="_self" rel="noreferrer">Standaard Weergave</a>
-      <a href="/?mode=full" target="_self" rel="noreferrer">Volledige Weergave</a>
-      <a href="/?mode=jaarlaag" target="_self" rel="noreferrer">Jaarlaag Weergave</a>
+      <a href="/#" onclick="modeDefault()">Standaard Weergave</a>
+      <a href="/#" onclick="modeFull()">Volledige Weergave</a>
+      <a href="/#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
     <menu>
@@ -71,17 +44,16 @@ if ($mode == 0):?>
           </span>
         </div>
         <span>
-          <a href="/?mode=default" target="_self" rel="noreferrer">Standaard Weergave</a>
+          <a href="/#" onclick="modeDefault()">Standaard Weergave</a>
         </span>
         <span>
-          <a href="/?mode=full" target="_self" rel="noreferrer">Volledige Weergave</a>
+          <a href="/#" onclick="modeFull()">Volledige Weergave</a>
         </span>
         <span>
-          <a href="/?mode=jaarlaag" target="_self" rel="noreferrer">Jaarlaag Weergave</a>
+          <a href="/#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
         </span>
       </div>
     </menu>
-<?php if ($mode == 0): ?>
     <div class="select">
       <select name="displayMode" onchange="buildSelect(this.value);">
         <option value="klas" selected>Klassen</option>
@@ -91,17 +63,14 @@ if ($mode == 0):?>
       </select>
     </div>
     <main style="display:block">
-      <p style="font-size:1.5em;text-align:center">Selecteer een docent of klas met de dropdown</p>
     </main>
-<?php else: ?>
-    <main></main>
-<?php endif ?>
     <!-- Loading svg -->
     <div id="loading">
       <div id="loadingContent">
         <img src="/img/loading.svg" alt="Loading...">
       </div>
     </div>
+    <!-- Message modal -->
     <div id="messageModal">
       <div id="messageModalContent">
       </div>
@@ -112,32 +81,22 @@ if ($mode == 0):?>
         <p>
           Loading animation by <a href="http://samherbert.net/svg-loaders/" rel="noreferrer" target="_blank">Sam Herbert</a>
           <br>
-          Menu Icon based on <a href="https://www.flaticon.com/free-icon/menu-button-of-three-horizontal-lines_56763" rel="noreferrer" target="_blank">icon</a> by
-          <a href="https://www.flaticon.com/authors/freepik" rel="noreferrer" target="_blank">Freepik</a>
-          and edited by <a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">Joeri Geuzinge</a><br>
-          Licensed under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC 3.0 BY</a>
+          Menu and Close Icon based on <a href="https://www.flaticon.com/free-icon/menu-button-of-three-horizontal-lines_56763" rel="noreferrer" target="_blank">icon</a> by
+          <a href="https://www.flaticon.com/authors/freepik" rel="noreferrer" target="_blank">Freepik</a> and <a href="https://www.flaticon.com/authors/chanut" rel="noreferrer" target="_blank">Chanut</a>.
+          <br>Edited by <a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">Joeri Geuzinge</a>
+          and licensed under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC 3.0 BY</a>
         </p>
       </span>
     </footer>
-<?php if ($mode == 0): ?>
+    <script src="/js/master.js" charset="utf-8"></script>
+
     <script src="/js/roosterMaster.js" charset="utf-8"></script>
     <script src="/js/rooster.js" charset="utf-8"></script>
-<?php elseif ($mode == 1): ?>
+
     <script src="/js/roosterFullMaster.js" charset="utf-8"></script>
     <script src="/js/roosterFull.js" charset="utf-8"></script>
-<?php elseif ($mode == 2): ?>
+
     <script src="/js/roosterJaarlaagMaster.js" charset="utf-8"></script>
     <script src="/js/roosterJaarlaag.js" charset="utf-8"></script>
-<?php endif; ?>
-    <script type="text/javascript">
-      function menu(bool) {
-        if (bool) {
-          let menu = document.getElementsByTagName('menu')[0].style.display = 'block';
-        }
-        else if (!bool) {
-          let menu = document.getElementsByTagName('menu')[0].style.display = 'none';
-        }
-      }
-    </script>
   </body>
 </html>
