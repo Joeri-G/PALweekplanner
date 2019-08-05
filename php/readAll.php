@@ -1,4 +1,13 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om alle afspraken voor alle klassen te lezen
+  - select alle afspraken
+    * als het dagdeel nog niet bestaat in het out object voeg deze dan toe als array
+    * appen afspraak aan dagdeel array
+  - encode out object naar JSON
+  - output JSON
+*/
 $out = new stdClass;
 
 require('db-connect.php');

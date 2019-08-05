@@ -1,11 +1,18 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-//script om roosterdata in database te "inserten"
-//stap 1: check of alle benodigde data gegeven is (een of meer docenten, klassen, lokalen en een dagdeel)
-//stap 2: verwerk de data
-//        2.1 check of de lokalen, docenten en klassen bestaan
-//        2.2 check of de lokalen, docenten of klassen al bezet zijn
-//stap 3: push naar database
+/*
+script om roosterdata in database te "inserten"
+  - check of alle benodigde data gegeven is (een of meer docenten, klassen, lokalen en een dagdeel)
+  - verwerk de data
+    * check of de lokalen, docenten en klassen bestaan
+    * check of de lokalen, docenten of klassen al bezet zijn
+  - push naar database
+
+
+!important
+klas2 is uitgeschakeld omdat deze niet nodig was
+als klas2 weer nodig is kan deze vrij gemakkelijk aangezet worden door te uncommenten
+*/
 require("funcLib.php");
 
 //check of alle velder ingevuld zijn
@@ -13,10 +20,6 @@ require("funcLib.php");
 if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", /*"klas2jaar", "klas2niveau", "klas2nummer",*/ "docent1", "docent2", "laptops"])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
-
-//http://localhost/api.php?insert=true&daypart=MA1&lokaal1=101&lokaal2=101&klas1jaar=1&klas1niveau=v&klas1nummer=3&klas2jaar=2&klas2niveau=h&klas2nummer=1&docent1=None&docent2=BEG&laptops=4&note=meh
-
-
 $daypart = $_GET["daypart"];
 
 $docent1 = $_GET["docent1"];

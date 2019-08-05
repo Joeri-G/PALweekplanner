@@ -1,5 +1,8 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om te verbinden met een MySQL database via mysqli
+*/
 $servername = "localhost";
 $username = "root";
 $password = "";

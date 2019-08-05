@@ -1,4 +1,13 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om alle jaarlagden te listen
+  - SQL query naar database om alle jaar - niveau combinaties te selecteren die nog niet geselecteerd zijn
+    * voeg toe aan object
+    * voeg object toe aan out object
+  - encode output object naar JSON
+  - ouput JSON
+*/
 //list alle jaarlagen
 $out = array();
 require('db-connect.php');

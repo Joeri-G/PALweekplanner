@@ -1,5 +1,14 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om afspraken van een klas te lezen
+erg vergelijkbaar met readDocent
+  - check of inputs gezet zijn (jaar, niveau, nummer)
+  - doe SQL query en select alle afspraken waar jaar, niveau en nummer matchen
+    * voeg afspraak toe aan dagdeel object
+  - encode out object naar JSON
+  - output JSON
+*/
 require('funcLib.php');
 if (!_GETIsset(['jaar', 'niveau', 'nummer'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
@@ -40,15 +49,10 @@ $stmt = $conn->prepare('SELECT
     )*/
   ');
 $stmt->bind_param(/*'isiisi'*/'isi', $klasJaar, $klasNiveau, $klasNummer/*, $klasJaar, $klasNiveau, $klasNummer*/);
-
-
 //execute query
 $stmt->execute();
-
-
 $stmt->store_result();
 //res voor result
-
 //maak leeg object
 $data = new stdClass;
 
@@ -100,7 +104,6 @@ $conn->close();
 
 //zet header
 header('Content-Type: application/json');
-
 //als als input ?format is gezet doe dan prettyp print
 //we doen dit niet meteen omdat het het bestand aanzienlijk groter maakt
 if (isset($_GET['format']) && $_GET['format'] == 'true') {

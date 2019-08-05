@@ -1,4 +1,22 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om een lijst te maken met alle klassen en docenten
+  - klas
+    * jaar
+    * niveau
+    * nummer
+  - docent
+    * username
+    * availability
+
+  - laad alle docenten met SQL query DISTICT staat voor geen duplicates
+    * plaats in object
+  - laad alle klassen op dezelfde manier
+    * plaats in object
+
+  - encode object naar JSON en stuur
+*/
 //library
 require('funcLib.php');
 

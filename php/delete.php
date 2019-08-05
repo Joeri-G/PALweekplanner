@@ -2,7 +2,12 @@
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
 de delete function verwijdert niet definitief rooster entries, hij verplaatst ze naar een nieuwe table, planner.deleted
-op deze manier is het gemakkelijk voor de sysadmins om fouten terug te zetten en kan een gebruiker die alles verweiderd makkelijk geidentificeerdd worden
+op deze manier is het gemakkelijk voor de sysadmins om fouten terug te zetten en kan een gebruiker die alles verwijdert makkelijk geidentificeerdd worden
+
+  - check voor input
+  - laad alle data van die afspraak
+  - input alle data in de deleted database
+  - delete de afspraak uit de 'week' database
 */
 require('funcLib.php');
 if (!_GETIsset(['ID'])) {

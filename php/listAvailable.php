@@ -1,90 +1,19 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
 we willen een lijst van alles wat vrij is op een gegeven tijdstip
-hiervoor moeten we JOINS gebruiken in SQL om tussen tables te vergelijken
-
-de SQL gaat op iets dergelijks lijken
-voor docent
-SELECT
-  username
-FROM
-  users
-WHERE
-  role = 'docent'
-  AND username NOT IN (
-    SELECT
-      docent1
-    FROM
-      week
-    WHERE
-      daypart = 'MA2'
-  )
-  AND username NOT IN (
-    SELECT
-      docent2
-    FROM
-      week
-    WHERE
-      daypart = 'MA2'
-  );
-
-
-voor klassen
-SELECT
-  jaar,
-  niveau,
-  nummer
-FROM
-  klassen
-WHERE
-  jaar NOT IN (
-    SELECT
-      klas1jaar
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  )
-  AND jaar NOT IN (
-    SELECT
-      klas2jaar
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  )
-  AND jaar NOT IN (
-    SELECT
-      klas2niveau
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  )
-  AND jaar NOT IN (
-    SELECT
-      klas2niveau
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  )
-  AND nummer NOT IN (
-    SELECT
-      klas2nummer
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  )
-  AND nummer NOT IN (
-    SELECT
-      klas2nummer
-    FROM
-      week
-    WHERE
-      daypart = 'DI1'
-  );
+  - maak een list met alle dagdelen
+  - maak een list met alle klassen
+  - maak een list met alle klassen die bezet zijn
+  - loop door dagdelen
+    * query alle docenten die niet bezet zijn op het huidige dagdeel
+      + als de ook beschikbaar zijn, voeg ze toe aan het Available object onder het correcte dagdeel
+    * query alle klassen die op dat dagdeel reregistreerd zijn
+      + loop door de list met klassen
+        ~ als de klas niet voor komt in de list met bezette klassen onder het huidige uur ($klassenBezet->[dagdeel]->[klasObject]) voeg klas dan toe aan output
+    * query alle lokalen die niet bezet zijn op het huidige dagdeel
+  - encode object naar JSON
+  - output JSON
 */
 require('funcLib.php');
 //maak object voor output

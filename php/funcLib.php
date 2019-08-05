@@ -1,10 +1,28 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script met functies die in verschilldende sripts gebruikt worden
+
+  - _GETIsset()
+    * functie om efficient te checken of alle inputs gezet zijn
+  - isOverlap()
+    * functie om te checken of er overlap is tussen twee arrays
+  - isOverlapKlas()
+    * isOverlap() maar dan aangepast voor klasssen
+  - notNone()
+    * functie om te checken of de value van de input None is, of een soort gelijke value
+  - notNoneKlas()
+    * notNone() maar dan aangepast voor klassen
+  - checkKlas()
+    * functie om te checken of alle nodige values van een klas object gezet zijn ($klas->jaar, $klas->niveau, $klas->nummer)
+  - daypartCheck()
+    * functie om te checken of het opgegeven dagdeel wel valid is vergeleken met de config files
+*/
 //function om snel te checken of alle inputs gezet zijn
-function _GETIsset($input = null) {
+function _GETIsset($input = array()) {
   //loop door array
   for ($i=0; $i < count($input); $i++) {
-    //if de key net gezet is return false
+    //als de key niet gezet is return false
     if (!isset($_GET[$input[$i]])) {
       return false;
     }
@@ -13,7 +31,7 @@ function _GETIsset($input = null) {
 }
 
 //functie om te checken of er overlap is tussen twee arrays
-function isOverlap($arr1 = null, $arr2 = null) {
+function isOverlap($arr1 = array(), $arr2 = array()) {
   //loop door eerste array
   for ($i=0; $i < count($arr1); $i++) {
     //loop door tweede array
@@ -31,7 +49,7 @@ function isOverlap($arr1 = null, $arr2 = null) {
 //functie om voor overlap te kiezen maar dan speciaal voor klassen
 //dit is omdat de klassen een object zijn in plaats van een string
 //vrijwel identiek aan isOverlap()
-function isOverlapKlas($arr1 = null, $arr2 = null) {
+function isOverlapKlas($arr1 = array(), $arr2 = array()) {
   //loop door eerste array
   for ($i=0; $i < count($arr1); $i++) {
     //loop door tweede array
@@ -61,7 +79,7 @@ function notNone($in = null) {
 
 
 //notNone maar dan voor klas
-function notNoneKlas($in) {
+function notNoneKlas($in = null) {
   if (notNone($in->jaar) && notNone($in->niveau) && notNone($in->nummer)) {
     return true;
   }
@@ -69,7 +87,7 @@ function notNoneKlas($in) {
 }
 
 //check of op zijn minst een van de entries in een array niet None is en of dit array dus een mogelijke input voor het rooster is
-function isPossible($input = null) {
+function isPossible($input = array()) {
   //loop door het array
   for ($i=0; $i < count($input); $i++) {
     //als de input niet None is return dan true
@@ -81,7 +99,7 @@ function isPossible($input = null) {
 }
 
 //zelfde als isPossible() maar dan voor klas omdat dit een object is in plaats van een string
-function isPossibleKlas($input = null) {
+function isPossibleKlas($input = array()) {
   for ($i=0; $i < count($input); $i++) {
     if (notNone($input[$i]->jaar) && notNone($input[$i]->niveau) && notNone($input[$i]->nummer)) {
       return true;
@@ -91,7 +109,7 @@ function isPossibleKlas($input = null) {
 }
 
 //alle drie de waardes voor een klas moeten gezet zijn anders worden deze naar None / 0 gezet
-function checkKlas($in = null) {
+function checkKlas($in = array()) {
   //maak leeg object voor output
   //loop door input array
   for ($i=0; $i < count($in); $i++) {

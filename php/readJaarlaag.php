@@ -1,4 +1,15 @@
 <?php
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om alle afspraken van een jaarlaag in te lezen
+erg vergelijkbaar met readAll maar deze neemt twee inputs, jaar en niveau
+  - check of de inputs gezet zijn (jaar, niveau)
+  - SQL query om alle afspraken te selecteren waar klas1 of klas2 gelijk is met de inputs
+    * als dagdeel nog niet gezet is voeg dit array toe aan out object
+      + voeg afspraak toe aan dagdeel
+  - encode out object naar JSON
+  - output JSON
+*/
 require('funcLib.php');
 if (!_GETIsset(['jaar', 'niveau'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
@@ -21,10 +32,10 @@ $stmt = $conn->prepare('SELECT
   notes,
   ID
   FROM week
-  WHERE klas1jaar = ?
-  AND klas1niveau = ?'
+  WHERE (klas1jaar = ?
+  AND klas1niveau = ?)/* OR (klas2jaar=? AND klas2niveau = ?)*/'
 );
-$stmt->bind_param('ss', $jaar, $niveau);
+$stmt->bind_param('ssss', $jaar, $niveau, $jaar, $niveau);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resDaypart, $resKlas1Nummer, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);

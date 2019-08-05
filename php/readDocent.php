@@ -1,5 +1,15 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+script om afspraken van docent te lezen
+  - check of input gezet is
+    * input is docent variabele
+  - maak SQL query om alle afspraken te selecteren waar docent1 of docent2 gelijk is aan de opgegeven docent
+    * voeg result toe aan out object onder dagdeel ($out->[dagdeel]->[results])
+  - encode out object naar JSON
+  - output JSON
+
+*/
 require('funcLib.php');
 if (!_GETIsset(['docent'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
@@ -27,14 +37,10 @@ $stmt = $conn->prepare('SELECT
   OR docent2 = ?');
 //bind params
 $stmt->bind_param('ss', $_GET['docent'], $_GET['docent']);
-
 //execute query
 $stmt->execute();
-
-
 $stmt->store_result();
 //res voor result
-
 //maak leeg object
 $data = new stdClass;
 
@@ -66,7 +72,6 @@ while($stmt->fetch()) {
   $klas1->jaar = $resKlas1jaar;
   $klas1->niveau = $resKlas1niveau;
   $klas1->nummer = $resKlas1nummer;
-
   // $klas2->jaar = $resKlas2jaar;
   // $klas2->niveau = $resKlas2niveau;
   // $klas2->nummer = $resKlas2nummer;
