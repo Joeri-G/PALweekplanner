@@ -39,7 +39,7 @@ main {
 	font-size: 1.5em;
 }
 
-button.close {
+button.SVGbutton {
 	background: inherit;
 	border: #000 solid 1px;
 	border-radius: 0;

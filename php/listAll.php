@@ -9,7 +9,7 @@ $klassen = array();
 //MySQL connection
 require('db-connect.php');
 //lees alle docenten
-$stmt = $conn->prepare('SELECT username, userAvailability FROM users WHERE role=\'docent\'');
+$stmt = $conn->prepare('SELECT DISTINCT username, userAvailability FROM users WHERE role=\'docent\'');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resUsername, $resUserAvailability);
@@ -28,7 +28,7 @@ $stmt->close();
 $out->docent = $docenten;
 
 
-$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen');
+$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau, nummer FROM klassen');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau, $resNummer);

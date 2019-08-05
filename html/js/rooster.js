@@ -9,8 +9,12 @@ function modeDefault() {
 
   //zorg dat er geen css rules meer in main zitten
   main.className = '';
+  //zorg dat de css styling weer de default wordt
+  main.style.display = 'block';
   //zorg dat de oude html weg is
   main.innerHTML = '<p style="font-size:1.5em;text-align:center">Selecteer een docent of klas met de dropdown</p>';
+  //zet de footer weer beneden
+  document.getElementsByTagName('footer')[0].style.position = 'absolute';
   //bouw selection dropdown
   document.getElementsByName('displayMode')[0].innerHTML = '<option value="klas" selected>Klassen</option><option value="docent">Docenten</option>';
 

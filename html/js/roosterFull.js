@@ -1,9 +1,8 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 function modeFull() {
-  //voeg full class toe
   //start laad animatie
   load(true);
-  //voeg de css class toe aan main
+  //voeg full class toe
   main.className = 'full';
   let allData;
   //xhhtp2 omdat we niet het oude object willen overwriten
@@ -13,7 +12,7 @@ function modeFull() {
     if (this.readyState == 4 && this.status == 200) {
       try {
         let allData = JSON.parse(this.responseText);
-        x(allData);
+        tmpFunc(allData);
       }
       catch (e) {
         //stop loading animatie
@@ -28,7 +27,7 @@ function modeFull() {
   xhttp.send();
 
 //temp fix
-function x(allData) {
+function tmpFunc(allData) {
   //laad alle klassen en docenten
   let list = {docent: [], klas: []};
   let xhttp2 = new XMLHttpRequest();
@@ -38,6 +37,8 @@ function x(allData) {
       try {
         list = JSON.parse(this.responseText);
         //nu we de docent/klassen data hebben kunnen we de lijst maken
+        //zet footer naar normale css
+        document.getElementsByTagName('footer')[0].style.position = 'relative';
         buildFull(allData, list);
         load(false);
         //stop loading animatie

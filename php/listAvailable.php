@@ -108,7 +108,7 @@ require('db-connect.php');
 //<TMP FIX>
 $klassenAll = array();
 //list alle vrije klassen per dagdeel
-$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen;');
+$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau, nummer FROM klassen;');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau, $resNummer);
@@ -125,7 +125,7 @@ $stmt->close();
 $klas1 = new stdClass;
 // $klas2 = new stdClass;
 $klassenBezet = new stdClass;
-$stmt = $conn->prepare('SELECT
+$stmt = $conn->prepare('SELECT DISTINCT
   klas1jaar,
   klas1niveau,
   klas1nummer,
@@ -161,7 +161,7 @@ while ($stmt->fetch()) {
 for ($x=0; $x < count($dagdelen); $x++) {
   $dagdeelTMP = $dagdelen[$x];
   //list alle vrije docenten per dagdeel
-  $stmt = $conn->prepare("SELECT
+  $stmt = $conn->prepare("SELECT DISTINCT
   username, userAvailability
 FROM
   users
@@ -215,7 +215,7 @@ WHERE
 
 
   //list alle vrije lokalen per dagdeel
-  $stmt = $conn->prepare('SELECT
+  $stmt = $conn->prepare('SELECT DISTINCT
   lokaal
 FROM
   lokalen

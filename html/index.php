@@ -44,13 +44,13 @@ if (!isset($_SESSION['loggedin'])) {
           </span>
         </div>
         <span>
-          <a href="/#" onclick="modeDefault()">Standaard Weergave</a>
+          <a href="/#" onclick="menu(false);modeDefault()">Standaard Weergave</a>
         </span>
         <span>
-          <a href="/#" onclick="modeFull()">Volledige Weergave</a>
+          <a href="/#" onclick="menu(false);modeFull()">Volledige Weergave</a>
         </span>
         <span>
-          <a href="/#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+          <a href="/#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a>
         </span>
       </div>
     </menu>
@@ -81,7 +81,7 @@ if (!isset($_SESSION['loggedin'])) {
         <p>
           Loading animation by <a href="http://samherbert.net/svg-loaders/" rel="noreferrer" target="_blank">Sam Herbert</a>
           <br>
-          Menu and Close Icon based on <a href="https://www.flaticon.com/free-icon/menu-button-of-three-horizontal-lines_56763" rel="noreferrer" target="_blank">icon</a> by
+          Menu, save and Close icons based on icons by
           <a href="https://www.flaticon.com/authors/freepik" rel="noreferrer" target="_blank">Freepik</a> and <a href="https://www.flaticon.com/authors/chanut" rel="noreferrer" target="_blank">Chanut</a>.
           <br>Edited by <a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">Joeri Geuzinge</a>
           and licensed under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC 3.0 BY</a>

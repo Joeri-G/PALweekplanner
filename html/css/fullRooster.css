@@ -1,7 +1,7 @@
 /* CSS door Joeri Geuzinge, minified door CSSPortal */
 main.full {
 	margin: auto;
-	margin: 48px;
+	margin: 32px;
   border: 1px #888 solid;
   overflow: auto;
 	max-width: none;
@@ -30,13 +30,14 @@ main.full {
 }
 
 
-.full th:first-of-type {
+.full th:first-of-type, td:first-of-type {
+	font-weight: bold;
 	min-width: auto;
 	padding: 0px 16px;
 }
 
 .full td {
-	width: 50px;
+	min-width: 128px;
 	text-align: center;
 }
 
@@ -47,16 +48,17 @@ main.full {
 .full .tijd {
 	font-size: 1.5em;
 }
+
 .full input, .full select {
-	max-width: 75px;
+	max-width: 100px;
 }
 
 .full img {
-	height: 1.5em;
+	height: 1.5rem;
 	cursor: pointer;
 }
 
-.full .close {
+.full .SVGbutton {
 	background: inherit;
 	border: none;
 	float: none;

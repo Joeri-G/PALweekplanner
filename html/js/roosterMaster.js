@@ -147,7 +147,7 @@ function buildHour(data, dag, uur, listAvailable) {
     inside.projectCode = '<span>ProjectCode:</span><span>'+nu.projectCode+'</span>\n';
     inside.note = '<span>Note:</span><span class="note">'+nu.note+'</span>\n';
 
-    html += '<button type="button" class="close" onclick="deleteHour(this.parentElement.dataset.hour)"><img src="/img/closeBlack.svg"></button>\n<p>\n'+lestijden[uur]+'</p><div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour);">\n'+
+    html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour)"><img src="/img/closeBlack.svg"></button>\n<p>\n'+lestijden[uur]+'</p><div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour);">\n'+
             inside.docent1+
             inside.docent2+
             inside.klas+
@@ -204,53 +204,4 @@ function buildHour(data, dag, uur, listAvailable) {
     html += '<div class="pause"></div>';
   }
   return html;
-}
-
-function sendHour(name, dagdeel) {
-  load(true);
-  //we moeten nu de values van alle selections/input uit het parent element halen
-  let inputs = ['docent1', 'docent2', 'klas1',/* 'klas2',*/ 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
-  let url = '/api.php?insert=true&daypart='+dagdeel;
-  let value;
-  let klassen = 0;
-  for (var i = 0; i < inputs.length; i++) {
-    value = document.getElementsByName(name+inputs[i])[0].value;
-    console.log(name+inputs[i]);
-    console.log(value);
-    //als het veld leeg is maak er dan None van
-    if (value == '') { value = "None"};
-    //als de value een klas is moeten we wat meer doen om het jaar, niveau en nummer er uit te krijgen
-    if (inputs[i].substring(0,4) == 'klas' ) {
-      klassen++;
-      if (value !=='None') {
-        let pos = Number(value.substring(4, 5));
-        let json = JSON.parse(document.getElementsByName(name+inputs[i])[0].dataset.klas);
-        url += '&klas'+klassen+'jaar='+json.data[pos].jaar;
-        url += '&klas'+klassen+'niveau='+json.data[pos].niveau;
-        url += '&klas'+klassen+'nummer='+json.data[pos].nummer;
-      }
-      else {
-        url += '&klas'+klassen+'jaar=None';
-        url += '&klas'+klassen+'niveau=None';
-        url += '&klas'+klassen+'nummer=None';
-      }
-    }
-    else {
-      //voeg de key en value toe aan de url
-      url += '&'+encodeURIComponent(inputs[i])+'='+encodeURIComponent(value);
-    }
-  }
-  console.log(url);
-  let xhttp4= new XMLHttpRequest();
-  //laad list met alle docenten en klassen
-  xhttp4.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      message(this.responseText);
-      setTimetable(document.getElementsByName('displayModeFinal')[0].value);
-      return null;
-    }
-  };
-  xhttp4.open("GET", url, true);
-  xhttp4.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-  xhttp4.send();
 }

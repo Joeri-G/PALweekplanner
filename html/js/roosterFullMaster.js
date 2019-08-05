@@ -15,7 +15,7 @@ function buildFull(data, list) {
        //maak header titles voor ieder lesuur
        html += '<tr><th>Klas</th>';
        //maak subheader met informatie over wat iedere column is
-       let subHeader = '<tr><th>Info</th>';
+       let subHeader = '<tr><td>Info</td>';
        for (var i = 0; i < dagen.length; i++) {
          for (var x = 0; x < uren; x++) {
            //voeg een table header toe met het dagdeel en te rooster tijden
@@ -34,7 +34,7 @@ function buildFull(data, list) {
        for (var i = 0; i < list.klas.length; i++) {
          html += '<tr>\n';
          //klas titel
-         html += '<th>' + list.klas[i].jaar + list.klas[i].niveau + list.klas[i].nummer + '</th>\n';
+         html += '<td>' + list.klas[i].jaar + list.klas[i].niveau + list.klas[i].nummer + '</td>\n';
          //voeg table content voor klas toe
          html += buildKlas(list.klas[i], data, listAvailable);
 
@@ -42,6 +42,8 @@ function buildFull(data, list) {
        }
        html += '</table>';
        main.innerHTML = html;
+       //sort table
+       sortTable();
      }
      catch (e) {
        //stop loading animatie
@@ -82,7 +84,7 @@ function buildKlas(klas, data, listAvailable) {
         }
       }
       if (!komtVoor) {
-        html += buildInput(listAvailable);
+        html += buildInput(listAvailable, dagdeel, klas);
       }
     }
   }
@@ -91,7 +93,6 @@ function buildKlas(klas, data, listAvailable) {
 
 function buildAfspraak(data) {
   let html = '';
-
   //voeg content toe
   html += '<td>'+data.docent[0]+'</td>\n';
   html += '<td>'+data.docent[1]+'</td>\n';
@@ -105,26 +106,65 @@ function buildAfspraak(data) {
   }
   html += '<td>'+data.note+'</td>\n';
   html += '<td data-hour=\'' + JSON.stringify(data) + '\'>';
-  html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)">\n';
-  html += '<button type="button" class="close" onclick="deleteHour(this.parentElement.dataset.hour, 1)"><img src="/img/closeBlack.svg"></button>';
+  html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge">\n';
+  html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)"><img src="/img/closeBlack.svg" alt="Close"></button>';
   html += '</td>';
-
 
   return html;
 }
 
-function buildInput(listAvailable) {
+function buildInput(listAvailable, dagdeel, klas) {
+  let klasTitle = klas.jaar + klas.niveau + klas.nummer;
   let html = '';
-
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-  html += '<td><select>'+makeList('MA0', 'lokaal', 'test', listAvailable)+'</select></td>';
-
+  html += '<td><select name="'+dagdeel+klasTitle+'docent1">'+makeList(dagdeel, 'docent', 'Docent1', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'docent2">'+makeList(dagdeel, 'docent', 'Docent2', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'lokaal1">'+makeList(dagdeel, 'lokaal', 'Lokaal1', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'lokaal2">'+makeList(dagdeel, 'lokaal', 'Lokaal2', listAvailable)+'</select></td>\n';
+  html += '<td><input type="number" name="'+dagdeel+klasTitle+'laptops" placeholder="Laptops"></td>';
+  html += '<td><input type="text" name="'+dagdeel+klasTitle+'projectCode" placeholder="ProjectCode"></td>';
+  html += '<td><input type="text" name="'+dagdeel+klasTitle+'note" placeholder="Note"></td>';
+  //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
+  html += '<td>';
+  html += '<input type="hidden" name="'+dagdeel+klasTitle+'klas1" value="klas0" data-klas=\'{"data":['+JSON.stringify(klas)+']}\'>';
+  html += '<button type="button" class="SVGbutton" onclick="sendHour(\'' + dagdeel+klasTitle + '\', \'' + dagdeel + '\', 1)"><img src="/img/save.svg" alt="Save"></button>';
+  html += '</td>';
 
   return html;
+}
+
+//function om de table te sorten
+function sortTable() {
+  let table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementsByTagName("table")[0];
+  switching = true;
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      // Check if the two rows should switch place:
+      // als de row met INFO begint switch dan niet
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() && x.innerHTML != 'Info') {
+        // If so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
 }
