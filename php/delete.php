@@ -87,8 +87,9 @@ $stmt = $conn->prepare('INSERT INTO deleted (
   IP
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?/*, ?, ?, ?*/)');
 echo "$conn->error";
-$stmt->bind_param(//'ssisiisissiisssss',
-  'ssisisssssssss',
+$stmt->bind_param(
+  //"sssssssssssssssss",
+  "ssssssssssssss",
   $resDaypart,
   $resDocent1,
   $resDocent2,

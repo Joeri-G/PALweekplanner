@@ -43,6 +43,7 @@ function load(mode) {
   let loadingContent = document.getElementById('loadingContent');
   //if show
   if (mode) {
+    loadingContent.innerHTML = '<img src="/img/loading.svg" alt="Loading...">';
     img.style.display = 'block';
     loadingContent.setAttribute('class', 'fade-in');
     //start loading animation
@@ -53,7 +54,10 @@ function load(mode) {
       //fade out
       loadingContent.setAttribute('class', 'fade-out');
       //remove fadeout
-      setTimeout(function(){img.style.display = "none"; img.setAttribute('class', '');}, 200);
+      setTimeout(function(){
+        img.style.display = "none"; img.setAttribute('class', '');
+        loadingContent.innerHTML = '';
+      }, 200);
     }, 500);
   }
 }
@@ -105,9 +109,9 @@ function enlargeHour(data) {
 function deleteHour(data, mode = 0) {
   load(true);
   if(confirm('Wilt u deze afspraak verwijderen?')) {
-    let xhttp5= new XMLHttpRequest();
+    let xhttp= new XMLHttpRequest();
     //laad list met alle docenten en klassen
-    xhttp5.onreadystatechange = function() {
+    xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         message(this.responseText);
         load(false);
@@ -122,9 +126,9 @@ function deleteHour(data, mode = 0) {
       }
     };
     let id = JSON.parse(data).ID;
-    xhttp5.open("GET", "/api.php?delete=true&ID="+encodeURIComponent(id), true);
-    xhttp5.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-    xhttp5.send();
+    xhttp.open("GET", "/api.php?delete=true&ID="+encodeURIComponent(id), true);
+    xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+    xhttp.send();
   }
   else {
     setTimeout(function() {load(false);}, 200);

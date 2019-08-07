@@ -27,6 +27,7 @@ if (!isset($_SESSION['loggedin'])) {
       <a href="#" onclick="modeDefault()">Standaard Weergave</a>
       <a href="#" onclick="modeGrid()">Volledige Weergave</a>
       <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+      <a href="/logout">Logout</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
     <!-- Hamburger Menu -->
@@ -36,9 +37,10 @@ if (!isset($_SESSION['loggedin'])) {
           <span><a href="#" class="icon"><img src="/img/logo.svg" alt="Logo"></a></span>
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
-        <span><a href="/#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
-        <span><a href="/#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
-        <span><a href="/#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
+        <span><a href="#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
+        <span><a href="#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
+        <span><a href="#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
+        <span><a href="/logout">Logout</a></span>
       </div>
     </menu>
     <!-- Noscript tags voor als een oma een keer met Internet Explorer 6 de pagina probeert te laden -->
@@ -49,17 +51,13 @@ if (!isset($_SESSION['loggedin'])) {
     <main style="display:block"></main>
     <!-- Loading svg -->
     <div id="loading">
-      <div id="loadingContent">
-        <img src="/img/loading.svg" alt="Loading...">
-      </div>
+      <div id="loadingContent"></div>
     </div>
     <!-- Message modal -->
     <div id="messageModal">
-      <div id="messageModalContent">
-      </div>
+      <div id="messageModalContent"></div>
     </div>
     <!-- Footer -->
-    <!-- <footer style="position:absolute"> -->
     <footer>
       <!-- Credits -->
       <span>

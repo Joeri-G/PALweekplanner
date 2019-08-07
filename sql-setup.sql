@@ -34,7 +34,7 @@ planner -> week
 SQL:
 */
 CREATE TABLE `week` (
-  `daypart` varchar(4) NOT NULL COMMENT 'day and part of day',
+  `daypart` varchar(16) NOT NULL COMMENT 'day and part of day',
   `docent1` varchar(16) NOT NULL,
   `docent2` varchar(16) NOT NULL,
   `klas1jaar` int(4) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE `week` (
   `klas2nummer` int(4) NOT NULL,*/
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
-  `laptops` varchar(32) NOT NULL COMMENT 'laptops',
+  `laptops` varchar(4) NOT NULL COMMENT 'laptops',
   `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
   `notes` varchar(128) NOT NULL COMMENT 'notes',
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
@@ -72,7 +72,7 @@ SQL:
 */
 CREATE TABLE `users` (
   `username` varchar(64) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `password` varchar(256) NOT NULL,
   `role` varchar(16) NOT NULL,
   `userLVL` int(1) NOT NULL,
   `userAvailability` varchar(64) NOT NULL,
@@ -95,9 +95,9 @@ planner -> klassen
 SQL:
 */
 CREATE TABLE `klassen` (
-  `jaar` int(4) NOT NULL,
+  `jaar` varchar(16) NOT NULL,
   `niveau` varchar(16) NOT NULL,
-  `nummer` int(4) NOT NULL,
+  `nummer` varchar(16) NOT NULL,
   `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -133,15 +133,15 @@ planner -> deleted
 Hier komen alle entries die verwijderd worden uit de table week
 */
 CREATE TABLE `deleted` (
-  `daypart` varchar(4) NOT NULL,
+  `daypart` varchar(16) NOT NULL,
   `docent1` varchar(16) NOT NULL,
   `docent2` varchar(16) NOT NULL,
-  `klas1jaar` int(4) NOT NULL,
+  `klas1jaar` varchar(16) NOT NULL,
   `klas1niveau` varchar(16) NOT NULL,
-  `klas1nummer` int(4) NOT NULL,
-  /*`klas2jaar` int(4) NOT NULL,
+  `klas1nummer` varchar(16) NOT NULL,
+  /*`klas2jaar` varchar(16) NOT NULL,
   `klas2niveau` varchar(16) NOT NULL,
-  `klas2nummer` int(4) NOT NULL,*/
+  `klas2nummer` varchar(16) NOT NULL,*/
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
   `laptops` varchar(32) NOT NULL,

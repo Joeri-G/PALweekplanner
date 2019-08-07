@@ -237,8 +237,8 @@ VALUES
 //s voor string en i voor integer
 echo "$conn->error";
 $stmt->bind_param(
-  //"sssisiisisssssss",
-  "sssisiisissss",
+  //"ssssssssssssssss",
+  "sssssssssssss",
   $daypart,
   $docent1,
   $docent2,
