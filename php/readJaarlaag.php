@@ -35,7 +35,7 @@ $stmt = $conn->prepare('SELECT
   WHERE (klas1jaar = ?
   AND klas1niveau = ?)/* OR (klas2jaar=? AND klas2niveau = ?)*/'
 );
-$stmt->bind_param('ssss', $jaar, $niveau, $jaar, $niveau);
+$stmt->bind_param(/*'ssss'*/ 'ss', $jaar, $niveau/*, $jaar, $niveau*/);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resDaypart, $resKlas1Nummer, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);

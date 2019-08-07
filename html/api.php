@@ -35,7 +35,7 @@ if (isset($_GET['delete']) && $_GET['delete'] == 'true') {
 }
 
 //als er om de config gevraagd wordt haal deze dan op en verstuur alleen de dagen en uren
-if (isset($_GET['loadconfig']) && $_GET['loadconfig'] == 'true') {
+if (isset($_GET['loadConfig']) && $_GET['loadConfig'] == 'true') {
   header('Content-Type: application/json');
   $data = file_get_contents('../conf/conf.json');
   $conf = json_decode($data);

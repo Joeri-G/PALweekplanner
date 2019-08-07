@@ -1,7 +1,7 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 //GLOBALS
-let conf, dagen, uren, lestijden;
-let main = document.getElementsByTagName('main')[0];
+// let main = document.getElementsByTagName('main')[0];
+// let select = document.getElementsByClassName('select')[0];
 
 //function voor menu buttons
 function menu(bool) {
@@ -92,27 +92,27 @@ function escapeHTML(input) {
  }
 
 
-//js voor config
-//laad config file
-let xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-   try {
-    config = JSON.parse(this.responseText);
-    uren = config.uren;
-    dagen = config.dagen;
-    lestijden = config.lestijden;
-   }
-   catch (e) {
-     errorMessage(e);
-     uren = 0;
-     dagen = [];
-   }
-  }
-};
-xhttp.open("GET", "/api.php?loadconfig=true", true);
-xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-xhttp.send();
+// //js voor config
+// //laad config file
+// let xhttp = new XMLHttpRequest();
+// xhttp.onreadystatechange = function() {
+//   if (this.readyState == 4 && this.status == 200) {
+//    try {
+//     config = JSON.parse(this.responseText);
+//     uren = config.uren;
+//     dagen = config.dagen;
+//     lestijden = config.lestijden;
+//    }
+//    catch (e) {
+//      errorMessage(e);
+//      uren = 0;
+//      dagen = [];
+//    }
+//   }
+// };
+// xhttp.open("GET", "/api.php?loadConfig=true", true);
+// xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+// xhttp.send();
 
 function enlargeHour(data) {
   let json = JSON.parse(data);
@@ -137,7 +137,7 @@ function deleteHour(data, mode = 0) {
         load(false);
         setTimeout(function() {
           if (mode == 0) {
-            setTimetable(document.getElementsByName('displayModeFinal')[0].value);
+            setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
           }
           else if (mode == 1) {
             modeFull();
@@ -212,7 +212,7 @@ function sendHour(name, dagdeel, mode = 0) {
       message(this.responseText);
       setTimeout(function() {
         if (mode == 0) {
-          setTimetable(document.getElementsByName('displayModeFinal')[0].value);
+          setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
         }
         else if (mode == 1) {
           modeFull();

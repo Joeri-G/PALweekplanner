@@ -11,59 +11,42 @@ if (!isset($_SESSION['loggedin'])) {
 <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
-    <!-- icon -->
-    <link rel="shortcut icon" href="/img/logo.png">
-    <!-- css -->
-    <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" href="/css/rooster.css">
-
-    <link rel="stylesheet" href="/css/fullRooster.css">
-    <link rel="stylesheet" href="/css/jaarlaagRooster.css">
     <!-- title -->
     <title>Rooster</title>
-    <!-- CDN -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <!-- icon -->
+    <link rel="shortcut icon" href="/img/logo.svg">
+    <!-- css -->
+    <link rel="stylesheet" href="/css/master.css">
+    <link rel="stylesheet" href="/css/gridRooster.css">
+    <link rel="stylesheet" href="/css/weekRooster.css">
   </head>
   <body>
+    <!-- Navbar -->
     <nav>
-      <img src="/img/logo.png" alt="Logo">
-      <a href="/#" onclick="modeDefault()">Standaard Weergave</a>
-      <a href="/#" onclick="modeFull()">Volledige Weergave</a>
-      <a href="/#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+      <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
+      <a href="#" onclick="modeDefault()">Standaard Weergave</a>
+      <a href="#" onclick="modeFull()">Volledige Weergave</a>
+      <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
+    <!-- Hamburger Menu -->
     <menu>
       <div class="items">
         <div class="top">
-          <span>
-            <img src="/img/logo.png" alt="Logo">
-          </span>
-          <span>
-            <img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close">
-          </span>
+          <span><a href="#" class="icon"><img src="/img/logo.svg" alt="Logo"></a></span>
+          <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
-        <span>
-          <a href="/#" onclick="menu(false);modeDefault()">Standaard Weergave</a>
-        </span>
-        <span>
-          <a href="/#" onclick="menu(false);modeFull()">Volledige Weergave</a>
-        </span>
-        <span>
-          <a href="/#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a>
-        </span>
+        <span><a href="/#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
+        <span><a href="/#" onclick="menu(false);modeFull()">Volledige Weergave</a></span>
+        <span><a href="/#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
       </div>
     </menu>
-    <div class="select">
-      <select name="displayMode" onchange="buildSelect(this.value);">
-        <option value="klas" selected>Klassen</option>
-      </select>
-      <select name="displayModeFinal" onchange="setTimetable(this.value);">
-        <option>Klas</option>
-      </select>
-    </div>
-    <main style="display:block">
-    </main>
+    <!-- Noscript tags voor als een oma een keer met Internet Explorer 6 de pagina probeert te laden -->
+    <noscript><p style="font-size:48px">Please enable JavaScript or switch to a browser that supports it.</p></noscript>
+    <!-- Selection object -->
+    <div class="select"></div>
+    <!-- Main document -->
+    <main style="display:block"></main>
     <!-- Loading svg -->
     <div id="loading">
       <div id="loadingContent">
@@ -75,12 +58,17 @@ if (!isset($_SESSION['loggedin'])) {
       <div id="messageModalContent">
       </div>
     </div>
-    <footer style="position:absolute">
+    <!-- Footer -->
+    <!-- <footer style="position:absolute"> -->
+    <footer>
+      <!-- Credits -->
       <span>
         <p>&copy; <a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">Joeri Geuzinge</a><br>Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.txt" target="_blank" rel="noreferrer">AGPL 3.0</a> </p>
         <p>
-          Loading animation by <a href="http://samherbert.net/svg-loaders/" rel="noreferrer" target="_blank">Sam Herbert</a>
+          Logo by <a href="https://www.youtube.com/channel/UC4XQZNE6g3aj2ZGuBITl6hQ" target="_blank" rel="noreferrer">Ties van Schaik</a>.<br>
+          Loading animation by <a href="http://samherbert.net/svg-loaders/" rel="noreferrer" target="_blank">Sam Herbert</a> under <a href="https://mit-license.org/" target="_blank" rel="noreferrer">MIT license</a>
           <br>
+          <!-- Icons -->
           Menu, save and Close icons based on icons by
           <a href="https://www.flaticon.com/authors/freepik" rel="noreferrer" target="_blank">Freepik</a> and <a href="https://www.flaticon.com/authors/chanut" rel="noreferrer" target="_blank">Chanut</a>.
           <br>Edited by <a href="https://www.joerigeuzinge.nl/" target="_blank" rel="noreferrer">Joeri Geuzinge</a>
@@ -88,15 +76,13 @@ if (!isset($_SESSION['loggedin'])) {
         </p>
       </span>
     </footer>
+    <!-- Scripts -->
     <script src="/js/master.js" charset="utf-8"></script>
-
-    <script src="/js/roosterMaster.js" charset="utf-8"></script>
-    <script src="/js/rooster.js" charset="utf-8"></script>
-
-    <script src="/js/roosterFullMaster.js" charset="utf-8"></script>
-    <script src="/js/roosterFull.js" charset="utf-8"></script>
-
-    <script src="/js/roosterJaarlaagMaster.js" charset="utf-8"></script>
-    <script src="/js/roosterJaarlaag.js" charset="utf-8"></script>
+    <script src="/js/weekRooster.js" charset="utf-8"></script>
+    <script src="/js/gridRooster.js" charset="utf-8"></script>
+    <script src="/js/roosterFunctions.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      modeDefault();
+    </script>
   </body>
 </html>

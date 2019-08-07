@@ -1,6 +1,16 @@
 /* CSS door Joeri Geuzinge, minified door CSSPortal */
+/*
+1.0 css voor main
+	1.1 main
+2.0 css voor table
+	2.1 table, rows, headers en cells
+	2.2 header content
+	2.3 buttons en cellContent
+*/
+/* 1.0 */
+/* 1.1 */
+
 main.full {
-	margin: auto;
 	margin: 32px;
   border: 1px #888 solid;
   overflow: auto;
@@ -8,24 +18,17 @@ main.full {
 	padding: 0;
 }
 
+/* 2.0 */
+/* 2.1 */
+
 .full table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-.full td, th {
-  border: 1px solid #eee;
-  text-align: left;
-  padding: 8px;
-}
-
-.full tr:nth-child(even) {
-  background-color: #ddd;
-}
-
 .full th {
-  text-align: center;
+	text-align: center;
 	min-width: 200px;
 }
 
@@ -36,18 +39,32 @@ main.full {
 	padding: 0px 16px;
 }
 
+.full td, th {
+  border: 1px solid #eee;
+  text-align: left;
+  padding: 8px;
+}
+
 .full td {
 	min-width: 128px;
 	text-align: center;
 }
 
+.full tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+/* 2.2 */
+
 .full .dag {
-  font-size: 2em;
+	font-size: 2em;
 }
 
 .full .tijd {
 	font-size: 1.5em;
 }
+
+/* 2.3 */
 
 .full input, .full select {
 	max-width: 100px;

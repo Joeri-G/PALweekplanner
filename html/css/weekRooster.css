@@ -1,31 +1,53 @@
 /* CSS door Joeri Geuzinge, minified door CSSPortal */
+/*
+1.0 MAIN css
+	1.1 main
+	1.2 dag css
+2.0 SELECT css
+	2.1 select
+
+*/
+
+/* 1.0 */
+/* 1.1 */
+
 main {
 	display: grid;
 	grid-template-columns: repeat(5,1fr);
 	margin: auto;
 	max-width: 1450px;
 	padding: 16px;
+	flex: 1 1 auto;
 }
 
-.hour,.pause {
+.noP p {
+	display: none;
+}
+
+/* 1.2 */
+
+.uur,.pauze {
 	margin: 8px 4px;
 }
 
-.hour {
+.uur {
 	background: #FFECA0;
 	padding: 16px;
 	min-height: 240px;
 }
 
-.hour > p {
+.uur > p {
 	margin: 0;
 	margin-bottom: 8px;
 }
 
-.pause {
+.pauze {
 	background: #a0ecff;
 	min-height: 32px;
 }
+
+/* 2.0 */
+/* 2.1 */
 
 .select {
 	display: block;
@@ -101,7 +123,7 @@ div p {
 	main {
 		grid-template-columns: repeat(4,1fr);
 	}
-	.hour {
+	.uur {
 		height: 300px;
 	}
 }

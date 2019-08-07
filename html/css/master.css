@@ -1,9 +1,33 @@
 /* CSS door Joeri Geuzinge, minified door CSSPortal */
+/*
+1.0 GLOBAL BODY css
+	1.1	html, body, a, *
+	1.2 navbar
+	1.3 main
+	1.4 overlay menu
+2.0 GLOBAL MODAL CSS
+	2.1 global
+	2.2 loading
+	2.3 message
+3.0 GLOBAL INPUT css
+	3.1 input, button
+4.0 GLOBAL FOOTER css
+	4.1 footer, footer content
+5.0 MEDIA QUERY css
+	5.1 desktop/mobile switch
+*/
+
+/* 1.0 */
+/* 1.1 */
+
 html,body {
 	font-family: 'Barlow Semi Condensed',sans-serif;
 	height: 100%;
 	margin: 0;
 	font-size: 16px;
+	display: flex;
+  flex-flow: column;
+  height: 100%;
 }
 
 * {
@@ -21,6 +45,8 @@ a:hover {
 	color: grey;
 }
 
+/* 1.2 */
+
 nav {
 	align-items: center;
 	background: #000;
@@ -32,7 +58,7 @@ nav {
 nav > a, .items a {
   text-decoration: none;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 12px;
   background: #333;
 }
 
@@ -53,74 +79,30 @@ nav img, nav span {
 	height: 2em;
 }
 
-/* loading css */
-/* The Modal (background) */
-#loading, #messageModal {
-	display: none;
-	position: fixed;
-	z-index: 1;
-	padding-top: 100px;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0,0,0,0.4);
-}
-/* Modal Content */
-#loading > div {
-	margin: auto;
+.icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	max-width: 3em;
+	padding: 0;
 	text-align: center;
 }
 
-#loading img {
-	width: 25%;
-}
-#messageModalContent {
-	margin: 0 auto 32px auto;
-	width: 40%;
-	background: white;
-	border-radius: 24px;
-	padding: 32px;
+/* 1.3 */
+
+.mainMessage {
+	font-size: 1.5em;
+	text-align: center
 }
 
 
-
-/* css om menu opties op kleiner scherm te verbergen en in plaats daar van een hamburger menu te laten zien */
-@media (max-width: 1250px) {
-	html, body {
-		font-size: 24px;
-	}
-	nav {
-		font-size: 2em;
-	}
-  nav > a {
-    display: none;
-  }
-
-	nav {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-	}
-
-  nav > :last-child {
-		cursor: pointer;
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-  }
-	/* op kleine schermen wordt de message modal box groter */
-	#messageModalContent {
-		width: 70%;
-	}
-}
-/* full menu css */
+/* 1.4 */
 
 menu {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 2; /* Sit on top */
-  left: 0;
+	display: none;
+	position: fixed;
+	z-index: 2;
+	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
@@ -139,6 +121,7 @@ menu {
 
 .close {
 	cursor: pointer;
+	padding: 12px 24px;
 }
 
 .top > span {
@@ -158,6 +141,9 @@ menu img {
 	line-height: 2.5;
 	text-align: center;
 }
+
+/* 2.0 */
+/* 2.1 */
 
 .fade-in {
 	animation: animateFadeIn 0.2s;
@@ -189,6 +175,43 @@ menu img {
 	}
 }
 
+#loading, #messageModal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.4);
+}
+
+/* 2.2 */
+
+#loading > div {
+	margin: auto;
+	text-align: center;
+}
+
+#loading img {
+	width: 25%;
+}
+
+/* 2.3 */
+
+#messageModalContent {
+	margin: 0 auto 32px auto;
+	width: 40%;
+	background: white;
+	border-radius: 24px;
+	padding: 32px;
+}
+
+/* 3.0 */
+/* 3.1 */
+
 select,input,button {
 	background: #f2f1f0;
 	border: 1px solid #ccc;
@@ -201,18 +224,61 @@ button {
 	cursor: pointer;
 }
 
+/* 4.0 */
+/* 4.1 */
+
 footer {
+	flex: 0 1 auto;
 	align-items: center;
 	background: #aaa;
 	bottom: 0;
 	display: flex;
-	min-height: 100px;
+	height: 150px;
 	justify-content: center;
 	width: 100%;
 	font-size: 0.7em;
 	text-align: center;
+	bottom: 0;
 }
 
 footer > span > p:first-child {
 	font-size: 1.4em;
+}
+
+/* 5.0 */
+/* 5.1 */
+
+@media (max-width: 1250px) {
+	html, body {
+		font-size: 24px;
+	}
+	nav {
+		font-size: 2em;
+	}
+  nav > a {
+    display: none;
+  }
+
+	.icon {
+		display: flex;
+	}
+
+	nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+  nav > :last-child {
+		cursor: pointer;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+  }
+	/* op kleine schermen wordt de message modal box groter */
+	#messageModalContent {
+		width: 70%;
+	}
+	footer {
+		height: 200px;
+	}
 }
