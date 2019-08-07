@@ -25,7 +25,7 @@ if (!isset($_SESSION['loggedin'])) {
     <nav>
       <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
       <a href="#" onclick="modeDefault()">Standaard Weergave</a>
-      <a href="#" onclick="modeFull()">Volledige Weergave</a>
+      <a href="#" onclick="modeGrid()">Volledige Weergave</a>
       <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
@@ -37,7 +37,7 @@ if (!isset($_SESSION['loggedin'])) {
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
         <span><a href="/#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
-        <span><a href="/#" onclick="menu(false);modeFull()">Volledige Weergave</a></span>
+        <span><a href="/#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
         <span><a href="/#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
       </div>
     </menu>

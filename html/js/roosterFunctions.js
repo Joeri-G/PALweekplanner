@@ -40,8 +40,8 @@ function modeDefault() {
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.send();
 }
-// Rooster Full
-function modeFull() {
+// Rooster Grid
+function modeGrid() {
   let main = document.getElementsByTagName('main')[0];
   let select = document.getElementsByClassName('select')[0];
   //start laad animatie
@@ -60,7 +60,7 @@ function modeFull() {
       try {
         let afspraken = JSON.parse(this.responseText);
         //nu we de afspraken hebben kunnen we beginnen met de table maken
-        setFullTimetable(afspraken);
+        setGridTimetable(afspraken);
         //stop loading animatie
         load(false);
       }
@@ -83,16 +83,16 @@ function modeJaarlaag() {
   load(true);
   //build jaarlaag input
   select.style.display = 'block';
-  let xhttp6 = new XMLHttpRequest();
-  xhttp6.onreadystatechange = function() {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       try {
         //bouw jaarlaag select
         let jaarlagen = JSON.parse(this.responseText);
         let html = '<select name="selectJaarlaag" onchange="buildJaarlaag(this.value, this.dataset.jaarlagen)" data-jaarlagen="'+this.responseText.replace(/\n/, '')+'">\n';
         html += '\t<option selected disabled>Jaarlaag</option>\n';
-        for (var i = 0; i < jaarlagen.length; i++) {
-          html += '<option value='+i+'>'+jaarlagen[i].jaar+jaarlagen[i].niveau+'</option>\n';
+        for (var i = 0; i < jaarlagen.klas.length; i++) {
+          html += '<option value=' + JSON.stringify(jaarlagen.klas[i]) + '>'+jaarlagen.klas[i].jaar+jaarlagen.klas[i].niveau+'</option>\n';
           jaarlagen[i]
         }
         //plaats html
@@ -114,11 +114,35 @@ function modeJaarlaag() {
       }
     }
   };
-  xhttp6.open("GET", "/api.php?listJaarlaag=true", true);
-  xhttp6.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-  xhttp6.send();
+  xhttp.open("GET", "/api.php?listJaarlaag=true", true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.send();
 }
 
-function buildJaarlaag(x) {
-  message(x);
+function buildJaarlaag(input) {
+  load(true);
+  let main = document.getElementsByTagName('main')[0];
+  main.className = 'full';
+  let jaarlaag = JSON.parse(input);
+  let xhttp = new XMLHttpRequest();
+  //laad list met alle docenten en klassen
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      try {
+        let afspraken = JSON.parse(this.responseText);
+        //nu we de afspraken hebben kunnen we beginnen met de table maken
+        setGridTimetable(afspraken, modeJaarlaag, jaarlaag);
+        //stop loading animatie
+        load(false);
+      }
+      catch (e) {
+        //stop loading animatie
+        load(false);
+        errorMessage(e);
+      }
+    }
+  };
+  xhttp.open("GET", "/api.php?readJaarlaag=true&jaar="+encodeURIComponent(jaarlaag.jaar)+"&niveau="+encodeURIComponent(jaarlaag.niveau), true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.send();
 }

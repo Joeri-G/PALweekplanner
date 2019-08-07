@@ -1,7 +1,25 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-//GLOBALS
-// let main = document.getElementsByTagName('main')[0];
-// let select = document.getElementsByClassName('select')[0];
+/*
+script met functions die voor alle "viewModes" gebruikt worden
+  - menu()
+    * functie om menu te toggelen
+  - errorMessage()
+    * functie om message met error melding weer te geven
+  - load()
+    * functie om laad animatie weer te geven
+  - message()
+    * functie om message modal weer te geven met bericht
+  - escapeHTML()
+    * functie om html te sterilizen om javascritp injections te voorkomen
+  - enlargeHour()
+    * functie om modal weer te geven met alle informatie van een afspraak omdat soms lines worden afgekapt
+  - deleteHour()
+    * functie om request naar server te sturen om afspraak te verwijderen
+  - makeList()
+    * functie om een option list voor <select> element te maken op basis van een array
+  - sendHour()
+    * functie om een afspraak te creeren
+*/
 
 //function voor menu buttons
 function menu(bool) {
@@ -72,48 +90,6 @@ function escapeHTML(input) {
   return out;
 }
 
-
-
-//JS voor message modal
-//wanneer er buiten de modal geklikt wordt, sluit de modal
- let modalBox = document.getElementById("messageModal");
- window.onclick = function(event) {
-   if (event.target == modalBox) {
-     let messageModal = document.getElementById('messageModal');
-     let messageModalContent = document.getElementById('messageModalContent');
-     //fade out
-     messageModalContent.setAttribute('class', 'fade-out');
-     //remove fadeout
-     setTimeout(function() {
-       messageModal.style.display = "none";
-       messageModal.setAttribute('class', '');
-     }, 200);
-   }
- }
-
-
-// //js voor config
-// //laad config file
-// let xhttp = new XMLHttpRequest();
-// xhttp.onreadystatechange = function() {
-//   if (this.readyState == 4 && this.status == 200) {
-//    try {
-//     config = JSON.parse(this.responseText);
-//     uren = config.uren;
-//     dagen = config.dagen;
-//     lestijden = config.lestijden;
-//    }
-//    catch (e) {
-//      errorMessage(e);
-//      uren = 0;
-//      dagen = [];
-//    }
-//   }
-// };
-// xhttp.open("GET", "/api.php?loadConfig=true", true);
-// xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-// xhttp.send();
-
 function enlargeHour(data) {
   let json = JSON.parse(data);
   let text = 'Docent1:\t\t'+json.docent[0];
@@ -140,7 +116,7 @@ function deleteHour(data, mode = 0) {
             setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
           }
           else if (mode == 1) {
-            modeFull();
+            modeGrid();
           }
         }, 1000);
       }
@@ -215,7 +191,7 @@ function sendHour(name, dagdeel, mode = 0) {
           setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
         }
         else if (mode == 1) {
-          modeFull();
+          modeGrid();
         }
       }, 1000);
       return null;
@@ -224,4 +200,22 @@ function sendHour(name, dagdeel, mode = 0) {
   xhttp4.open("GET", url, true);
   xhttp4.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp4.send();
+}
+
+
+//JS voor message modal
+//wanneer er buiten de modal geklikt wordt, sluit de modal
+let modalBox = document.getElementById("messageModal");
+window.onclick = function(event) {
+  if (event.target == modalBox) {
+    let messageModal = document.getElementById('messageModal');
+    let messageModalContent = document.getElementById('messageModalContent');
+    //fade out
+    messageModalContent.setAttribute('class', 'fade-out');
+    //remove fadeout
+    setTimeout(function() {
+      messageModal.style.display = "none";
+      messageModal.setAttribute('class', '');
+    }, 200);
+  }
 }

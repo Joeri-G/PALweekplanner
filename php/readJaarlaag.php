@@ -49,7 +49,7 @@ while ($stmt->fetch()) {
   $klasObj->niveau = $niveau;
   $klasObj->nummer = $resKlas1Nummer;
 
-  $obj->klas = $klasObj;
+  $obj->klas = [$klasObj];
 
   $obj->docent = [$resDocent1, $resDocent2];
 

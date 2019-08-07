@@ -1,26 +1,24 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
-script om alle jaarlagden te listen
-  - SQL query naar database om alle jaar - niveau combinaties te selecteren die nog niet geselecteerd zijn
-    * voeg toe aan object
-    * voeg object toe aan out object
-  - encode output object naar JSON
-  - ouput JSON
+script om alle klassen binnen een jaarlaag te listen
+  - SQL query naar database om alle klassen te listen waar jaarlaag = jaarlaag en niveau = niveau
 */
-//list alle jaarlagen
+require('funcLib.php');
+if (!_GETIsset(['jaar', 'niveau'])) {
+  die("[INPUT]\tNOT ALL PARAMETERS SET");
+}
 $out = new stdClass;
-$out->klas = array();
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau FROM klassen');
+$stmt = $conn->prepare('SELECT DISTINCT nummer FROM klassen WHERE jaar = ? AND niveau = ?');
+$stmt->bind_param('ss', $_GET['jaar'], $_GET['niveau']);
 $stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($resJaar, $resNiveau);
+$stmt->bind_result($resNummer);
 while($stmt->fetch()) {
   $tmpObj = new stdClass;
-  $tmpObj->jaar = $resJaar;
-  $tmpObj->niveau = $resNiveau;
-  $tmpObj->nummer = '';
+  $tmpObj->jaar = $_GET['jaar'];
+  $tmpObj->niveau = $_GET['niveau'];
+  $tmpObj->nummer = $resNummer;
   $out->klas[] = $tmpObj;
 }
 
@@ -36,4 +34,4 @@ else {
 }
 //output JSON en stop execution
 die($json);
- ?>
+?>

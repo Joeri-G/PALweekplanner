@@ -73,4 +73,8 @@ if (isset($_GET['readAll']) && $_GET['readAll'] == 'true') {
   require('../php/readAll.php');
 }
 
+//list alle klassen in een jaarlaag
+if (isset($_GET['listJaarlaagKlassen']) && $_GET['listJaarlaagKlassen'] == 'true') {
+  require('../php/listJaarlaagKlassen.php');
+}
  ?>

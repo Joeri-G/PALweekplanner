@@ -17,9 +17,6 @@ script om een lijst te maken met alle klassen en docenten
 
   - encode object naar JSON en stuur
 */
-//library
-require('funcLib.php');
-
 //maak leeg out object en tijdenlijke objects voor docenten en klassen
 $out = new stdClass;
 $docenten = array();
