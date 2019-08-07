@@ -5,7 +5,11 @@
 	1.2 dag css
 2.0 SELECT css
 	2.1 select
-
+3.0 MEDIA QUERY css
+	3.1	4 uur grid
+	3.2 3 uur grid
+	3.3 2 uur grid
+	3.4 1 uur grid
 */
 
 /* 1.0 */
@@ -26,6 +30,12 @@ main {
 
 /* 1.2 */
 
+section > p {
+	font-size: 1.5em;
+	margin: 0;
+	text-align: center;
+}
+
 .uur,.pauze {
 	margin: 8px 4px;
 }
@@ -44,41 +54,6 @@ main {
 .pauze {
 	background: #a0ecff;
 	min-height: 32px;
-}
-
-/* 2.0 */
-/* 2.1 */
-
-.select {
-	display: block;
-	margin: 16px auto;
-	max-width: 1280px;
-	text-align: center;
-	border-radius: 0;
-}
-
-.select select {
-	font-size: 1.5em;
-}
-
-button.SVGbutton {
-	background: inherit;
-	border: #000 solid 1px;
-	border-radius: 0;
-	color: #000;
-	float: right;
-	height: 2em;
-	width: 2em;
-}
-
-.input select,.input button,.input input {
-	width: 100%;
-}
-
-section > p {
-	font-size: 1.5em;
-	margin: 0;
-	text-align: center;
 }
 
 div p {
@@ -119,6 +94,38 @@ div p {
 	-webkit-box-orient: vertical;
 }
 
+/* 2.0 */
+/* 2.1 */
+
+.select {
+	display: block;
+	margin: 16px auto;
+	max-width: 1280px;
+	text-align: center;
+	border-radius: 0;
+}
+
+.select select {
+	font-size: 1.5em;
+}
+
+button.SVGbutton {
+	background: inherit;
+	border: #000 solid 1px;
+	border-radius: 0;
+	color: #000;
+	float: right;
+	height: 2em;
+	width: 2em;
+}
+
+.input select,.input button,.input input {
+	width: 100%;
+}
+
+/* 3.0 */
+/* 3.1 */
+
 @media (max-width: 1500px) {
 	main {
 		grid-template-columns: repeat(4,1fr);
@@ -128,17 +135,23 @@ div p {
 	}
 }
 
+/* 3.2 */
+
 @media (max-width: 1300px) {
 	main {
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
 
+/* 3.3 */
+
 @media (max-width: 1050px) {
 	main {
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
+
+/* 3.4 */
 
 @media (max-width: 725px) {
 	main {
