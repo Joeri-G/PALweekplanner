@@ -13,10 +13,11 @@
 
 */
 function toggleUsers(element) {
+  load(true);
   let userList = document.getElementById('userList');
   if (element.dataset.toggle == 'hidden') {
     userList.style.display = 'block';
-    loadUsers();
+    loadUsers(userList);
     element.dataset.toggle = 'shown';
     element.innerHTML = 'Hide';
   }
@@ -24,13 +25,12 @@ function toggleUsers(element) {
     userList.style.display = 'none';
     element.dataset.toggle = 'hidden';
     element.innerHTML = 'Show';
+    load(false);
   }
 }
 
 
-function loadUsers() {
-  load(true);
-  let userList = document.getElementById('userList');
+function loadUsers(userList) {
   let xhttp = new XMLHttpRequest();
   //laad list met alle docenten en klassen
   xhttp.onreadystatechange = function() {
@@ -39,8 +39,6 @@ function loadUsers() {
         //stop loading animatie
         let data = JSON.parse(this.responseText);
         buildUserList(data, userList);
-        userList.style.display = 'block';
-        load(false);
       }
       catch (e) {
         //stop loading animatie
@@ -61,7 +59,7 @@ function buildUserList(data, userList) {
     if (this.readyState == 4 && this.status == 200) {
       try {
         config = JSON.parse(this.responseText);
-        let html = '<table>\n';
+        let html = '<table id="userTable">\n';
         html += '<tr><th>Username</th><th>Password</th><th>Role</th><th>UserLVL</th>';
         for (var i = 0; i < config.dagen.length; i++) {
           html += '<th>' + config.dagen[i] + '</th>';
@@ -80,7 +78,10 @@ function buildUserList(data, userList) {
           html += '</tr>\n';
         }
         html += '</table>\n';
+        load(false);
         userList.innerHTML = html;
+        //sort table
+        sortTable(document.getElementById('userTable'));
       }
       catch (e) {
         //stop loading animatie
@@ -113,4 +114,63 @@ function deleteUser(data) {
     errorMessage(e);
     return null;
   }
+}
+
+function toggleKlassen(element) {
+  load(true);
+  let klasList = document.getElementById('klasList');
+  if (element.dataset.toggle == 'hidden') {
+    klasList.style.display = 'block';
+    loadKlas(klasList);
+    element.dataset.toggle = 'shown';
+    element.innerHTML = 'Hide';
+  }
+  else if (element.dataset.toggle == 'shown') {
+    klasList.style.display = 'none';
+    element.dataset.toggle = 'hidden';
+    element.innerHTML = 'Show';
+    load(false);
+  }
+  else {
+    element.dataset.toggle = 'hidden';
+  }
+}
+
+function loadKlas(klasList) {
+  let xhttp = new XMLHttpRequest();
+  //laad list met alle docenten en klassen
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      try {
+        //stop loading animatie
+        let data = JSON.parse(this.responseText);
+        buildKlasList(data, klasList);
+        load(false);
+      }
+      catch (e) {
+        //stop loading animatie
+        load(false);
+        errorMessage(e);
+      }
+    }
+  };
+  xhttp.open("GET", "/admin/api.php?listKlassen=true", true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.send();
+}
+
+function buildKlasList(data, klasList) {
+  let html = '<table id="klasTable">\n';
+  html += '<tr><th>Klas</th><th>Jaar</th><th>Niveau</th><th>Nummer</th><th>Action</th></tr>\n';
+  for (var i = 0; i < data.length; i++) {
+    html += '<tr>\
+    <td>' + data[i].jaar + data[i].niveau + data[i].nummer + '</td>\
+    <td><input type="number" name="klas' + data[i].ID + 'jaar" value="' + data[i].jaar + '" placeholder="Jaar"></td>\
+    <td><input type="text" name="klas' + data[i].ID + 'niveau" value="' + data[i].niveau + '" placeholder="Niveau"></td>\
+    <td><input type="number" name="klas' + data[i].ID + 'nummer" value="' + data[i].nummer + '" placeholder="Nummer"></td>\
+    <td><div class="centerContent actions" data-user=\'' + JSON.stringify(data[i]) + '\'><img src="/img/save.svg" alt="save" onclick="saveKlas(this.parentElement.dataset.user)"><img src="/img/closeBlack.svg" alt="remove" onclick="deleteKlas(this.parentElement.dataset.hour)"></div></td>\
+    </tr>\n';
+    data[i]
+  }
+  klasList.innerHTML = html;
 }
