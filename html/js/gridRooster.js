@@ -15,8 +15,6 @@ Script met functions om het volledige rooster te bouwen
     * als een afspraak bestaat op het gekozen dagdeel, build dan een entry waar al deze informatie in staat
   - buildGridTimetableInput()
     * als er geen afspraak bestaat, build dan een entry met inputs voor afspraak
-  - sortTable
-    * functie om een table alphabetische te sorteren op de eerste kolom
 */
 function setGridTimetable(data, modeJaarlaag = false, dataJaarlaag = null) {
   let xhttp = new XMLHttpRequest();
@@ -64,7 +62,7 @@ function setGridTimetableBody(conf, data, modeJaarlaag, dataJaarlaag) {
 
 function buildGridTimetableHead(conf, data) {
   let main = document.getElementsByTagName('main')[0];
-  let html = '<table>\n<tr>\n<th>Klas</th>\n';
+  let html = '<table id="gridRooster">\n<tr>\n<th>Klas</th>\n';
   for (var i = 0; i < conf.dagen.length; i++) {
     for (var j = 0; j < conf.uren; j++) {
       //offset van 1 omdat de dagdelen vanaf 0 worden geteld maar vanaf 1 weergegeven
@@ -91,7 +89,7 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
           html += '</tr>\n';
         }
         table.innerHTML += html;
-        sortTable();
+        sortTable(document.getElementById('gridRooster'));
       }
       catch (e) {
         //stop loading animatie
@@ -139,19 +137,19 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas) {
 function buildGridTimetableAfspraak(data) {
   let html = '';
   //voeg content toe
-  html += '<td>'+data.docent[0]+'</td>\n';
-  html += '<td>'+data.docent[1]+'</td>\n';
-  html += '<td>'+data.lokaal[0]+'</td>\n';
-  html += '<td>'+data.lokaal[1]+'</td>\n';
-  html += '<td>'+data.laptop+'</td>\n';
-  html += '<td>'+data.projectCode+'</td>\n';
+  html += '<td>'+data.docent[0].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.docent[1].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.lokaal[0].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.lokaal[1].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.laptop.replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.projectCode.replace(/\'/g, "&#39;")+'</td>\n';
   //om te voorkomen dat lange notities de table verpesten truncaten we de note als deze meer dan 7 characters is
   let note = data.note;
   if (note.length > 7) {
     note = note.substr(0, 6) + "\u2026";
   }
   html += '<td>'+note+'</td>\n';
-  html += '<td data-hour=\'' + JSON.stringify(data) + '\'>';
+  html += '<td data-hour=\'' + JSON.stringify(data).replace(/\'/g, "&#39;") + '\'>';
   html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge">\n';
   html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)"><img src="/img/closeBlack.svg" alt="Close"></button>';
   html += '</td>';
@@ -171,46 +169,9 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable) {
   html += '<td><input type="text" name="'+dagdeel+klasTitle+'note" placeholder="Note"></td>';
   //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
   html += '<td>';
-  html += '<input type="hidden" name="'+dagdeel+klasTitle+'klas1" value="klas0" data-klas=\'{"data":['+JSON.stringify(klas)+']}\'>';
+  html += '<input type="hidden" name="'+dagdeel+klasTitle+'klas1" value="klas0" data-klas=\'{"data":['+JSON.stringify(klas).replace(/\'/g, "&#39;")+']}\'>';
   html += '<button type="button" class="SVGbutton" onclick="sendHour(\'' + dagdeel+klasTitle + '\', \'' + dagdeel + '\', 1)"><img src="/img/save.svg" alt="Save"></button>';
   html += '</td>';
 
   return html;
-}
-
-//function om de table te sorten
-function sortTable() {
-  let table, rows, switching, i, x, y, shouldSwitch;
-  table = document.getElementsByTagName("table")[0];
-  switching = true;
-  /* Make a loop that will continue until
-  no switching has been done: */
-  while (switching) {
-    // Start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /* Loop through all table rows (except the
-    first, which contains table headers): */
-    for (i = 1; i < (rows.length - 1); i++) {
-      // Start by saying there should be no switching:
-      shouldSwitch = false;
-      /* Get the two elements you want to compare,
-      one from current row and one from the next: */
-      x = rows[i].getElementsByTagName("TD")[0];
-      y = rows[i + 1].getElementsByTagName("TD")[0];
-      // Check if the two rows should switch place:
-      // als de row met INFO begint switch dan niet
-      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() && x.innerHTML != 'Info') {
-        // If so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      /* If a switch has been marked, make the switch
-      and mark that a switch has been done: */
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
 }

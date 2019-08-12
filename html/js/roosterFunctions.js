@@ -92,7 +92,7 @@ function modeJaarlaag() {
         let html = '<select name="selectJaarlaag" onchange="buildJaarlaag(this.value, this.dataset.jaarlagen)" data-jaarlagen="'+this.responseText.replace(/\n/, '')+'">\n';
         html += '\t<option selected disabled>Jaarlaag</option>\n';
         for (var i = 0; i < jaarlagen.klas.length; i++) {
-          html += '<option value=' + JSON.stringify(jaarlagen.klas[i]).replace(/'/g, '\'') + '>'+jaarlagen.klas[i].jaar+jaarlagen.klas[i].niveau+'</option>\n';
+          html += '<option value=' + JSON.stringify(jaarlagen.klas[i]).replace(/\'/g, "&#39;") + '>'+jaarlagen.klas[i].jaar+jaarlagen.klas[i].niveau+'</option>\n';
         }
         //plaats html
         html += '</select>';

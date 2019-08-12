@@ -162,7 +162,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   //check of er een afspraak gezet is in het huidige dagdeel
   if (typeof data[dagdeel] !== 'undefined' && data[dagdeel] !== null) {
     //geef afspraak view
-    let html = '<div class="uur afspraak" data-hour=\'' + JSON.stringify(data[dagdeel]) + '\'>\n';
+    let html = '<div class="uur afspraak" data-hour=\'' + JSON.stringify(data[dagdeel]).replace(/\'/g, "&#39;") + '\'>\n';
     //roostertijden
     html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour)"><img src="/img/closeBlack.svg"></button>\n';
     html += '<p>' + conf.lestijden[uur] + '</p>\n';
@@ -180,7 +180,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     html += '<span>Lokaal2:</span><span>' + data[dagdeel].lokaal[1] + '</span>\n';
     //overig
     html += '<span>Laptops:</span><span>' + data[dagdeel].laptop + '</span>\n';
-    html += '<span class="L1">ProjectCode&#xfeff;:</span><span>' + data[dagdeel].projectCode + '</span>\n';
+    html += '<span class="L1">ProjectCode&#xfeff;:</span><span class="projectCode">' + data[dagdeel].projectCode + '</span>\n';
     html += '<span>Note:</span><span class="note">' + data[dagdeel].note + '</span>\n';
 
     html += '</div>\n</div>\n'
