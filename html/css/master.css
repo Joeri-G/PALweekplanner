@@ -28,6 +28,7 @@ html,body {
 	display: flex;
   flex-flow: column;
   height: 100%;
+	background: #eee;
 }
 
 * {
@@ -35,6 +36,7 @@ html,body {
 	/*idk waarom en hoe maar dit fixt problemen op Chrome for Android*/
 	max-width: 999999px;
 	max-height: 999999px;
+	word-wrap: break-word;
 }
 
 a {

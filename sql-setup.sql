@@ -77,6 +77,7 @@ CREATE TABLE `users` (
   `userLVL` int(1) NOT NULL,
   `userAvailability` varchar(64) NOT NULL,
   `lastLoginIP` varchar(64) NOT NULL,
+  `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ALTER TABLE `users`

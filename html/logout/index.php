@@ -3,6 +3,7 @@
 //logout script
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+  header('location: /login');
   die('Not logged in');
 }
 $_SESSION['loggedin'] = false;

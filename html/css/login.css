@@ -3,6 +3,7 @@ main {
   margin: auto;
 }
 section {
+  background: #fff;
   display: block;
   margin: auto;
   max-width: 400px;

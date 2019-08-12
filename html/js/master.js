@@ -96,13 +96,13 @@ function escapeHTML(input) {
 
 function enlargeHour(data) {
   let json = JSON.parse(data);
-  let text = 'Docent1:\t\t'+json.docent[0];
-  text += '\nDocent2:\t\t'+json.docent[1];
-  text += '\n\nKlas:\t\t'+json.klas[0].jaar+json.klas[0].niveau+json.klas[0].nummer;
-  text += '\n\nLokaal1:\t\t'+json.lokaal[0];
-  text += '\nLokaal2:\t\t'+json.lokaal[0];
-  text += '\n\nProjectCode:\t'+json.projectCode;
-  text += '\nNote:\t\t'+json.note;
+  let text = 'Docent1:\t\t' + escapeHTML(json.docent[0]);
+  text += '\nDocent2:\t\t' + escapeHTML(json.docent[1]);
+  text += '\n\nKlas:\t\t' + escapeHTML(json.klas[0].jaar + json.klas[0].niveau + json.klas[0].nummer);
+  text += '\n\nLokaal1:\t\t' + escapeHTML(json.lokaal[0]);
+  text += '\nLokaal2:\t\t' + escapeHTML(json.lokaal[0]);
+  text += '\n\nProjectCode:\t' + escapeHTML(json.projectCode);
+  text += '\nNote:\t\t' + escapeHTML(json.note);
   message(text);
 }
 

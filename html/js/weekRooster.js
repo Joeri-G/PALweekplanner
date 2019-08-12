@@ -180,13 +180,13 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     html += '<span>Lokaal2:</span><span>' + data[dagdeel].lokaal[1] + '</span>\n';
     //overig
     html += '<span>Laptops:</span><span>' + data[dagdeel].laptop + '</span>\n';
-    html += '<span>ProjectCode:</span><span>' + data[dagdeel].projectCode + '</span>\n';
-    html += '<span>Note:</span><span>' + data[dagdeel].note + '</span>\n';
+    html += '<span class="L1">ProjectCode&#xfeff;:</span><span>' + data[dagdeel].projectCode + '</span>\n';
+    html += '<span>Note:</span><span class="note">' + data[dagdeel].note + '</span>\n';
 
     html += '</div>\n</div>\n'
     return html;
   }
-  let html = '<div class="uur input">\n<div class="menu">\n';
+  let html = '<div class="uur input">\n<p>' + conf.lestijden[uur] + '</p>\n<div class="menu">\n';
   //input js
   //de bovenste row hangt af van de geselecterde mode
   if (mode == 'klas') {

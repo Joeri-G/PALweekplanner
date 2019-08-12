@@ -3,7 +3,7 @@
 session_start();
 //login check
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] < 2) {
-  header("location: /login?r=".$_SERVER['REQUEST_URI']);
+  header("location: /login");
   die('Not Logged In');
 }
 

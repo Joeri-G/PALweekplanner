@@ -1,0 +1,223 @@
+html, body {
+  display: block;
+}
+
+main {
+  max-width: 990px;
+  margin: auto;
+  text-align: left;
+  display: block;
+}
+
+main > div {
+  background: #fff;
+  -webkit-box-shadow: 0px 0px 8px 2px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 8px 2px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 8px 2px rgba(50, 50, 50, 0.75);
+  padding: 32px;
+  margin: 32px;
+  display: block;
+}
+
+main > div > p:first-of-type {
+  font-size: 2em;
+  margin: 0;
+}
+
+.inputParent {
+  border: 1px #000 solid;
+  padding: 16px;
+  overflow: auto;
+}
+
+.col_2, .col_3, .col_1 {
+  width: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.col_1 {
+  grid-template-columns: 1fr;
+  padding: 2px;
+}
+
+.col_2 span, .col_3 span {
+  padding: 2px;
+}
+
+.col_3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.inputParent input {
+  width: 100%;
+  font-size: 1em;
+  padding: 4px 8px;
+}
+
+.buttonContaier {
+  display: block;
+  margin: 2px;
+}
+
+.button {
+  font-size: 1em;
+  display: block;
+  width: 100%;
+}
+
+.actions img:first-of-type {
+  margin-right: 8px;
+}
+
+.actions img:last-of-type {
+  margin-left: 8px;
+}
+
+.button:hover, .button:focus,
+.inputParent input:hover, .inputParent input:focus,
+.checkmark:hover, .checkmark:focus {
+  -webkit-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow:    0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+  box-shadow:         0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+}
+
+#docentDagen {
+  padding: 4px;
+  width: 90%;
+  margin: 8px auto;
+  border: 1px #000 solid;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  text-align: center;
+}
+
+#docentDagen > p {
+  display: block;
+}
+
+.list {
+  overflow: auto;
+  margin: 2px;
+  margin-top: 8px;
+  -webkit-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow:    0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+  box-shadow:         0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+}
+
+.list table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.list input {
+  display: block;
+}
+
+.list th:first-of-type, .list td:first-of-type {
+	font-weight: bold;
+	min-width: auto;
+	padding: 0;
+}
+
+.list tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+.list tr {
+  height: 3em;
+}
+
+.list input {
+  margin: 0;
+}
+
+.list td, .list th {
+  border: 1px solid #eee;
+  min-width: 80px;
+  width: 100%;
+  margin: auto;
+  width: 100%;
+  padding: 4px;
+  text-align: center;
+}
+
+.list img {
+  height: 1em;
+  cursor: pointer;
+}
+
+.centerContent {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Customize the label (the container) */
+.container {
+ display: block;
+ position: relative;
+ /* margin: 0 16px; */
+ cursor: pointer;
+ font-size: 1em;
+ -webkit-user-select: none;
+ -moz-user-select: none;
+ -ms-user-select: none;
+ user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+ position: absolute;
+ opacity: 0;
+ cursor: pointer;
+ height: 0;
+ width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 25px;
+ width: 25px;
+ background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+ background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+ background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+ content: "";
+ position: absolute;
+ display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+ display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+ /* left: 9px;
+ top: 5px;
+ width: 5px;
+ height: 10px;
+ border: solid white;
+ border-width: 0 3px 3px 0;
+ -webkit-transform: rotate(45deg);
+ -ms-transform: rotate(45deg);
+ transform: rotate(45deg);
+} */

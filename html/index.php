@@ -27,6 +27,12 @@ if (!isset($_SESSION['loggedin'])) {
       <a href="#" onclick="modeDefault()">Standaard Weergave</a>
       <a href="#" onclick="modeGrid()">Volledige Weergave</a>
       <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+      <?php
+      //als de gebruiker een admin is geef dan de admin link weer
+      if ($_SESSION['userLVL'] > 3) {
+        echo '<a href="/admin">Panel</a>';
+      }
+       ?>
       <a href="/logout">Logout</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
@@ -40,6 +46,12 @@ if (!isset($_SESSION['loggedin'])) {
         <span><a href="#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
         <span><a href="#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
         <span><a href="#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
+        <?php
+        //als de gebruiker een admin is geef dan de admin link weer
+        if ($_SESSION['userLVL'] > 3) {
+          echo '<span><a href="/admin">Panel</a></span>';
+        }
+         ?>
         <span><a href="/logout">Logout</a></span>
       </div>
     </menu>
