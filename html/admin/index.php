@@ -54,21 +54,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Vul alle velden in om een gebruiker toe te voegen.</p>
         <div class="inputParent">
           <span class="col_2">
-            <span><input type="text" placeholder="Username" id="username"></span>
-            <span><input type="password" placeholder="Password" id="password"></span>
-            <span><input type="text" placeholder="Role" id="role"></span>
-            <span><input type="number" placeholder="UserLVL" id="userLVL"></span>
+            <span><input type="text" placeholder="Username" id="adduserUsername"></span>
+            <span><input type="password" placeholder="Password" id="adduserPassword"></span>
+            <span><input type="text" placeholder="Role" id="adduserRole"></span>
+            <span><input type="number" placeholder="UserLVL" id="adduserUserLVL"></span>
           </span>
-
-          <span id="docentDagen">
-            <span><label for="adduserMA">MA</label> <input type="checkbox" checked="checked" id="adduserMA"></span>
-            <span><label for="adduserDI">DI</label> <input type="checkbox" checked="checked" id="adduserDI"></span>
-            <span><label for="adduserWO">WO</label> <input type="checkbox" checked="checked" id="adduserWO"></span>
-            <span><label for="adduserDO">DO</label> <input type="checkbox" checked="checked" id="adduserDO"></span>
-            <span><label for="adduserVR">VR</label> <input type="checkbox" checked="checked" id="adduserVR"></span>
-          </span>
+          <span id="docentDagen"></span>
           <span class="buttonContaier">
-            <button type="button" class="button">Add</button>
+            <button type="button" class="button" onclick="saveUser(config)">Add</button>
           </span>
         </div>
       </div>
@@ -77,7 +70,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Gebruikers</p>
         <p>Lijst met alle gebruikers</p>
         <div class="inputParent">
-          <button type="button" class="button" data-toggle="hidden" onclick="toggleUsers(this)">Show</button>
+          <button type="button" class="button" data-toggle="hidden" onclick="toggleUsers(this, config)">Show</button>
           <div id="userList" class="list" style="display:none;"></div>
         </div>
       </div>
@@ -100,8 +93,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       <div>
         <p>Klassen</p>
         <p>Lijst met alle klassen</p>
-        <button type="button" class="button" data-toggle="hide" onclick="toggleKlassen(this)">show</button>
-        <div id="klasList" class="list" style="display:none;"></div>
+        <div class="inputParent">
+          <button type="button" class="button" data-toggle="hidden" onclick="toggleKlassen(this)">show</button>
+          <div id="klasList" class="list" style="display:none;"></div>
+        </div>
       </div>
       <!-- Add lokaal -->
       <div>
@@ -114,6 +109,15 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <span class="buttonContaier">
             <button type="button" name="button" class="button">Add</button>
           </span>
+        </div>
+      </div>
+      <!-- listLokaal -->
+      <div>
+        <p>Lokalen</p>
+        <p>Lijst met alle lokalen</p>
+        <div class="inputParent">
+          <button type="button" class="button" data-toggle="hidden" onclick="toggleLokalen(this, config)">show</button>
+          <div id="lokaalList" class="list" style="display:none;"></div>
         </div>
       </div>
     </main>
@@ -143,6 +147,35 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       </span>
     </footer>
     <script src="/js/master.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    load(true);
+    let xhttp = new XMLHttpRequest();
+    let config = {dagen:[], uren:0, roostertijden:[]};
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        try {
+          //stop loading animatie
+          config = JSON.parse(this.responseText);
+          let docentDagen = document.getElementById('docentDagen');
+          for (var i = 0; i < config.dagen.length; i++) {
+            docentDagen.innerHTML += '<span>\
+            <label for="adduser' + config.dagen[i] + '">' + config.dagen[i] + '</label>\
+            <input type="checkbox" checked="checked" id="adduser' + config.dagen[i] + '">\
+            </span>';
+          }
+          load(false);
+        }
+        catch (e) {
+          //stop loading animatie
+          load(false);
+          errorMessage(e);
+        }
+      }
+    };
+    xhttp.open("GET", "/api.php?loadConfig=true", true);
+    xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+    xhttp.send();
+    </script>
     <script src="/js/admin.js" charset="utf-8"></script>
   </body>
 </html>

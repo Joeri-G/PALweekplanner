@@ -11,4 +11,34 @@ if (isset($_GET['listUsers']) && $_GET['listUsers'] == 'true') {
   require('../../php/ADMIN-listUsers.php');
 }
 
+if (isset($_GET['listKlassen']) && $_GET['listKlassen'] == 'true') {
+  require('../../php/ADMIN-listKlassen.php');
+}
+
+if (isset($_GET['listLokalen']) && $_GET['listLokalen'] == 'true') {
+  require('../../php/ADMIN-listLokalen.php');
+}
+
+if (isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true' ||
+isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true' ||
+isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true') {
+  if (isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true') {
+    $mode = 'user';
+  }
+  elseif (isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true') {
+    $mode = 'klas';
+  }
+  elseif (isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true') {
+    $mode = 'lokaal';
+  }
+  else {
+    die('[MODE] INVALID');
+  }
+  require('../../php/ADMIN-deleteEntry.php');
+}
+
+if (isset($_GET['addUser']) && $_GET['addUser'] == 'true') {
+  require('../../php/ADMIN-addUser.php');
+}
+
  ?>

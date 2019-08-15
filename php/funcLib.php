@@ -2,9 +2,10 @@
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
 script met functies die in verschilldende sripts gebruikt worden
-
   - _GETIsset()
     * functie om efficient te checken of alle inputs gezet zijn
+  - _POSTIsset()
+    * zelfde als _GETIsset maar dan met $_POST
   - isOverlap()
     * functie om te checken of er overlap is tussen twee arrays
   - isOverlapKlas()
@@ -18,6 +19,18 @@ script met functies die in verschilldende sripts gebruikt worden
   - daypartCheck()
     * functie om te checken of het opgegeven dagdeel wel valid is vergeleken met de config files
 */
+//function om snel te checken of alle inputs gezet zijn
+function _POSTIsset($input = array()) {
+  //loop door array
+  for ($i=0; $i < count($input); $i++) {
+    //als de key niet gezet is return false
+    if (!isset($_POST[$input[$i]])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 //function om snel te checken of alle inputs gezet zijn
 function _GETIsset($input = array()) {
   //loop door array

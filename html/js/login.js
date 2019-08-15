@@ -1,4 +1,12 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+/*
+  - login()
+    * fetcht login informatie uit tetxboxes
+    * check of beide wel gezet zijn
+    * stuur POST request naar /login/login.php om te vergelijken met databse
+    * responseText
+  - bij keydown enter execute login()
+*/
 function login() {
   load(true);
   //haal username en wachtwoord uit textboxes
@@ -45,12 +53,17 @@ function login() {
 
 //voeg trigger toe voor username en password boxes
 document.getElementById('username').addEventListener("keydown", function (e) {
-    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
-        login();
+    if (e.keyCode === 13) {  //keyCode 13 is enter
+      //focus op password box
+      document.getElementById('password').focus();
     }
 });
 document.getElementById('password').addEventListener("keydown", function (e) {
-    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
-        login();
+    if (e.keyCode === 13) {  //keyCode 13 is enter
+      login();
     }
 });
+
+
+//focus op username box
+document.getElementById('username').focus();
