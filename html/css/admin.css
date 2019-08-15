@@ -150,3 +150,14 @@ main > div > p:first-of-type {
   justify-content: center;
   align-items: center;
 }
+
+.list td:first-of-type, .list th:first-of-type {
+  width: auto;
+  padding-left: 32px;
+  text-align: left;
+}
+
+.list td:last-of-type, .list th:last-of-type {
+  width: auto;
+  max-width: 100px;
+}

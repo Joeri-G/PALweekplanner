@@ -3,6 +3,8 @@ require('funcLib.php');
 if (!_POSTIsset(['username', 'password', 'role', 'userLVL'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
+echo "[INPUT]\tOK\n";
+
 $username = $_POST['username'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 $password = $_POST['password'];
@@ -64,7 +66,9 @@ $stmt->execute();
 $stmt->store_result();
 
 if (!empty($conn->error)) {
-  echo "ERROR\n";
+  $stmt->close();
+  $conn->close();
+  die("ERROR\n");
 }
 $stmt->close();
 $conn->close();

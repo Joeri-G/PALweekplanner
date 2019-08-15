@@ -6,12 +6,53 @@
     * functie om lijst met alle gebruikers te laden
   - buildUserList()
     * functie om de user table te 'bouwen' uit de JSON
-  - saveUser()
-    * komt nog
+
+
+  - toggleKlassen()
+    * zelfde als toggleUsers() maar voor klassen
+  - loadKlassen()
+    * zelfde als loadUsers() maar voor klassen
+  - buildKlassen()
+    * zelfde als buildUsers() maar voor klassen
+
+
+  - toggleLokalen()
+    * zelfde als toggleUsers() maar voor lokalen
+  - loadLokalen()
+    * zelfde als loadUsers() maar voor lokalen
+  - buildLokalen()
+    * zelfde als buildUsers() maar voor lokalen
+
+
+  - sendURL()
+    * functie om request te doen, gebruikt door deleteUser(), deleteKlas() en deleteLokaal()
+
+
   - deleteUser()
-    * komt nog
-  -  loadKlas()
-    * functie om alle
+    * functie om gebruikers te verwijderen uit database
+
+  - deleteKlas()
+    * zelfde als deleteUser() maar voor klassen
+
+  - deleteLokaal()
+    * zelfde als deleteUser() maar voor lokalen
+
+
+  - addUser()
+    * functie om user toe te voegen aan database
+      + username
+      + password
+      + role (docent, admin, leerling, etc)
+      + userLVL (waar de gebruiker toegang tot heeft. 2 voor /html/api.php, 4 voor /html/admin/api.php)
+      + userAvailability (afhankelijk van dagen in /conf/conf.json)
+  - addKlas()
+    * zelfde als addUser() maar voor klas
+      + jaar
+      + niveau
+      + nummer
+  - addLokaal()
+    * zelfde als addUser() maar voor lokalen
+      + lokaal
 */
 function toggleUsers(element, config) {
   load(true);
@@ -65,9 +106,9 @@ function buildUsers(data, userList, config) {
 
     html += '<tr>\
     <td>' + data[i].username + '</td>\
-    <td><input type="password" placeholder="password" name="' + data[i].username + 'password"></td>\
-    <td><input type="text" placeholder="role" value="' + data[i].role + '" name="' + data[i].username + 'role"></td>\
-    <td><input type="number" placeholder="userLVL" value="' + data[i].userLVL + '" name="' + data[i].username + 'userLVL"></td>\n';
+    <td> *** </td>\
+    <td>' + data[i].role + '</td>\
+    <td>' + data[i].userLVL + '</td>\n';
     for (var x = 0; x < config.dagen.length; x++) {
       if(
         typeof userAvailability[config.dagen[x]] !== undefined &&
@@ -157,9 +198,9 @@ function buildKlassen(data, klasList, config) {
   for (var i = 0; i < data.length; i++) {
     html += '<tr>\
     <td>' + data[i].jaar + data[i].niveau + data[i].nummer + '</td>\
-    <td><input type="number" name="klas' + data[i].ID + 'jaar" value="' + data[i].jaar + '" placeholder="Jaar"></td>\
-    <td><input type="text" name="klas' + data[i].ID + 'niveau" value="' + data[i].niveau + '" placeholder="Niveau"></td>\
-    <td><input type="number" name="klas' + data[i].ID + 'nummer" value="' + data[i].nummer + '" placeholder="Nummer"></td>\
+    <td>' + data[i].jaar + '</td>\
+    <td>' + data[i].niveau + '</td>\
+    <td>' + data[i].nummer + '</td>\
     <td>\
     <div class="centerContent actions" data-klas=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteKlas(this.parentElement.dataset.klas)">\
@@ -234,7 +275,7 @@ function buildLokalen(data, lokaalList) {
   html += '<tr><th>Klas</th><th>Delete</th></tr>\n';
   for (var i = 0; i < data.length; i++) {
     html += '<tr>\
-    <td><input type="text" name="lokaal' + data[i].ID + '" placeholder="Lokaal" value="' + data[i].lokaal + '"></td>\
+    <td>' + data[i].lokaal + '</td>\
     <td>\
     <div class="centerContent actions" data-lokaal=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteLokaal(this.parentElement.dataset.lokaal)">\
@@ -274,7 +315,7 @@ function sendURL(url, callback) {
   xhttp.send();
 }
 
-function saveUser(config) {
+function addUser(config) {
   load(true);
   //haal data uit textboxes
   let usernameObj = document.getElementById('adduserUsername');
@@ -286,6 +327,10 @@ function saveUser(config) {
   let password = passwordObj.value;
   let role = roleObj.value;
   let userLVL = userLVLObj.value;
+
+  //maak username en password velden leeg
+  usernameObj.value = '';
+  passwordObj.value = '';
 
   //check of een van de inputs leeg is
   if (username == '' || password == '' || role == '' || userLVL == '') {
@@ -315,6 +360,74 @@ function saveUser(config) {
     }
   };
   xhttp.open("POST", '/admin/api.php?addUser=true', true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(POST);
+}
+
+function addKlas() {
+  load(true);
+  let jaarObj = document.getElementById('addklasJaar');
+  let niveauObj = document.getElementById('addklasNiveau');
+  let nummerObj = document.getElementById('addklasNummer');
+
+  let jaar = jaarObj.value;
+  let niveau = niveauObj.value;
+  let nummer = nummerObj.value;
+
+  jaarObj.value = '';
+  niveauObj.value = '';
+  nummerObj.value = '';
+
+  //check of alle variables wel een value
+  if (jaar == '' || niveau == '' || nummer == '') {
+    load(false);
+    message('Niet alle velden zijn ingevuld');
+    return 0;
+  }
+  let POST = 'jaar='+encodeURIComponent(jaar)+
+  '&niveau='+encodeURIComponent(niveau)+
+  '&nummer='+encodeURIComponent(nummer);
+
+
+  let xhttp = new XMLHttpRequest();
+  //laad list met alle docenten en klassen
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      load(false);
+      message(this.responseText);
+    }
+  };
+  xhttp.open("POST", '/admin/api.php?addKlas=true', true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(POST);
+}
+
+function addLokaal() {
+  load(true);
+  let lokaalObj = document.getElementById('addlokaalLokaal');
+  let lokaal = lokaalObj.value;
+
+  //check of er wel wat gezet is
+  if (lokaal == '') {
+    load(false);
+    message('Niet alle velden zijn ingevuld');
+    return 0;
+  }
+
+  lokaalObj.value = '';
+
+  let POST = 'lokaal='+encodeURIComponent(lokaal);
+  let xhttp = new XMLHttpRequest();
+  //stuur request met in body alle data
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      load(false);
+      message(this.responseText);
+    }
+  };
+  xhttp.open("POST", '/admin/api.php?addLokaal=true', true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send(POST);

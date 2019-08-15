@@ -41,4 +41,12 @@ if (isset($_GET['addUser']) && $_GET['addUser'] == 'true') {
   require('../../php/ADMIN-addUser.php');
 }
 
+if (isset($_GET['addKlas']) && $_GET['addKlas'] == 'true') {
+  require('../../php/ADMIN-addKlas.php');
+}
+
+if (isset($_GET['addLokaal']) && $_GET['addLokaal'] == 'true') {
+  require('../../php/ADMIN-addLokaal.php');
+}
+
  ?>

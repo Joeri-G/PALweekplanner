@@ -61,7 +61,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           </span>
           <span id="docentDagen"></span>
           <span class="buttonContaier">
-            <button type="button" class="button" onclick="saveUser(config)">Add</button>
+            <button type="button" class="button" onclick="addUser(config)">Add</button>
           </span>
         </div>
       </div>
@@ -80,12 +80,12 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Vul de velden in om een klas toe te voegen</p>
         <div class="inputParent">
           <span class="col_3">
-            <span><input type="number" placeholder="Jaarlaag" name="jaarlaag"></span>
-            <span><input type="text" placeholder="Niveau" name="niveau"></span>
-            <span><input type="number" placeholder="Nummer" name="nummer"></span>
+            <span><input type="number" placeholder="Jaarlaag" id="addklasJaar"></span>
+            <span><input type="text" placeholder="Niveau" id="addklasNiveau"></span>
+            <span><input type="number" placeholder="Nummer" id="addklasNummer"></span>
           </span>
           <span class="buttonContaier">
-            <button type="button" class="button">Add</button>
+            <button type="button" class="button" onclick="addKlas()">Add</button>
           </span>
         </div>
       </div>
@@ -104,10 +104,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Vul het veld in om een lokaal toe te voegen</p>
         <div class="inputParent">
           <span class="col_1">
-            <input type="text" placeholder="Lokaal">
+            <input type="text" placeholder="Lokaal" id="addlokaalLokaal">
           </span>
           <span class="buttonContaier">
-            <button type="button" name="button" class="button">Add</button>
+            <button type="button" onclick="addLokaal()" class="button">Add</button>
           </span>
         </div>
       </div>
