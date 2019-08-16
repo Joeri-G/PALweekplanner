@@ -50,7 +50,7 @@
       + jaar
       + niveau
       + nummer
-  - addLokaal()
+  - addLoka()
     * zelfde als addUser() maar voor lokalen
       + lokaal
 */
@@ -122,7 +122,7 @@ function buildUsers(data, userList, config) {
       }
     }
     html += '<td>\
-    <div class="centerContent actions" data-user=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
+    <div class="actions" data-user=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteUser(this.parentElement.dataset.user, config)"></div>\
     </td>\
     </tr>\n';
@@ -202,7 +202,7 @@ function buildKlassen(data, klasList, config) {
     <td>' + data[i].niveau + '</td>\
     <td>' + data[i].nummer + '</td>\
     <td>\
-    <div class="centerContent actions" data-klas=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
+    <div class="actions" data-klas=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteKlas(this.parentElement.dataset.klas)">\
     </div>\
     </td>\
@@ -277,7 +277,7 @@ function buildLokalen(data, lokaalList) {
     html += '<tr>\
     <td>' + data[i].lokaal + '</td>\
     <td>\
-    <div class="centerContent actions" data-lokaal=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
+    <div class="actions" data-lokaal=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteLokaal(this.parentElement.dataset.lokaal)">\
     </div>\
     </td>\

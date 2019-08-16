@@ -7,7 +7,6 @@ echo "[INPUT]\tOK\n";
 
 $username = $_POST['username'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-$password = $_POST['password'];
 $role = $_POST['role'];
 $userLVL = $_POST['userLVL'];
 
@@ -23,7 +22,7 @@ if (strlen($_POST['password']) < 8) {
 echo "[PASSWORD]\tOK LENGTH\n";
 
 //check of username en passwd wel gezet zijn
-if (empty($username) || empty($password)) {
+if (empty($username) || empty($_POST['password'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 

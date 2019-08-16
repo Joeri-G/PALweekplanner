@@ -30,6 +30,10 @@ main > div > p:first-of-type {
   overflow: auto;
 }
 
+.inputParent a {
+  text-decoration: none;
+}
+
 .col_2, .col_3, .col_1 {
   width: auto;
   display: grid;
@@ -158,6 +162,5 @@ main > div > p:first-of-type {
 }
 
 .list td:last-of-type, .list th:last-of-type {
-  width: auto;
-  max-width: 100px;
+  width: 100px;
 }

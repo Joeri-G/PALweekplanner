@@ -6,7 +6,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
   header("location: /login");
   die('Not Logged In');
 }
- ?>
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -21,12 +21,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
     <nav>
       <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
       <a href="/">Home</a>
-      <?php
-      //als de gebruiker een admin is geef dan de admin link weer
-      if ($_SESSION['userLVL'] > 3) {
-        echo '<a href="/admin">Panel</a>';
-      }
-       ?>
+      <a href="/admin">Panel</a>
       <a href="/logout">Logout</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
     </nav>
@@ -38,12 +33,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
         <span><a href="/">Home</a></span>
-        <?php
-        //als de gebruiker een admin is geef dan de admin link weer
-        if ($_SESSION['userLVL'] > 3) {
-          echo '<span><a href="/admin">Panel</a></span>';
-        }
-         ?>
+        <span><a href="/admin">Panel</a></span>
         <span><a href="/logout">Logout</a></span>
       </div>
     </menu>
