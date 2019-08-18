@@ -77,4 +77,9 @@ if (isset($_GET['readAll']) && $_GET['readAll'] == 'true') {
 if (isset($_GET['listJaarlaagKlassen']) && $_GET['listJaarlaagKlassen'] == 'true') {
   require('../php/listJaarlaagKlassen.php');
 }
+
+//list alle projecten
+if (isset($_GET['listProjects']) && $_GET['listProjects'] == 'true') {
+  require('../php/PROJECTS-listProjects.php');
+}
  ?>

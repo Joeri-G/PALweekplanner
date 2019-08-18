@@ -1,32 +1,27 @@
 <?php
-//BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
+// BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
-if (!isset($_SESSION['loggedin'])) {
+//login check
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] <= 3) {
   header("location: /login");
-  die();
+  die('Not Logged In');
 }
- ?>
+?>
 <!DOCTYPE html>
 <html lang="nl" dir="ltr">
-<!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
+  <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
-    <!-- title -->
-    <title>Rooster</title>
-    <!-- icon -->
+    <title>Project Codes</title>
     <link rel="shortcut icon" href="/img/logo.svg">
-    <!-- css -->
     <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" href="/css/gridRooster.css">
-    <link rel="stylesheet" href="/css/weekRooster.css">
+    <link rel="stylesheet" href="/css/admin.css">
   </head>
   <body>
     <!-- Navbar -->
     <nav>
       <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
-      <a href="#" onclick="modeDefault()">Standaard Weergave</a>
-      <a href="#" onclick="modeGrid()">Volledige Weergave</a>
-      <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+      <a href="/">Home</a>
       <a href="/projecten">Projecten</a>
       <?php
       //als de gebruiker een admin is geef dan de admin link weer
@@ -44,9 +39,7 @@ if (!isset($_SESSION['loggedin'])) {
           <span><a href="#" class="icon"><img src="/img/logo.svg" alt="Logo"></a></span>
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
-        <span><a href="#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
-        <span><a href="#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
-        <span><a href="#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
+        <span><a href="/">Home</a></span>
         <span><a href="/projecten">Projecten</a></span>
         <?php
         //als de gebruiker een admin is geef dan de admin link weer
@@ -59,10 +52,38 @@ if (!isset($_SESSION['loggedin'])) {
     </menu>
     <!-- Noscript tags voor als een oma een keer met Internet Explorer 6 de pagina probeert te laden -->
     <noscript><p style="font-size:48px">Please enable JavaScript or switch to a browser that supports it.</p></noscript>
-    <!-- Selection object -->
-    <div class="select"></div>
-    <!-- Main document -->
-    <main style="display:block"></main>
+    <main>
+      <div>
+        <p>Voeg Project Toe</p>
+        <p>Vul alle velden in om een project toe te voegen</p>
+        <div class="inputParent">
+          <span class="col_3">
+            <span><input type="text" placeholder="Titel" id="projectTitel"></span>
+            <span><input type="text" placeholder="Afkorting" id="projectAfkorting"></span>
+            <span>
+              <select id="projectLeider">
+                <option disabled selected>Projectleider</option>
+              </select>
+            </span>
+          </span>
+          <span class="col_1">
+            <span><textarea placeholder="Beschrijving van project" id="projectBeschrijving"></textarea></span>
+            <span><textarea placeholder="Instructies voor leerlingen" id="projectInstructie"></textarea></span>
+          </span>
+          <span class="buttonContaier">
+            <button type="button" class="button" onclick="addProject()">Add</button>
+          </span>
+        </div>
+      </div>
+      <div>
+        <p>Projecten</p>
+        <p>Lijst met alle projecten</p>
+        <div class="inputParent">
+          <button type="button" class="button" data-toggle="hidden" onclick="toggleProjecten(this)">show</button>
+          <div id="projectList" class="list" style="display:none;"></div>
+        </div>
+      </div>
+    </main>
     <!-- Loading svg -->
     <div id="loading">
       <div id="loadingContent"></div>
@@ -88,13 +109,6 @@ if (!isset($_SESSION['loggedin'])) {
         </p>
       </span>
     </footer>
-    <!-- Scripts -->
     <script src="/js/master.js" charset="utf-8"></script>
-    <script src="/js/weekRooster.js" charset="utf-8"></script>
-    <script src="/js/gridRooster.js" charset="utf-8"></script>
-    <script src="/js/roosterFunctions.js" charset="utf-8"></script>
-    <script type="text/javascript">
-      modeDefault();
-    </script>
   </body>
 </html>

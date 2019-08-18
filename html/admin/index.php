@@ -8,7 +8,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="nl" dir="ltr">
+  <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
     <title>Admin Panel</title>
@@ -21,6 +22,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
     <nav>
       <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
       <a href="/">Home</a>
+      <a href="/projecten">Projecten</a>
       <a href="/admin">Panel</a>
       <a href="/logout">Logout</a>
       <span onclick="menu(true)"><img src="/img/menu.svg" alt="menu"></span>
@@ -33,6 +35,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
         <span><a href="/">Home</a></span>
+        <span><a href="/projecten">Projecten</a></span>
         <span><a href="/admin">Panel</a></span>
         <span><a href="/logout">Logout</a></span>
       </div>

@@ -50,7 +50,7 @@
       + jaar
       + niveau
       + nummer
-  - addLoka()
+  - addLokaal()
     * zelfde als addUser() maar voor lokalen
       + lokaal
 */
@@ -272,10 +272,11 @@ function loadLokalen(lokaalList) {
 
 function buildLokalen(data, lokaalList) {
   let html = '<table id="lokaalTable">\n';
-  html += '<tr><th>Klas</th><th>Delete</th></tr>\n';
+  html += '<tr><th>Klas</th><th class="tableFilling">&nbsp;</th><th>Delete</th></tr>\n';
   for (var i = 0; i < data.length; i++) {
     html += '<tr>\
     <td>' + data[i].lokaal + '</td>\
+    <td class="tableFilling">&nbsp;</td>\
     <td>\
     <div class="actions" data-lokaal=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteLokaal(this.parentElement.dataset.lokaal)">\

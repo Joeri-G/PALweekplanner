@@ -7,7 +7,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 }
  ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="nl" dir="ltr">
+  <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
     <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->

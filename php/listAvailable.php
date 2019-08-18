@@ -5,6 +5,7 @@ we willen een lijst van alles wat vrij is op een gegeven tijdstip
   - maak een list met alle dagdelen
   - maak een list met alle klassen
   - maak een list met alle klassen die bezet zijn
+  - maak list met alle projectCodes
   - loop door dagdelen
     * query alle docenten die niet bezet zijn op het huidige dagdeel
       + als de ook beschikbaar zijn, voeg ze toe aan het Available object onder het correcte dagdeel
@@ -21,6 +22,7 @@ $out = new stdClass;
 $out->docent = new stdClass;
 $out->klas = new stdClass;
 $out->lokaal = new stdClass;
+$out->projectCode = array();
 //maak list met alle dagdelen
 $data = file_get_contents('../conf/conf.json');
 $conf = json_decode($data);
@@ -174,6 +176,15 @@ WHERE
     $out->lokaal->$dagdeelTMP[] = $resLokaal;
   }
   $stmt->close();
+
+  // //selecteer projectCodes
+  // $stmt = $conn->prepare('SELECT DISTINCT projectCode FROM projecten');
+  // $stmt->execute();
+  // $stmt->store_result();
+  // $stmt->bind_result($resProjectCode);
+  // while ($stmt->fetch()) {
+  //   $out->projectCode[] = $resProjectCode;
+  // }
 }
 $conn->close();
 //zet header

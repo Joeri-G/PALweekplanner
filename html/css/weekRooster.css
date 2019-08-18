@@ -28,6 +28,14 @@ main {
 	display: none;
 }
 
+button:hover, button:focus,
+input:hover, input:focus,
+textarea:hover,textarea:focus,
+select:hover, select:focus,
+.checkmark:hover, .checkmark:focus {
+    box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.5);
+}
+
 /* 1.2 */
 
 section > p {
@@ -38,16 +46,12 @@ section > p {
 
 .uur,.pauze {
 	margin: 16px 8px;
-	-webkit-box-shadow: 0px 0px 4px 1px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    0px 0px 4px 1px rgba(50, 50, 50, 0.75);
-	box-shadow:         0px 0px 4px 1px rgba(50, 50, 50, 0.75);
+	box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
 }
 
 .uur:hover,.pauze:hover,
 .uur:focus-within,.pauze:focus-within {
-	-webkit-box-shadow: 0px 0px 6px 2px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    0px 0px 6px 2px rgba(50, 50, 50, 0.75);
-	box-shadow:         0px 0px 6px 2px rgba(50, 50, 50, 0.75)
+  box-shadow: 0px 0px 6px 3px rgba(50, 50, 50, 0.5);
 }
 
 .uur {

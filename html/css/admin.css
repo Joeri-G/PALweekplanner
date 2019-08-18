@@ -1,19 +1,44 @@
-html, body {
-  display: block;
-}
+/* CSS door Joeri Geuzinge */
+/*
+1.0 MAIN CSS
+  1.1 main
+2.0 MAIN CONTENT
+  2.1 container
+  2.2 content
+3.0 TABLES
+  3.1 table css
+*/
 
+/* 1.0 */
+/* 1.1 */
 main {
+  width: 100%;
   max-width: 990px;
-  margin: auto;
+  margin: 0 auto auto;
   text-align: left;
   display: block;
 }
 
+select {
+  width: 100%;
+}
+
+.centerContent {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+textarea {
+  font-family: 'Barlow Semi Condensed',sans-serif;
+}
+
+/* 2.0 */
+/* 2.1 */
 main > div {
   background: #fff;
-  -webkit-box-shadow: 0px 0px 8px 2px rgba(50, 50, 50, 0.75);
-  -moz-box-shadow:    0px 0px 8px 2px rgba(50, 50, 50, 0.75);
-  box-shadow:         0px 0px 8px 2px rgba(50, 50, 50, 0.75);
+  box-shadow: 0px 0px 4px 4px rgba(50, 50, 50, 0.5);
   padding: 32px;
   margin: 32px;
   display: block;
@@ -53,7 +78,7 @@ main > div > p:first-of-type {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.inputParent input {
+.inputParent input, .inputParent textarea {
   width: 100%;
   font-size: 1em;
   padding: 4px 8px;
@@ -78,14 +103,6 @@ main > div > p:first-of-type {
   margin-left: 8px;
 }
 
-.button:hover, .button:focus,
-.inputParent input:hover, .inputParent input:focus,
-.checkmark:hover, .checkmark:focus {
-  -webkit-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
-  -moz-box-shadow:    0px 0px 2px 2px rgba(50, 50, 50, 0.5);
-  box-shadow:         0px 0px 2px 2px rgba(50, 50, 50, 0.5);
-}
-
 #docentDagen {
   padding: 4px;
   width: 90%;
@@ -100,34 +117,31 @@ main > div > p:first-of-type {
   display: block;
 }
 
+/* 3.0 */
+/* 3.1 */
+
 .list {
   overflow: auto;
   margin: 2px;
   margin-top: 8px;
-  -webkit-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
-  -moz-box-shadow:    0px 0px 2px 2px rgba(50, 50, 50, 0.5);
-  box-shadow:         0px 0px 2px 2px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.5);
 }
 
-.list table {
+table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-.list input {
+input, textarea {
   display: block;
 }
 
-.list th:first-of-type, .list td:first-of-type {
-	font-weight: bold;
-}
-
-.list tr:nth-child(even) {
+tr:nth-child(even) {
   background-color: #ddd;
 }
 
-.list tr {
+tr {
   height: 3em;
 }
 
@@ -135,7 +149,7 @@ main > div > p:first-of-type {
   margin: 0 auto;
 }
 
-.list td, .list th {
+td,  th {
   border: 1px solid #eee;
   width: auto;
   margin: auto;
@@ -148,19 +162,19 @@ main > div > p:first-of-type {
   cursor: pointer;
 }
 
-.centerContent {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.list td:first-of-type, .list th:first-of-type {
+td:first-of-type,  th:first-of-type {
+  font-weight: bold;
   width: auto;
-  padding-left: 32px;
-  text-align: left;
 }
 
-.list td:last-of-type, .list th:last-of-type {
-  width: 100px;
+td:last-of-type,  th:last-of-type {
+   width: 100px;
+}
+
+.tableFilling {
+  width: 100%;
+}
+
+#lokaalTable td, #lokaalTable th {
+  padding: 4px 32px;
 }

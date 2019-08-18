@@ -148,8 +148,8 @@ CREATE TABLE `deleted` (
   `laptops` varchar(32) NOT NULL,
   `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
   `notes` varchar(128) NOT NULL,
-  `userCreate` varchar(16) NOT NULL COMMENT 'user who added original entry',
-  `userDelete` varchar(16) NOT NULL COMMENT 'user who deleted original entry',
+  `userCreate` varchar(64) NOT NULL COMMENT 'user who added original entry',
+  `userDelete` varchar(64) NOT NULL COMMENT 'user who deleted original entry',
   `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was deleted',
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
   `ID` int(11) NOT NULL
@@ -157,5 +157,33 @@ CREATE TABLE `deleted` (
 ALTER TABLE `deleted`
   ADD PRIMARY KEY (`ID`);
 ALTER TABLE `deleted`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+COMMIT;
+
+
+/*
+planner -> projectCodes
+  - afkorting
+  - beschrijving
+  - USER
+  - TIME
+  - IP
+  - ID
+*/
+
+CREATE TABLE `projecten` (
+  `projectTitle` varchar(64) NOT NULL,
+  `projectCode` varchar(6) NOT NULL,
+  `projectBeschrijving` TEXT NOT NULL,
+  `projectInstructie` TEXT NOT NULL,
+  `verantwoordelijke` varchar(64) NOT NULL,
+  `user` varchar(64) NOT NULL,
+  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `IP` varchar(64) NOT NULL,
+  `ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `projecten`
+  ADD PRIMARY KEY (`ID`);
+ALTER TABLE `projecten`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 COMMIT;
