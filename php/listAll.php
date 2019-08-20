@@ -19,8 +19,8 @@ script om een lijst te maken met alle klassen en docenten
 */
 //maak leeg out object en tijdenlijke objects voor docenten en klassen
 $out = new stdClass;
-$docenten = array();
-$klassen = array();
+$d = array();
+$k = array();
 //MySQL connection
 require('db-connect.php');
 //lees alle docenten
@@ -36,11 +36,11 @@ while ($stmt->fetch()) {
   //plaats de availability
   $docent->availability = json_decode($resUserAvailability);
   //plaats het in het object docent
-  $docenten[] = $docent;
+  $d[] = $docent;
 }
 $stmt->close();
 //plaats docenten in out;
-$out->docent = $docenten;
+$out->d = $d;
 
 
 $stmt = $conn->prepare('SELECT DISTINCT jaar, niveau, nummer FROM klassen');
@@ -51,15 +51,15 @@ while ($stmt->fetch()) {
   //tijdelijk object
   $klas = new stdClass;
   //jaar
-  $klas->jaar = $resJaar;
+  $klas->j = $resJaar;
   //niveau
-  $klas->niveau = htmlentities($resNiveau);
+  $klas->ni = htmlentities($resNiveau);
   //nummer
-  $klas->nummer = $resNummer;
+  $klas->nu = $resNummer;
   //plaats in klassen
-  $klassen[] = $klas;
+  $k[] = $klas;
 }
-$out->klas = $klassen;
+$out->k = $k;
 
 //set JSON header
 header('Content-Type: application/json');

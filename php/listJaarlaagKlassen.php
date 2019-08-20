@@ -9,6 +9,7 @@ if (!_GETIsset(['jaar', 'niveau'])) {
   die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 $out = new stdClass;
+$out->k = array();
 require('db-connect.php');
 $stmt = $conn->prepare('SELECT DISTINCT nummer FROM klassen WHERE jaar = ? AND niveau = ?');
 $stmt->bind_param('ss', $_GET['jaar'], $_GET['niveau']);
@@ -16,10 +17,10 @@ $stmt->execute();
 $stmt->bind_result($resNummer);
 while($stmt->fetch()) {
   $tmpObj = new stdClass;
-  $tmpObj->jaar = $_GET['jaar'];
-  $tmpObj->niveau = $_GET['niveau'];
-  $tmpObj->nummer = $resNummer;
-  $out->klas[] = $tmpObj;
+  $tmpObj->j = $_GET['jaar'];
+  $tmpObj->ni = $_GET['niveau'];
+  $tmpObj->nu = $resNummer;
+  $out->k[] = $tmpObj;
 }
 
 //set JSON header

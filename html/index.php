@@ -25,8 +25,8 @@ if (!isset($_SESSION['loggedin'])) {
     <nav>
       <a href="/" target="_self" class="icon"><img src="/img/logo.svg" alt="Logo"></a>
       <a href="#" onclick="modeDefault()">Standaard Weergave</a>
-      <a href="#" onclick="modeGrid()">Volledige Weergave</a>
-      <a href="#" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
+      <a href="#full" onclick="modeGrid()">Volledige Weergave</a>
+      <a href="#jaarlaag" onclick="modeJaarlaag()">Jaarlaag Weergave</a>
       <a href="/projecten">Projecten</a>
       <?php
       //als de gebruiker een admin is geef dan de admin link weer
@@ -44,9 +44,9 @@ if (!isset($_SESSION['loggedin'])) {
           <span><a href="#" class="icon"><img src="/img/logo.svg" alt="Logo"></a></span>
           <span><a href="#" class="icon"><img src ="/img/close.svg" alt="Close" onclick="menu(false)" class="close"></a></span>
         </div>
-        <span><a href="#" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
-        <span><a href="#" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
-        <span><a href="#" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
+        <span><a href="#default" onclick="menu(false);modeDefault()">Standaard Weergave</a></span>
+        <span><a href="#full" onclick="menu(false);modeGrid()">Volledige Weergave</a></span>
+        <span><a href="#jaarlaag" onclick="menu(false);modeJaarlaag()">Jaarlaag Weergave</a></span>
         <span><a href="/projecten">Projecten</a></span>
         <?php
         //als de gebruiker een admin is geef dan de admin link weer
@@ -94,7 +94,17 @@ if (!isset($_SESSION['loggedin'])) {
     <script src="/js/gridRooster.js" charset="utf-8"></script>
     <script src="/js/roosterFunctions.js" charset="utf-8"></script>
     <script type="text/javascript">
+    //check in de url met de hash (#) anchor wat de mode is
+    let hash = window.location.hash;
+    if (hash == '#full') {
+      modeGrid();
+    }
+    else if (hash == '#jaarlaag') {
+      modeJaarlaag();
+    }
+    else {
       modeDefault();
+    }
     </script>
   </body>
 </html>

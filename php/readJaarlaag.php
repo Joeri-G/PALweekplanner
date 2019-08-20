@@ -45,19 +45,19 @@ while ($stmt->fetch()) {
   }
   $obj = new stdClass;
   $klasObj = new stdClass;
-  $klasObj->jaar = $jaar;
-  $klasObj->niveau = $niveau;
-  $klasObj->nummer = $resKlas1Nummer;
+  $klasObj->j = $jaar;
+  $klasObj->ni = $niveau;
+  $klasObj->nu = $resKlas1Nummer;
 
-  $obj->klas = [$klasObj];
+  $obj->k = [$klasObj];
 
-  $obj->docent = [$resDocent1, $resDocent2];
+  $obj->d = [$resDocent1, $resDocent2];
 
-  $obj->lokaal = [$resLokaal1, $resLokaal2];
+  $obj->l = [$resLokaal1, $resLokaal2];
 
-  $obj->laptop = $resLaptop;
-  $obj->projectCode = $resProjectCode;
-  $obj->note = $resNote;
+  $obj->la = $resLaptop;
+  $obj->p = $resProjectCode;
+  $obj->no = $resNote;
   $obj->ID = $resID;
 
   $out->$resDaypart[] = $obj;

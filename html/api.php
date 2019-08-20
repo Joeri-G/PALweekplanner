@@ -82,4 +82,14 @@ if (isset($_GET['listJaarlaagKlassen']) && $_GET['listJaarlaagKlassen'] == 'true
 if (isset($_GET['listProjects']) && $_GET['listProjects'] == 'true') {
   require('../php/PROJECTS-listProjects.php');
 }
+
+//list alle docenten
+if (isset($_GET['listDocent']) && $_GET['listDocent'] == 'true') {
+  require('../php/listDocent.php');
+}
+
+//voeg project toe
+if (isset($_GET['addProject']) && $_GET['addProject'] == 'true') {
+  require('../php/addProject.php');
+}
  ?>

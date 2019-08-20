@@ -58,16 +58,17 @@ for ($i=0; $i < count($conf->dagen); $i++) {
 }
 
 $userAvailability = json_encode($userAvailabilityObj);
-echo "INSERTINGS...\n";
-$stmt = $conn->prepare('INSERT INTO users (username, password, role, userLVL, userAvailability) VALUES (?, ?, ?, ?, ?)');
+echo "INSERTING...\n";
+$stmt = $conn->prepare("INSERT INTO users (username, password, role, userLVL, userAvailability, lastLoginIP) VALUES (?, ?, ?, ?, ?, '0.0.0.0')");
 $stmt->bind_param('sssis', $username, $password, $role, $userLVL, $userAvailability);
 $stmt->execute();
 $stmt->store_result();
 
 if (!empty($conn->error)) {
+  echo "ERROR\n$conn->error";
   $stmt->close();
   $conn->close();
-  die("ERROR\n");
+  die();
 }
 $stmt->close();
 $conn->close();

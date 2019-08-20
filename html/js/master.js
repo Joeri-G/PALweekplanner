@@ -21,6 +21,8 @@ script met functions die voor alle "viewModes" gebruikt worden
     * functie om een afspraak te creeren
   - sortTable()
     * functie om table alpahbatisch te sorteren
+  - checkEmpty()
+    * functie om te checken of een value null is
 */
 
 //function voor menu buttons
@@ -98,13 +100,14 @@ function escapeHTML(input) {
 
 function enlargeHour(data) {
   let json = JSON.parse(data);
-  let text = 'Docent1:\t\t' + escapeHTML(json.docent[0]);
-  text += '\nDocent2:\t\t' + escapeHTML(json.docent[1]);
-  text += '\n\nKlas:\t\t' + escapeHTML(json.klas[0].jaar + json.klas[0].niveau + json.klas[0].nummer);
-  text += '\n\nLokaal1:\t\t' + escapeHTML(json.lokaal[0]);
-  text += '\nLokaal2:\t\t' + escapeHTML(json.lokaal[0]);
-  text += '\n\nProjectCode:\t' + escapeHTML(json.projectCode);
-  text += '\nNote:\t\t' + escapeHTML(json.note);
+  let text = 'Docent1: ' + escapeHTML(json.d[0]);
+  text += '\nDocent2: ' + escapeHTML(json.d[1]);
+  text += '\n\nKlas: ' + escapeHTML(json.k[0].j + json.k[0].ni + json.k[0].nu);
+  text += '\n\nLokaal1: ' + escapeHTML(json.l[0]);
+  text += '\nLokaal2: ' + escapeHTML(json.l[0]);
+  text += '\n\nProjectCode: ' + escapeHTML(json.p);
+  text += '\n\nLaptops: ' + escapeHTML(json.la);
+  text += '\nNote: ' + escapeHTML(json.no);
   message(text);
 }
 
@@ -123,6 +126,10 @@ function deleteHour(data, mode = 0) {
           }
           else if (mode == 1) {
             modeGrid();
+          }
+          else if (mode == 2) {
+            let el = document.getElementsByName('selectJaarlaag')[0];
+            buildJaarlaag(el.value, el.dataset.jaarlagen);
           }
         }, 1000);
       }
@@ -143,9 +150,9 @@ function makeList(dagdeel, type, lable, listAvailable) {
   let html = '<option selected disabled value="None">'+lable+'</option>\n';
   html += '<option value="None">Geen</option>';
   //voor klassen moeten we het anders doen
-  if (type == 'klas') {
+  if (type == 'k') {
     for (var i = 0; i < lijst.length; i++) {
-      html += '<option value="klas'+i+'">'+lijst[i].jaar+lijst[i].niveau+lijst[i].nummer+'</option>\n';
+      html += '<option value="klas'+i+'">'+lijst[i].j+lijst[i].ni+lijst[i].nu+'</option>\n';
     }
     return html;
   }
@@ -171,10 +178,10 @@ function sendHour(name, dagdeel, mode = 0) {
       klassen++;
       if (value !=='None') {
         let pos = Number(value.substring(4, 5));
-        let json = JSON.parse(document.getElementsByName(name+inputs[i])[0].dataset.klas);
-        url += '&klas'+klassen+'jaar='+json.data[pos].jaar;
-        url += '&klas'+klassen+'niveau='+json.data[pos].niveau;
-        url += '&klas'+klassen+'nummer='+json.data[pos].nummer;
+        let json = JSON.parse(document.getElementsByName(name+inputs[i])[0].dataset.k);
+        url += '&klas'+klassen+'jaar='+json.data[pos].j;
+        url += '&klas'+klassen+'niveau='+json.data[pos].ni;
+        url += '&klas'+klassen+'nummer='+json.data[pos].nu;
       }
       else {
         url += '&klas'+klassen+'jaar=None';
@@ -198,6 +205,10 @@ function sendHour(name, dagdeel, mode = 0) {
         }
         else if (mode == 1) {
           modeGrid();
+        }
+        else if (mode == 2) {
+          let el = document.getElementsByName('selectJaarlaag')[0];
+          buildJaarlaag(el.value, el.dataset.jaarlagen);
         }
       }, 1000);
       return null;
@@ -261,4 +272,35 @@ function sortTable(table) {
       switching = true;
     }
   }
+}
+
+
+function checkEmpty(input = []) {
+  for (var i = 0; i < input.length; i++) {
+    if (input[i].replace(/ /g, '') == '' || input[i] == null || input[i] == undefined) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+
+//makeProjectList
+function makeProjectList(type, lable, listAvailable) {
+  //haal de data uit de lijst met beschikbare docenten, klassen, etc
+  let lijst = listAvailable[type];
+  let html = '<option selected disabled value="None">'+lable+'</option>\n';
+  html += '<option value="None">Geen</option>';
+  //voor klassen moeten we het anders doen
+  if (type == 'k') {
+    for (var i = 0; i < lijst.length; i++) {
+      html += '<option value="klas'+i+'">'+lijst[i].j+lijst[i].ni+lijst[i].nu+'</option>\n';
+    }
+    return html;
+  }
+  for (var i = 0; i < lijst.length; i++) {
+    html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
+  }
+  return html;
 }

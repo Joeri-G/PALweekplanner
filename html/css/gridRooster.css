@@ -82,6 +82,6 @@ main.full {
 	background: inherit;
 	border: none;
 	float: none;
-	height: auto;
+	/* height: auto; */
 	width: auto;
 }

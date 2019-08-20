@@ -2,7 +2,7 @@
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 //login check
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] <= 3) {
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] < 3) {
   header("location: /login");
   die('Not Logged In');
 }
@@ -110,5 +110,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       </span>
     </footer>
     <script src="/js/master.js" charset="utf-8"></script>
+    <script src="/js/projecten.js" charset="utf-8"></script>
   </body>
 </html>

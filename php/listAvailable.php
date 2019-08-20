@@ -19,10 +19,10 @@ we willen een lijst van alles wat vrij is op een gegeven tijdstip
 require('funcLib.php');
 //maak object voor output
 $out = new stdClass;
-$out->docent = new stdClass;
-$out->klas = new stdClass;
-$out->lokaal = new stdClass;
-$out->projectCode = array();
+$out->d = new stdClass;
+$out->k = new stdClass;
+$out->l = new stdClass;
+$out->p = array();
 //maak list met alle dagdelen
 $data = file_get_contents('../conf/conf.json');
 $conf = json_decode($data);
@@ -45,9 +45,9 @@ $stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau, $resNummer);
 while ($stmt->fetch()) {
   $klasObject = new stdClass;
-  $klasObject->jaar = $resJaar;
-  $klasObject->niveau = $resNiveau;
-  $klasObject->nummer = $resNummer;
+  $klasObject->j = $resJaar;
+  $klasObject->ni = $resNiveau;
+  $klasObject->nu = $resNummer;
   $klassenAll[] = $klasObject;
 }
 $stmt->close();
@@ -68,9 +68,9 @@ $stmt = $conn->prepare('SELECT DISTINCT
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result(
-  $klas1->jaar,
-  $klas1->niveau,
-  $klas1->nummer,
+  $klas1->j,
+  $klas1->ni,
+  $klas1->nu,
   // $klas2->jaar,
   // $klas2->niveau,
   // $klas2->nummer,
@@ -79,7 +79,7 @@ while ($stmt->fetch()) {
   if (!isset($resDaypart)) {
     $klassenBezet->$resDaypart = array();
   }
-  if (notNone($klas1->niveau)) {
+  if (notNone($klas1->ni)) {
     $klassenBezet->$resDaypart[] = $klas1;
   }
   // if (notNone($klas2->niveau)) {
@@ -119,8 +119,8 @@ WHERE
   $stmt->store_result();
   $stmt->bind_result($resDocent, $resUserAvailability);
   //maak array voor resulsts
-  $out->docent->$dagdeelTMP = array();
-  $out->klas->$dagdeelTMP = array();
+  $out->d->$dagdeelTMP = array();
+  $out->k->$dagdeelTMP = array();
   //loop door de results
   while ($stmt->fetch()) {
     //nu moeten we checken of de docent op dat tijdstip wel beschikbaar is
@@ -130,7 +130,7 @@ WHERE
     //check of er een key is (zou er moeten zijn maar idk wat de sysadmin allemaal gaat doen)
     if (isset($beschikbaar->$dag) && $beschikbaar->$dag == true) {
       //plaats ieder result in de docenten array in het $out object
-      $out->docent->$dagdeelTMP[] = $resDocent;
+      $out->d->$dagdeelTMP[] = $resDocent;
     }
   }
   $stmt->close();
@@ -138,9 +138,9 @@ WHERE
   for ($i=0; $i < count($klassenAll); $i++) {
     if (!isset($klassenBezet->$dagdeelTMP) || !in_array($klassenAll[$i], $klassenBezet->$dagdeelTMP)) {
       if (!isset($out->klas->$dagdeelTMP)) {
-        $out->klas->$dagdeelTMP = array();
+        $out->k->$dagdeelTMP = array();
       }
-      $out->klas->$dagdeelTMP[] = $klassenAll[$i];
+      $out->k->$dagdeelTMP[] = $klassenAll[$i];
     }
   }
 
@@ -168,24 +168,25 @@ WHERE
       daypart = ?
   );
 ');
-  $stmt->bind_param('ss', $dagdeelTMP, $dagdeelTMP);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($resLokaal);
-  while ($stmt->fetch()) {
-    $out->lokaal->$dagdeelTMP[] = $resLokaal;
-  }
-  $stmt->close();
-
-  // //selecteer projectCodes
-  // $stmt = $conn->prepare('SELECT DISTINCT projectCode FROM projecten');
-  // $stmt->execute();
-  // $stmt->store_result();
-  // $stmt->bind_result($resProjectCode);
-  // while ($stmt->fetch()) {
-  //   $out->projectCode[] = $resProjectCode;
-  // }
+$stmt->bind_param('ss', $dagdeelTMP, $dagdeelTMP);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($resLokaal);
+while ($stmt->fetch()) {
+  $out->l->$dagdeelTMP[] = $resLokaal;
 }
+$stmt->close();
+}
+
+//selecteer projectCodes
+$stmt = $conn->prepare('SELECT DISTINCT projectCode FROM projecten');
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($resProjectCode);
+while ($stmt->fetch()) {
+  $out->p[] = $resProjectCode;
+}
+$stmt->close();
 $conn->close();
 //zet header
 header('Content-Type: application/json');

@@ -10,7 +10,7 @@ script om alle jaarlagden te listen
 */
 //list alle jaarlagen
 $out = new stdClass;
-$out->klas = array();
+$out->k = array();
 require('db-connect.php');
 $stmt = $conn->prepare('SELECT DISTINCT jaar, niveau FROM klassen');
 $stmt->execute();
@@ -18,10 +18,10 @@ $stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau);
 while($stmt->fetch()) {
   $tmpObj = new stdClass;
-  $tmpObj->jaar = $resJaar;
-  $tmpObj->niveau = $resNiveau;
-  $tmpObj->nummer = '';
-  $out->klas[] = $tmpObj;
+  $tmpObj->j = $resJaar;
+  $tmpObj->ni = $resNiveau;
+  $tmpObj->nu = '';
+  $out->k[] = $tmpObj;
 }
 
 //set JSON header

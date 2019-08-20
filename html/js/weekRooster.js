@@ -15,28 +15,34 @@ script met fumctions om het weekrooster te bouwen
     * functie om uur te bouwen
       + de inputs hangen af van de "mode" (docent/klas)
 */
-function buildSelect(type = 'klas', list = {docent: [], klas: []}) {
-  let html = '<option selected disabled>' + type + '</option>'
+function buildSelect(type = 'klas', list = {d: [], k: []}) {
+  let title = {
+    d: 'docent',
+    k: 'klas',
+    jl: 'jaarlaag'
+  };
+
+  let html = '<option selected disabled>' + title[type] + '</option>'
   // de select moet anders gedaan worden afhangend van de type
   //select voor klas
-  if (type == 'klas') {
-    for (var i = 0; i < list.klas.length; i++) {
+  if (type == 'k') {
+    for (var i = 0; i < list.k.length; i++) {
       //maak option met klas en als value klas object
-      html += '<option value=\'' + JSON.stringify(list[type][i]) + '\'>' + list[type][i].jaar + list[type][i].niveau + list[type][i].nummer + '</option>';
+      html += '<option value=\'' + JSON.stringify(list[type][i]) + '\'>' + list[type][i].j + list[type][i].ni + list[type][i].nu + '</option>';
     }
   }
   //select voor docent
-  else if (type == 'docent') {
+  else if (type == 'd') {
     //maak een option met docent en als value docent object
-    for (var i = 0; i < list.docent.length; i++) {
+    for (var i = 0; i < list.d.length; i++) {
       html += '<option value=\'' + JSON.stringify(list[type][i]) + '\'>' + list[type][i].username + '</option>';
     }
   }
   //selectt voor jaarlagen
-  else if (type == 'jaarlaag') {
-    for (var i = 0; i < list.jaarlaag.length; i++) {
+  else if (type == 'jl') {
+    for (var i = 0; i < list.jl.length; i++) {
       //maak option met klas en als value klas object
-      html += '<option value=\'' + JSON.stringify(list[type][i]) + '\'>' + list[type][i].jaar + list[type][i].niveau + '</option>';
+      html += '<option value=\'' + JSON.stringify(list[type][i]) + '\'>' + list[type][i].j + list[type][i].ni + '</option>';
     }
   }
   document.getElementsByName('displayModeFinal')[0].innerHTML = html;
@@ -48,11 +54,11 @@ function setWeekTimetable(input) {
   let mode = document.getElementsByName('displayMode')[0].value;
   let inputObj = JSON.parse(input);
   //klas
-  if (mode == 'klas') {
-    url = '/api.php?readKlas=true&jaar='+encodeURIComponent(inputObj.jaar)+'&niveau='+encodeURIComponent(inputObj.niveau)+'&nummer='+encodeURIComponent(inputObj.nummer);
+  if (mode == 'k') {
+    url = '/api.php?readKlas=true&jaar='+encodeURIComponent(inputObj.j)+'&niveau='+encodeURIComponent(inputObj.ni)+'&nummer='+encodeURIComponent(inputObj.nu);
   }
   //docent
-  else if (mode == 'docent') {
+  else if (mode == 'd') {
     url = '/api.php?readDocent=true&docent='+encodeURIComponent(inputObj.username);
     availability = inputObj.availability
   }
@@ -169,19 +175,19 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     //remove button en afspraak data
     html += '<div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour)">'
     //docenten
-    html += '<span>Docent1:</span><span>' + data[dagdeel].docent[0] + '</span>\n';
-    html += '<span>Docent2:</span><span>' + data[dagdeel].docent[1] + '</span>\n';
+    html += '<span>Docent1:</span><span>' + data[dagdeel].d[0] + '</span>\n';
+    html += '<span>Docent2:</span><span>' + data[dagdeel].d[1] + '</span>\n';
     //klassen
     // html += '<span>Klas1:</span><span>' + data[dagdeel].klas[0].jaar + data[dagdeel].klas[0].niveau + data[dagdeel].klas[0].nummer + '</span>';
     // html += '<span>Klas2:</span><span>' + data[dagdeel].klas[1].jaar + data[dagdeel].klas[1].niveau + data[dagdeel].klas[1].nummer + '</span>';
-    html += '<span>Klas:</span><span>' + data[dagdeel].klas[0].jaar + data[dagdeel].klas[0].niveau + data[dagdeel].klas[0].nummer + '</span>';
+    html += '<span>Klas:</span><span>' + data[dagdeel].k[0].j + data[dagdeel].k[0].ni + data[dagdeel].k[0].nu + '</span>';
     //lokalen
-    html += '<span>Lokaal1:</span><span>' + data[dagdeel].lokaal[0] + '</span>\n';
-    html += '<span>Lokaal2:</span><span>' + data[dagdeel].lokaal[1] + '</span>\n';
+    html += '<span>Lokaal1:</span><span>' + data[dagdeel].l[0] + '</span>\n';
+    html += '<span>Lokaal2:</span><span>' + data[dagdeel].l[1] + '</span>\n';
     //overig
-    html += '<span>Laptops:</span><span>' + data[dagdeel].laptop + '</span>\n';
-    html += '<span class="L1">ProjectCode&#xfeff;:</span><span class="projectCode">' + data[dagdeel].projectCode + '</span>\n';
-    html += '<span>Note:</span><span class="note">' + data[dagdeel].note + '</span>\n';
+    html += '<span>Laptops:</span><span>' + data[dagdeel].la + '</span>\n';
+    html += '<span class="L1">ProjectCode&#xfeff;:</span><span class="projectCode">' + data[dagdeel].p + '</span>\n';
+    html += '<span>Note:</span><span class="note">' + data[dagdeel].no + '</span>\n';
 
     html += '</div>\n</div>\n'
     return html;
@@ -189,27 +195,32 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   let html = '<div class="uur input">\n<p>' + conf.lestijden[uur] + '</p>\n<div class="menu">\n';
   //input js
   //de bovenste row hangt af van de geselecterde mode
-  if (mode == 'klas') {
+  if (mode == 'k') {
     //klas input
-    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-klas=\'{"data":['+JSON.stringify(obj)+']}\'>\n';
+    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-k=\'{"data":['+JSON.stringify(obj)+']}\'>\n';
     //build select en voeg options toe
-    html += '<select name="' + dagdeel + 'docent1">' + makeList(dagdeel, 'docent', 'docent1', listAvailable) + '</select>\n';
-    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'docent', 'docent2', listAvailable) + '</select>\n';
+    html += '<select name="' + dagdeel + 'docent1">' + makeList(dagdeel, 'd', 'Docent1', listAvailable) + '</select>\n';
+    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
   }
-  else if (mode == 'docent') {
+  else if (mode == 'd') {
     //docent input
     html += '<input type="hidden" name="' + dagdeel + 'docent1" value="' + obj.username + '">\n';
-    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'docent', 'docent2', listAvailable) + '</select>\n';
-    html += '<select name="' + dagdeel + 'klas1" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dagdeel])+'}\'>' + makeList(dagdeel, 'klas', 'klas', listAvailable) + '</select>\n';
+    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
+    html += '<select name="' + dagdeel + 'klas1" data-k=\'{"data":'+JSON.stringify(listAvailable.k[dagdeel])+'}\'>' + makeList(dagdeel, 'k', 'klas', listAvailable) + '</select>\n';
   }
-  // html += '<select name="' + dagdeel + 'klas2" data-klas=\'{"data":'+JSON.stringify(listAvailable.klas[dagdeel])+'}\'>' + makeList(dagdeel, 'klas', 'klas2', listAvailable) + '</select>\n';
+  else {
+    message('mode Error');
+    load(false);
+    return null;
+  }
+  // html += '<select name="' + dagdeel + 'klas2" data-k=\'{"data":'+JSON.stringify(listAvailable.klas[dagdeel])+'}\'>' + makeList(dagdeel, 'klas', 'klas2', listAvailable) + '</select>\n';
   //lokaal1 & lokaal2
-  html += '<select name="' + dagdeel + 'lokaal1">' + makeList(dagdeel, 'lokaal', 'lokaal1', listAvailable) + '</select>\n';
-  html += '<select name="' + dagdeel + 'lokaal2">' + makeList(dagdeel, 'lokaal', 'lokaal2', listAvailable) + '</select>\n';
+  html += '<select name="' + dagdeel + 'lokaal1">' + makeList(dagdeel, 'l', 'Lokaal1', listAvailable) + '</select>\n';
+  html += '<select name="' + dagdeel + 'lokaal2">' + makeList(dagdeel, 'l', 'Lokaal2', listAvailable) + '</select>\n';
   //laptops
   html += '<input type="number" name="' + dagdeel + 'laptops" min="0" max="1000" placeholder="Laptops">\n';
   //project code
-  html += '<input type="text" name="' + dagdeel + 'projectCode" placeholder="ProjectCode">\n';
+  html += '<select name="' + dagdeel + 'projectCode">' + makeProjectList('p', 'Project Code', listAvailable) + '</select>';
   html += '</div>\n';
   //note
   html += '<input type="text" name="' + dagdeel + 'note" placeholder="Note">\n';

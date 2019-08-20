@@ -78,24 +78,24 @@ while($stmt->fetch()) {
   // $klas2 = new stdClass;
   //object daarin alle data en loop er door zolang er nog entries terug komen
   $data->$resDaypart = new stdClass;
-  $data->$resDaypart->docent = array($resDocent1, $resDocent2);
+  $data->$resDaypart->d = array($resDocent1, $resDocent2);
 
-  $klas1->jaar = $resKlas1jaar;
-  $klas1->niveau = $resKlas1niveau;
-  $klas1->nummer = $resKlas1nummer;
+  $klas1->j = $resKlas1jaar;
+  $klas1->ni = $resKlas1niveau;
+  $klas1->nu = $resKlas1nummer;
 
   // $klas2->jaar = $resKlas2jaar;
   // $klas2->niveau = $resKlas2niveau;
   // $klas2->nummer = $resKlas2nummer;
 
-  $data->$resDaypart->klas = array(
+  $data->$resDaypart->k = array(
     $klas1,
     // $klas2
   );
-  $data->$resDaypart->lokaal = array($resLokaal1, $resLokaal2);
-  $data->$resDaypart->laptop = $resLaptop;
-  $data->$resDaypart->projectCode = $resProjectCode;
-  $data->$resDaypart->note = $resNote;
+  $data->$resDaypart->l = array($resLokaal1, $resLokaal2);
+  $data->$resDaypart->la = $resLaptop;
+  $data->$resDaypart->p = $resProjectCode;
+  $data->$resDaypart->no = $resNote;
   $data->$resDaypart->ID = $resID;
 }
 $stmt->close();

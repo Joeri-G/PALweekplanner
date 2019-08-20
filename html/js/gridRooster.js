@@ -82,10 +82,10 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
       try {
         let listAll = JSON.parse(this.responseText);
         let html = '';
-        for (var i = 0; i < listAll.klas.length; i++) {
-          let klas = listAll.klas[i]
-          html += '<tr>\n<td>' + klas.jaar + klas.niveau + klas.nummer + '</td>\n';
-          html += buildGridTimetableKlas(conf, data, listAvailable, klas);
+        for (var i = 0; i < listAll.k.length; i++) {
+          let klas = listAll.k[i];
+          html += '<tr>\n<td>' + klas.j + klas.ni + klas.nu + '</td>\n';
+          html += buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag);
           html += '</tr>\n';
         }
         table.innerHTML += html;
@@ -99,7 +99,7 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
     }
   };
   if (modeJaarlaag) {
-    xhttp.open("GET", "/api.php?listJaarlaagKlassen=true&jaar="+encodeURIComponent(dataJaarlaag.jaar)+"&niveau="+encodeURIComponent(dataJaarlaag.niveau), true);
+    xhttp.open("GET", "/api.php?listJaarlaagKlassen=true&jaar="+encodeURIComponent(dataJaarlaag.j)+"&niveau="+encodeURIComponent(dataJaarlaag.ni), true);
 }
   else {
     xhttp.open("GET", "/api.php?listAll=true", true);
@@ -108,7 +108,7 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
   xhttp.send();
 }
 
-function buildGridTimetableKlas(conf, data, listAvailable, klas) {
+function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
   let html = '';
   for (var i = 0; i < conf.dagen.length; i++) {
     for (var j = 0; j < conf.uren; j++) {
@@ -118,59 +118,70 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas) {
       if (typeof data[dagdeel] !== 'undefined' && data[dagdeel] !== null) {
         for (var x = 0; x < data[dagdeel].length; x++) {
           let afspraak = data[dagdeel][x];
-          if (afspraak.klas[0].jaar == klas.jaar && afspraak.klas[0].niveau == klas.niveau && afspraak.klas[0].nummer == klas.nummer) {
+          if (afspraak.k[0].j == klas.j && afspraak.k[0].ni == klas.ni && afspraak.k[0].nu == klas.nu) {
             heeftAfspraak = true;
-            html += buildGridTimetableAfspraak(afspraak);
+            html += buildGridTimetableAfspraak(afspraak, modeJaarlaag);
             // break;
           }
         }
       }
       //als er geen afspraak is build dan de input
       if (!heeftAfspraak) {
-        html += buildGridTimetableInput(dagdeel, klas, listAvailable);
+        html += buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag);
       }
     }
   }
   return html;
 }
 
-function buildGridTimetableAfspraak(data) {
+function buildGridTimetableAfspraak(data, modeJaarlaag = false) {
   let html = '';
   //voeg content toe
-  html += '<td>'+data.docent[0].replace(/\'/g, "&#39;")+'</td>\n';
-  html += '<td>'+data.docent[1].replace(/\'/g, "&#39;")+'</td>\n';
-  html += '<td>'+data.lokaal[0].replace(/\'/g, "&#39;")+'</td>\n';
-  html += '<td>'+data.lokaal[1].replace(/\'/g, "&#39;")+'</td>\n';
-  html += '<td>'+data.laptop.replace(/\'/g, "&#39;")+'</td>\n';
-  html += '<td>'+data.projectCode.replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.d[0].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.d[1].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.l[0].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.l[1].replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.la.replace(/\'/g, "&#39;")+'</td>\n';
+  html += '<td>'+data.p.replace(/\'/g, "&#39;")+'</td>\n';
   //om te voorkomen dat lange notities de table verpesten truncaten we de note als deze meer dan 7 characters is
-  let note = data.note;
+  let note = data.no;
   if (note.length > 7) {
     note = note.substr(0, 6) + "\u2026";
   }
   html += '<td>'+note+'</td>\n';
   html += '<td data-hour=\'' + JSON.stringify(data).replace(/\'/g, "&#39;") + '\'>';
-  html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge">\n';
-  html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)"><img src="/img/closeBlack.svg" alt="Close"></button>';
+  html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge" class="svgButton">\n';
+  if (modeJaarlaag) {
+    html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 2)">';
+  }
+  else {
+    html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)">';
+  }
   html += '</td>';
 
   return html;
 }
 
-function buildGridTimetableInput(dagdeel, klas, listAvailable) {
-  let klasTitle = klas.jaar + klas.niveau + klas.nummer;
+function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
+  let klasTitle = klas.j + klas.ni + klas.nu;
   let html = '';
-  html += '<td><select name="'+dagdeel+klasTitle+'docent1">'+makeList(dagdeel, 'docent', 'Docent1', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'docent2">'+makeList(dagdeel, 'docent', 'Docent2', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'lokaal1">'+makeList(dagdeel, 'lokaal', 'Lokaal1', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'lokaal2">'+makeList(dagdeel, 'lokaal', 'Lokaal2', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'docent1">'+makeList(dagdeel, 'd', 'Docent1', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'docent2">'+makeList(dagdeel, 'd', 'Docent2', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'lokaal1">'+makeList(dagdeel, 'l', 'Lokaal1', listAvailable)+'</select></td>\n';
+  html += '<td><select name="'+dagdeel+klasTitle+'lokaal2">'+makeList(dagdeel, 'l', 'Lokaal2', listAvailable)+'</select></td>\n';
   html += '<td><input type="number" name="'+dagdeel+klasTitle+'laptops" placeholder="Laptops"></td>';
-  html += '<td><input type="text" name="'+dagdeel+klasTitle+'projectCode" placeholder="ProjectCode"></td>';
+  // html += '<td><input type="text" name="'+dagdeel+klasTitle+'projectCode" placeholder="ProjectCode"></td>';
+  html += '<td><select name="' + dagdeel+klasTitle + 'projectCode">' + makeProjectList('p', 'Project Code', listAvailable) + '</select></td>'
   html += '<td><input type="text" name="'+dagdeel+klasTitle+'note" placeholder="Note"></td>';
   //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
   html += '<td>';
-  html += '<input type="hidden" name="'+dagdeel+klasTitle+'klas1" value="klas0" data-klas=\'{"data":['+JSON.stringify(klas).replace(/\'/g, "&#39;")+']}\'>';
-  html += '<button type="button" class="SVGbutton" onclick="sendHour(\'' + dagdeel+klasTitle + '\', \'' + dagdeel + '\', 1)"><img src="/img/save.svg" alt="Save"></button>';
+  html += '<input type="hidden" name="'+dagdeel+klasTitle+'klas1" value="klas0" data-k=\'{"data":['+JSON.stringify(klas).replace(/\'/g, "&#39;")+']}\'>';
+  if (modeJaarlaag) {
+    html += '<img src="/img/save.svg" alt="Save" onclick="sendHour(\'' + dagdeel+klasTitle + '\', \'' + dagdeel + '\', 2)" class="svgButton">';
+  }
+  else {
+    html += '<img src="/img/save.svg" alt="Save" onclick="sendHour(\'' + dagdeel+klasTitle + '\', \'' + dagdeel + '\', 1)" class="svgButton">';
+  }
   html += '</td>';
 
   return html;

@@ -39,6 +39,18 @@ html, body {
 	word-wrap: break-word;
 }
 
+button:hover, button:focus,
+input:hover, input:focus,
+textarea:hover,textarea:focus,
+select:hover, select:focus,
+.checkmark:hover, .checkmark:focus {
+    box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.5);
+}
+
+textarea {
+	resize: vertical;
+}
+
 a {
 	color: inherit;
 }
