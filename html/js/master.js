@@ -144,20 +144,29 @@ function deleteHour(data, mode = 0) {
   }
 }
 
-function makeList(dagdeel, type, lable, listAvailable) {
-  //haal de data uit de lijst met beschikbare docenten, klassen, etc
-  let lijst = listAvailable[type][dagdeel];
-  let html = '<option selected disabled value="None">'+lable+'</option>\n';
-  html += '<option value="None">Geen</option>';
-  //voor klassen moeten we het anders doen
+function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') {
+  let title = [];
+  let value = [];
+  let html = '';
+  let lijst = [];
+  if (type == 'p') {
+    lijst = listAvailable[type];
+  }
+  else {
+    lijst = listAvailable[type][dagdeel];
+  }
   if (type == 'k') {
     for (var i = 0; i < lijst.length; i++) {
-      html += '<option value="klas'+i+'">'+lijst[i].j+lijst[i].ni+lijst[i].nu+'</option>\n';
+      title.push(lijst[i].j+lijst[i].ni+lijst[i].nu);
+      value.push('klas'+i);
     }
-    return html;
+    html = buildDropdown(title, value, lable, name, dataset)
   }
-  for (var i = 0; i < lijst.length; i++) {
-    html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
+  else {
+    for (var i = 0; i < lijst.length; i++) {
+      title.push(lijst[i]);
+    }
+    html = buildDropdown(title, false, lable, name, dataset)
   }
   return html;
 }
@@ -220,24 +229,6 @@ function sendHour(name, dagdeel, mode = 0) {
 }
 
 
-//JS voor message modal
-//wanneer er buiten de modal geklikt wordt, sluit de modal
-let modalBox = document.getElementById("messageModal");
-window.onclick = function(event) {
-  if (event.target == modalBox) {
-    let messageModal = document.getElementById('messageModal');
-    let messageModalContent = document.getElementById('messageModalContent');
-    //fade out
-    messageModalContent.setAttribute('class', 'fade-out');
-    //remove fadeout
-    setTimeout(function() {
-      messageModal.style.display = "none";
-      messageModal.setAttribute('class', '');
-    }, 200);
-  }
-}
-
-
 //function om de table te sorten
 function sortTable(table) {
   let rows, switching, i, x, y, shouldSwitch;
@@ -292,15 +283,138 @@ function makeProjectList(type, lable, listAvailable) {
   let lijst = listAvailable[type];
   let html = '<option selected disabled value="None">'+lable+'</option>\n';
   html += '<option value="None">Geen</option>';
-  //voor klassen moeten we het anders doen
-  if (type == 'k') {
-    for (var i = 0; i < lijst.length; i++) {
-      html += '<option value="klas'+i+'">'+lijst[i].j+lijst[i].ni+lijst[i].nu+'</option>\n';
-    }
-    return html;
-  }
   for (var i = 0; i < lijst.length; i++) {
     html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
   }
   return html;
+}
+
+
+//functies voor custom select boxes
+String.prototype.replaceChar = function(html = false) {
+  let obj = {'\"' : '\"', '&quot' : '\"'};
+  if (html) {
+    obj = {'>' : '&gt;', '<' : ' &lt;', '\"' : "&quot;"};
+  }
+  var retStr = this;
+  for (var x in obj) {
+      retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+  }
+  return retStr;
+};
+
+function buildDropdown(data = [], value = false, title = 'Title', name = 'Name', dataset = '') {
+  if (!value) {
+    value = data;
+  }
+  if (value.length !== data.length) {
+    errorMessage('invalid array length');
+    return '';
+  }
+  let html = '<div class="dropSelect">\
+  <input type="button" value="' + title.replaceChar() + '" onclick="toggleDrop(this)" data-title="' + title.replaceChar() + '">\
+  <div class="drop">\
+  <input type="hidden" name="' + name.replaceChar() + '" value="None" ' + dataset + '>\
+  <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
+  <a href="#" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
+  for (var i = 0; i < data.length; i++) {
+    html += '<a href="#" onclick="setValue(this)" data-value="' + value[i].replaceChar() + '">' + data[i].replaceChar(true) + '</a>';
+  }
+  html += '<span>Geen resultaten...</span>\
+  </div></div>';
+  return html;
+}
+
+function toggleDrop(el) {
+  let drop = el.parentElement.children[1];
+  let isOpen = drop.classList.contains("show");
+  //select alle dropdowns
+  let dropdowns = document.getElementsByClassName('drop');
+  for (var i = 0; i < dropdowns.length; i++) {
+    //als de dropdown weergegeven is hide
+    if (dropdowns[i].classList.contains("show")) {
+      dropdowns[i].classList.toggle("show");
+    }
+  }
+
+  if (!isOpen) {
+    drop.classList.toggle("show");
+    //maak input leeg
+    drop.getElementsByTagName('input')[1].value = '';
+    //maak value leeg
+    drop.getElementsByTagName('input')[0].value = '';
+    //laat alle items zien
+    filterDropdown(drop.getElementsByTagName('input')[1], '');
+  }
+}
+
+function filterDropdown(el) {
+  let txtValue;
+  let parent = el.parentElement;
+  let value = el.value.toUpperCase();
+  let item = parent.getElementsByTagName("a");
+  let hasContent = false;
+  for (i = 0; i < item.length; i++) {
+    txtValue = item[i].textContent || item[i].innerText;
+    if (txtValue.toUpperCase().indexOf(value) > -1) {
+      item[i].style.display = "";
+      hasContent = true;
+    }
+    else if (item[i].classList.contains('shown')) {
+      item[i].style.display = "";
+    }
+    else {
+      item[i].style.display = "none";
+    }
+  }
+  if (!hasContent) {
+    parent.getElementsByTagName("span")[0].style.display = 'block';
+  }
+  else {
+    parent.getElementsByTagName("span")[0].style.display = 'none';
+  }
+}
+
+function setValue(el) {
+  let parent = el.parentElement;
+  let input = parent.getElementsByTagName('input')[0];
+  let value = el.dataset.value.replaceChar();
+  input.value = value;
+  //zet class
+  let a = el.parentElement.getElementsByTagName('a');
+  for (var i = 0; i < a.length; i++) {
+    a[i].classList = '';
+  }
+  el.classList = 'geselecteerd';
+  //fix de title
+
+  let master = parent.parentElement;
+  let button = master.getElementsByTagName('input')[0];
+  button.value = (button.dataset.title + ' | ' + el.innerHTML.replaceChar()).substr(0, 12);
+  toggleDrop(el.parentElement);
+}
+
+
+
+
+
+
+
+
+
+//JS voor message modal
+//wanneer er buiten de modal geklikt wordt, sluit de modal
+let modalBox = document.getElementById("messageModal");
+window.onclick = function(event) {
+  if (event.target == modalBox) {
+    let messageModal = document.getElementById('messageModal');
+    let messageModalContent = document.getElementById('messageModalContent');
+    //fade out
+    messageModalContent.setAttribute('class', 'fade-out');
+    //remove fadeout
+    setTimeout(function() {
+      messageModal.style.display = "none";
+      messageModal.setAttribute('class', '');
+    }, 200);
+  }
 }

@@ -11,6 +11,7 @@
 	2.3 message
 3.0 GLOBAL INPUT css
 	3.1 input, button
+	3.2 custom input
 4.0 GLOBAL FOOTER css
 	4.1 footer, footer content
 5.0 MEDIA QUERY css
@@ -236,6 +237,69 @@ select, input, button, textarea {
 
 button {
 	cursor: pointer;
+}
+
+/* 3.2 */
+
+.dropSelect {
+	text-align: left;
+	margin: 2px;
+}
+
+.dropSelect input, input[type=number] {
+	margin: 0;
+	border-radius: 0;
+	padding: 8px;
+	font-size: 1em;
+	cursor: pointer;
+	text-align: left;
+}
+
+input[type=number] {
+	margin: 2px;
+}
+
+.dropSelect input[type=search]:hover, .dropSelect input[type=search]:focus {
+	background: #bbb;
+	box-shadow: none;
+}
+
+.dropSelect input[type=search] {
+	display: block;
+	width: 100%;
+	padding: 12px;
+	font-size: 16px;
+	cursor: text;
+}
+
+.drop {
+	position: absolute;
+	width: 200px;
+	font-size: 16px;
+	display: none;
+	background: #ccc;
+}
+
+.show {
+	display: block;
+}
+
+.drop a, .drop span {
+	color: #000;
+	text-decoration: none;
+	display: block;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 8px 16px;
+}
+
+.drop a:hover, .geselecteerd {
+	background: #aaa;
+}
+
+.drop span {
+	font-weight: bold;
+	display: none;
 }
 
 /* 4.0 */

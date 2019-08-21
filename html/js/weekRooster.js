@@ -199,28 +199,36 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     //klas input
     html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-k=\'{"data":['+JSON.stringify(obj)+']}\'>\n';
     //build select en voeg options toe
-    html += '<select name="' + dagdeel + 'docent1">' + makeList(dagdeel, 'd', 'Docent1', listAvailable) + '</select>\n';
-    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
+    // html += '<select name="' + dagdeel + 'docent1">' + makeList(dagdeel, 'd', 'Docent1', listAvailable) + '</select>\n';
+    // html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
+    html += makeList(dagdeel, 'd', 'Docent1', listAvailable, dagdeel + 'docent1', 1);
+    html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2', 1);
   }
   else if (mode == 'd') {
     //docent input
     html += '<input type="hidden" name="' + dagdeel + 'docent1" value="' + obj.username + '">\n';
-    html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
+    // html += '<select name="' + dagdeel + 'docent2">' + makeList(dagdeel, 'd', 'Docent2', listAvailable) + '</select>\n';
+    html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2', 1);
     html += '<select name="' + dagdeel + 'klas1" data-k=\'{"data":'+JSON.stringify(listAvailable.k[dagdeel])+'}\'>' + makeList(dagdeel, 'k', 'klas', listAvailable) + '</select>\n';
   }
   else {
-    message('mode Error');
+    message('Mode Error');
     load(false);
-    return null;
+    return '<h1>Mode Error</h1>';
   }
   // html += '<select name="' + dagdeel + 'klas2" data-k=\'{"data":'+JSON.stringify(listAvailable.klas[dagdeel])+'}\'>' + makeList(dagdeel, 'klas', 'klas2', listAvailable) + '</select>\n';
   //lokaal1 & lokaal2
-  html += '<select name="' + dagdeel + 'lokaal1">' + makeList(dagdeel, 'l', 'Lokaal1', listAvailable) + '</select>\n';
-  html += '<select name="' + dagdeel + 'lokaal2">' + makeList(dagdeel, 'l', 'Lokaal2', listAvailable) + '</select>\n';
+  // html += '<select name="' + dagdeel + 'lokaal1">' + makeList(dagdeel, 'l', 'Lokaal1', listAvailable) + '</select>\n';
+  // html += '<select name="' + dagdeel + 'lokaal2">' + makeList(dagdeel, 'l', 'Lokaal2', listAvailable) + '</select>\n';
+  html += makeList(dagdeel, 'l', 'Lokaal1', listAvailable, dagdeel + 'lokaal1');
+  html += makeList(dagdeel, 'l', 'Lokaal2', listAvailable, dagdeel + 'lokaal2');
   //laptops
-  html += '<input type="number" name="' + dagdeel + 'laptops" min="0" max="1000" placeholder="Laptops">\n';
+  html += '<div>\
+  <input type="number" name="' + dagdeel + 'laptops" min="0" max="1000" placeholder="Laptops">\
+  </div>';
   //project code
-  html += '<select name="' + dagdeel + 'projectCode">' + makeProjectList('p', 'Project Code', listAvailable) + '</select>';
+  // html += '<select name="' + dagdeel + 'projectCode">' + makeProjectList('p', 'Project Code', listAvailable) + '</select>';
+  html += makeList(dagdeel, 'p', 'Afk.', listAvailable, dagdeel + 'projectCode');
   html += '</div>\n';
   //note
   html += '<input type="text" name="' + dagdeel + 'note" placeholder="Note">\n';

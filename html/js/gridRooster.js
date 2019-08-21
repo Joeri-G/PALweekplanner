@@ -165,13 +165,17 @@ function buildGridTimetableAfspraak(data, modeJaarlaag = false) {
 function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
   let klasTitle = klas.j + klas.ni + klas.nu;
   let html = '';
-  html += '<td><select name="'+dagdeel+klasTitle+'docent1">'+makeList(dagdeel, 'd', 'Docent1', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'docent2">'+makeList(dagdeel, 'd', 'Docent2', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'lokaal1">'+makeList(dagdeel, 'l', 'Lokaal1', listAvailable)+'</select></td>\n';
-  html += '<td><select name="'+dagdeel+klasTitle+'lokaal2">'+makeList(dagdeel, 'l', 'Lokaal2', listAvailable)+'</select></td>\n';
+  // html += '<td><select name="'+dagdeel+klasTitle+'docent1">'+makeList(dagdeel, 'd', 'Docent1', listAvailable)+'</select></td>\n';
+  // html += '<td><select name="'+dagdeel+klasTitle+'docent2">'+makeList(dagdeel, 'd', 'Docent2', listAvailable)+'</select></td>\n';
+  // html += '<td><select name="'+dagdeel+klasTitle+'lokaal1">'+makeList(dagdeel, 'l', 'Lokaal1', listAvailable)+'</select></td>\n';
+  // html += '<td><select name="'+dagdeel+klasTitle+'lokaal2">'+makeList(dagdeel, 'l', 'Lokaal2', listAvailable)+'</select></td>\n';
+  html += '<td>' + makeList(dagdeel, 'd', 'Docent1', listAvailable, dagdeel+klasTitle + 'docent1') + '</td>\
+  <td>' + makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel+klasTitle + 'docent2') + '</td>\
+  <td>' + makeList(dagdeel, 'd', 'Lokaal1', listAvailable, dagdeel+klasTitle + 'lokaal1') + '</td>\
+  <td>' + makeList(dagdeel, 'd', 'Lokaal2', listAvailable, dagdeel+klasTitle + 'lokaal2') + '</td>';
   html += '<td><input type="number" name="'+dagdeel+klasTitle+'laptops" placeholder="Laptops"></td>';
   // html += '<td><input type="text" name="'+dagdeel+klasTitle+'projectCode" placeholder="ProjectCode"></td>';
-  html += '<td><select name="' + dagdeel+klasTitle + 'projectCode">' + makeProjectList('p', 'Project Code', listAvailable) + '</select></td>'
+  html += '<td>' + makeList(dagdeel, 'p', 'Afk.', listAvailable, dagdeel+klasTitle + 'projectCode') + '</td>'
   html += '<td><input type="text" name="'+dagdeel+klasTitle+'note" placeholder="Note"></td>';
   //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
   html += '<td>';
