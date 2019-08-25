@@ -62,11 +62,11 @@ function setGridTimetableBody(conf, data, modeJaarlaag, dataJaarlaag) {
 
 function buildGridTimetableHead(conf, data) {
   let main = document.getElementsByTagName('main')[0];
-  let html = '<table id="gridRooster">\n<tr>\n<th>Klas</th>\n';
+  let html = '<table id="gridRooster">\n<tr>\n';
   for (var i = 0; i < conf.dagen.length; i++) {
     for (var j = 0; j < conf.uren; j++) {
       //offset van 1 omdat de dagdelen vanaf 0 worden geteld maar vanaf 1 weergegeven
-      html += '<th colspan="8">\n<span class="dag">' + conf.dagen[i]+(j+1) + '</span>\n<br>\n<span class="tijd">' + conf.lestijden[j] + '</span>\n</th>\n';
+      html += '<th colspan="9">\n<span class="dag">' + conf.dagen[i]+(j+1) + '</span>\n<br>\n<span class="tijd">' + conf.lestijden[j] + '</span>\n</th>\n';
     }
   }
   html += '</tr>';
@@ -84,7 +84,6 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
         let html = '';
         for (var i = 0; i < listAll.k.length; i++) {
           let klas = listAll.k[i];
-          html += '<tr>\n<td>' + klas.j + klas.ni + klas.nu + '</td>\n';
           html += buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag);
           html += '</tr>\n';
         }
@@ -112,6 +111,7 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
   let html = '';
   for (var i = 0; i < conf.dagen.length; i++) {
     for (var j = 0; j < conf.uren; j++) {
+      html += '\n<td class="klas">' + klas.j + klas.ni + klas.nu + '</td>\n';
       let heeftAfspraak = false;
       let dagdeel = conf.dagen[i]+j;
       //check of er afspraken zijn op het dagdeel
@@ -130,6 +130,7 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
         html += buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag);
       }
     }
+    //voeg nog een keer de klas toe
   }
   return html;
 }

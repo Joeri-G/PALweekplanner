@@ -26,7 +26,6 @@ main.full {
 /* 2.1 */
 
 .full table {
-	overflow: auto;
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -41,12 +40,6 @@ main.full {
   border: 1px solid #eee;
   text-align: left;
   padding: 8px;
-}
-
-.full th:first-of-type, td:first-of-type {
-	font-weight: bold;
-	min-width: auto;
-	padding: 0;
 }
 
 .full td {
@@ -66,6 +59,11 @@ main.full {
 
 .full .tijd {
 	font-size: 1.5em;
+}
+
+.full .klas {
+	font-weight: bold;
+	padding: 0;
 }
 
 /* 2.3 */
