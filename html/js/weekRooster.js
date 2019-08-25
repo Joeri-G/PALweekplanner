@@ -229,7 +229,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   html += makeList(dagdeel, 'l', 'Lokaal2', listAvailable, dagdeel + 'lokaal2');
   //laptops
   html += '<div>\
-  <input type="number" name="' + dagdeel + 'laptops" min="0" max="1000" placeholder="Laptops">\
+  <input type="number" name="' + dagdeel + 'laptops" min="0" max="80" placeholder="Laptops">\
   </div>';
   //project code
   html += makeList(dagdeel, 'p', 'Project', listAvailable, dagdeel + 'projectCode');

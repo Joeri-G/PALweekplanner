@@ -170,7 +170,7 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
   <td>' + makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel+klasTitle + 'docent2') + '</td>\
   <td>' + makeList(dagdeel, 'l', 'Lokaal1', listAvailable, dagdeel+klasTitle + 'lokaal1') + '</td>\
   <td>' + makeList(dagdeel, 'l', 'Lokaal2', listAvailable, dagdeel+klasTitle + 'lokaal2') + '</td>';
-  html += '<td><input type="number" name="'+dagdeel+klasTitle+'laptops" placeholder="Laptops"></td>';
+  html += '<td><input type="number" min="0" max="80" name="'+dagdeel+klasTitle+'laptops" placeholder="Laptops"></td>';
   html += '<td>' + makeList(dagdeel, 'p', 'Project', listAvailable, dagdeel+klasTitle + 'projectCode') + '</td>'
   html += '<td><input type="text" name="'+dagdeel+klasTitle+'note" placeholder="Note"></td>';
   html += '<td>';
