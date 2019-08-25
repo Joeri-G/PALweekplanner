@@ -53,6 +53,9 @@
   - addLokaal()
     * zelfde als addUser() maar voor lokalen
       + lokaal
+
+  - deleteAll()
+    * functie om alles te verwijderen
 */
 function toggleUsers(element, config) {
   load(true);
@@ -432,4 +435,26 @@ function addLokaal() {
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send(POST);
+}
+
+function deleteAll() {
+  load(true);
+  if (confirm("Wilt u alle alle afspraken verwijderen?")) {
+    load(false);
+    let xhttp = new XMLHttpRequest();
+    //stuur request met in body alle data
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        load(false);
+        message(this.responseText);
+      }
+    };
+    xhttp.open("GET", '/admin/api.php?deleteAll=true', true);
+    xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhttp.send();
+  }
+  else {
+    load(false);
+  }
 }

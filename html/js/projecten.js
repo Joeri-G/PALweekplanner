@@ -134,12 +134,14 @@ xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     try {
       let data = JSON.parse(this.responseText);
-      let element = document.getElementById('projectLeider');
-      let html = '<option disabled selected>Projectleider</option>';
-      for (var i = 0; i < data.length; i++) {
-        html += '<option value="' + data[i] + '">' + data[i] + '</option>'
-      }
-      element.innerHTML = html;
+      let el = document.getElementById('projectLeider');
+      // let html = '<option disabled selected>Projectleider</option>';
+      // for (var i = 0; i < data.length; i++) {
+      //   html += '<option value="' + data[i] + '">' + data[i] + '</option>'
+      // }
+      let input = {d: {a: data} };
+      let html = makeList('a', 'd', 'Docent', input, 'a' + 'docent2');
+      el.innerHTML = html;
       //stop loading animatie
       load(false);
     }

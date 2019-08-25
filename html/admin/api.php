@@ -49,4 +49,8 @@ if (isset($_GET['addLokaal']) && $_GET['addLokaal'] == 'true') {
   require('../../php/ADMIN-addLokaal.php');
 }
 
+if (isset($_GET['deleteAll']) && $_GET['deleteAll'] == 'true') {
+  require('../../php/ADMIN-deleteAll.php');
+}
+
  ?>

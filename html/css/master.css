@@ -242,6 +242,7 @@ button {
 /* 3.2 */
 
 .dropSelect {
+	display: inline;
 	text-align: left;
 	margin: 2px;
 }
@@ -259,6 +260,10 @@ input[type=number] {
 	margin: 2px;
 }
 
+.select input[type=button] {
+	font-size: 1.5em;
+}
+
 .dropSelect input[type=search]:hover, .dropSelect input[type=search]:focus {
 	background: #bbb;
 	box-shadow: none;
@@ -273,6 +278,9 @@ input[type=number] {
 }
 
 .drop {
+	z-index: 4;
+	max-height: 600px;
+	overflow: auto;
 	position: absolute;
 	width: 200px;
 	font-size: 16px;
@@ -300,6 +308,11 @@ input[type=number] {
 .drop span {
 	font-weight: bold;
 	display: none;
+}
+
+.drop input[type=search] {
+	position: sticky;
+	top: 0;
 }
 
 /* 4.0 */

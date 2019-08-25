@@ -113,6 +113,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <div id="lokaalList" class="list" style="display:none;"></div>
         </div>
       </div>
+      <!-- delete all -->
+      <div>
+        <p>Delete</p>
+        <p>Delete alle afspraken in de database</p>
+        <div class="inputParent">
+          <button type="button" class="button" onclick="deleteAll()">Delete</button>
+        </div>
+      </div>
     </main>
     <!-- Loading svg -->
     <div id="loading">

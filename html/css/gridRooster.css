@@ -26,6 +26,7 @@ main.full {
 /* 2.1 */
 
 .full table {
+	overflow: auto;
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -69,8 +70,10 @@ main.full {
 
 /* 2.3 */
 
-.full input, .full select {
+.full input, .full .drop {
 	max-width: 100px;
+	max-height: 300px;
+	position: sticky;
 }
 
 .full img {

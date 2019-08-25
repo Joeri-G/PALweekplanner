@@ -15,13 +15,32 @@ function modeDefault() {
   //zorg dat de selction weergegeven wordt
   select.style.display = 'block';
   //bouw selection dropdown
-  select.innerHTML = '<select name="displayMode" onchange="buildSelect(this.value, list);">\
-  <option value="k" selected>Klassen</option>\
-  <option value="d">docenten</option>\
-  </select>\
-  <select name="displayModeFinal" onchange="setWeekTimetable(this.value);">\
-  <option>Klas</option>\
-  </select>';
+  // select.innerHTML = '<select name="displayMode" onchange="buildSelect(this.value, list);">\
+  // <option value="k" selected>Klassen</option>\
+  // <option value="d">docenten</option>\
+  // </select>\
+  // <select name="displayModeFinal" onchange="setWeekTimetable(this.value);">\
+  // <option>Klas</option>\
+  // </select>';
+
+  select.innerHTML = '<div class="dropSelect">\
+    <input type="button" value="Klas" onclick="toggleDrop(this)" data-title="">\
+      <div class="drop">\
+      <input type="hidden" name="displayMode" value="k">\
+      <input type="hidden">\
+      <a href="javascript:void(0)" onclick="setValue(this);buildSelect(\'k\', list)" data-value="k">Klas</a>\
+      <a href="javascript:void(0)" onclick="setValue(this);buildSelect(\'d\', list)" data-value="d">Docent</a>\
+      <span></span>\
+    </div>\
+  </div>\
+  <div class="dropSelect">\
+    <input type="button" value="Klas" onclick="toggleDrop(this)" data-title="klas">\
+    <div class="drop" id="selectKlasDocent">\
+      <input type="hidden" name="displayModeFinal" onChange="setWeekTimetable(this.value)">\
+      <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
+      <span>Geen resultaten...</span>\
+    </div>\
+  </div>';
 
 
   let xhttp = new XMLHttpRequest();
@@ -96,13 +115,17 @@ function modeJaarlaag() {
       try {
         //bouw jaarlaag select
         let jaarlagen = JSON.parse(this.responseText);
-        let html = '<select name="selectJaarlaag" onchange="buildJaarlaag(this.value, this.dataset.jaarlagen)" data-jl="'+this.responseText.replace(/\n/, '')+'">\n';
-        html += '\t<option selected disabled>Jaarlaag</option>\n';
+        let html = '<div class="dropSelect">\
+          <input type="button" value="Jaar" onclick="toggleDrop(this)" data-title="Jaar">\
+          <div class="drop" id="selectKlasDocent">\
+            <input type="hidden" name="selectJaarlaag" onChange="setWeekTimetable(this.value)">\
+            <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">';
         for (var i = 0; i < jaarlagen.k.length; i++) {
-          html += '<option value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>'+jaarlagen.k[i].j+jaarlagen.k[i].ni+'</option>\n';
+          html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>'+jaarlagen.k[i].j+jaarlagen.k[i].ni+'</a>\n';
         }
-        //plaats html
-        html += '</select>';
+        html += '<span>Geen resultaten...</span>\
+          </div>\
+        </div>';
         select.innerHTML = html;
         //verander main
         main.innerHTML = '<p class="mainMessage">Selecteer een jaarlaag met de dropdown</p>';

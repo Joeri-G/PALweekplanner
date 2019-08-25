@@ -25,6 +25,8 @@ script met functions die voor alle "viewModes" gebruikt worden
     * functie om te checken of een value null is
 */
 
+var activeDrop = false;
+
 //function voor menu buttons
 function menu(bool) {
   if (bool) {
@@ -67,7 +69,7 @@ function load(mode) {
 }
 
 //function om berichten weer te geven
-function message(text, escape = true) {
+function message(text = '', escape = true) {
   //declare objects
   let messageModal = document.getElementById('messageModal');
   let messageModalContent = document.getElementById('messageModalContent');
@@ -81,6 +83,8 @@ function message(text, escape = true) {
   setTimeout(function(){
     messageModal.style.display = 'block';
     messageModalContent.setAttribute('class', 'fade-in');
+    //haal scroll weg uit document
+    document.body.style.overflow = 'hidden';
   }, 200);
 }
 
@@ -275,19 +279,19 @@ function checkEmpty(input = []) {
   return true;
 }
 
-
-
-//makeProjectList
-function makeProjectList(type, lable, listAvailable) {
-  //haal de data uit de lijst met beschikbare docenten, klassen, etc
-  let lijst = listAvailable[type];
-  let html = '<option selected disabled value="None">'+lable+'</option>\n';
-  html += '<option value="None">Geen</option>';
-  for (var i = 0; i < lijst.length; i++) {
-    html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
-  }
-  return html;
-}
+//
+//
+// //makeProjectList
+// function makeProjectList(type, lable, listAvailable) {
+//   //haal de data uit de lijst met beschikbare docenten, klassen, etc
+//   let lijst = listAvailable[type];
+//   let html = '<option selected disabled value="None">'+lable+'</option>\n';
+//   html += '<option value="None">Geen</option>';
+//   for (var i = 0; i < lijst.length; i++) {
+//     html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
+//   }
+//   return html;
+// }
 
 
 //functies voor custom select boxes
@@ -316,9 +320,9 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
   <div class="drop">\
   <input type="hidden" name="' + name.replaceChar() + '" value="None" ' + dataset + '>\
   <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
-  <a href="#" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
+  <a href="javascript:void(0)" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
   for (var i = 0; i < data.length; i++) {
-    html += '<a href="#" onclick="setValue(this)" data-value="' + value[i].replaceChar() + '">' + data[i].replaceChar(true) + '</a>';
+    html += '<a href="javascript:void(0)" onclick="setValue(this)" data-value="' + value[i].replaceChar() + '">' + data[i].replaceChar(true) + '</a>';
   }
   html += '<span>Geen resultaten...</span>\
   </div></div>';
@@ -328,23 +332,19 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
 function toggleDrop(el) {
   let drop = el.parentElement.children[1];
   let isOpen = drop.classList.contains("show");
-  //select alle dropdowns
-  let dropdowns = document.getElementsByClassName('drop');
-  for (var i = 0; i < dropdowns.length; i++) {
-    //als de dropdown weergegeven is hide
-    if (dropdowns[i].classList.contains("show")) {
-      dropdowns[i].classList.toggle("show");
-    }
+  if (activeDrop !== false) {
+    activeDrop.classList.toggle('show');
   }
-
+  activeDrop = false;
   if (!isOpen) {
-    drop.classList.toggle("show");
-    //maak input leeg
+    drop.classList.toggle('show');
     drop.getElementsByTagName('input')[1].value = '';
-    //maak value leeg
-    drop.getElementsByTagName('input')[0].value = '';
+    // //maak value leeg
+    // drop.getElementsByTagName('input')[0].value = '';
     //laat alle items zien
     filterDropdown(drop.getElementsByTagName('input')[1], '');
+
+    activeDrop = drop;
   }
 }
 
@@ -390,15 +390,14 @@ function setValue(el) {
 
   let master = parent.parentElement;
   let button = master.getElementsByTagName('input')[0];
-  button.value = (button.dataset.title + ' | ' + el.innerHTML.replaceChar()).substr(0, 12);
+  let defaultTitle = button.dataset.title;
+  button.value = (defaultTitle + ' | ' + el.innerHTML.replaceChar()).substr(0, 12);
+  //als er geen title is zet dan de title naar alleen de value
+  if (defaultTitle == '') {
+    button.value = el.innerHTML.replaceChar().substr(0, 12);
+  }
   toggleDrop(el.parentElement);
 }
-
-
-
-
-
-
 
 
 
@@ -407,14 +406,22 @@ function setValue(el) {
 let modalBox = document.getElementById("messageModal");
 window.onclick = function(event) {
   if (event.target == modalBox) {
+    //haal no-scroll weg uit HTML
     let messageModal = document.getElementById('messageModal');
     let messageModalContent = document.getElementById('messageModalContent');
     //fade out
     messageModalContent.setAttribute('class', 'fade-out');
     //remove fadeout
     setTimeout(function() {
+      document.body.style.overflow = '';
       messageModal.style.display = "none";
       messageModal.setAttribute('class', '');
     }, 200);
+  }
+  //add dropdown
+  //als de target niet de dropdown is, niet de dropdown toggle button en de dropdown gezet is, haal dan de dropdown weg
+  else if (event.target.parentElement !== activeDrop && activeDrop !== false && event.target !== activeDrop.parentElement.children[0]) {
+    let dropBtn = activeDrop.parentElement.children[0];
+    toggleDrop(dropBtn)
   }
 }

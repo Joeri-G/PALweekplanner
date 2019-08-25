@@ -60,10 +60,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <span class="col_3">
             <span><input type="text" placeholder="Titel" id="projectTitel"></span>
             <span><input type="text" placeholder="Afkorting" id="projectAfkorting"></span>
-            <span>
-              <select id="projectLeider">
-                <option disabled selected>Projectleider</option>
-              </select>
+            <span id="projectLeider">
             </span>
           </span>
           <span class="col_1">
