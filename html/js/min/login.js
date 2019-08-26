@@ -5,8 +5,7 @@
     * check of beide wel gezet zijn
     * stuur POST request naar /login/login.php om te vergelijken met databse
     * responseText
-  - bij keydown enter in username box switch naar password box
-  - bij keydown enter in password box execute login()
+  - bij keydown enter execute login()
 */
 function login() {
   load(true);

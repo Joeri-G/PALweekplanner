@@ -1,58 +1,28 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
-script met functions die door alle "viewModes" en paginas gebruikt worden
+script met functions die voor alle "viewModes" gebruikt worden
   - menu()
     * functie om menu te toggelen
-
   - errorMessage()
     * functie om message met error melding weer te geven
-
   - load()
     * functie om laad animatie weer te geven
-
   - message()
     * functie om message modal weer te geven met bericht
-
   - escapeHTML()
     * functie om html te sterilizen om javascritp injections te voorkomen
-
   - enlargeHour()
     * functie om modal weer te geven met alle informatie van een afspraak omdat soms lines worden afgekapt
-
   - deleteHour()
     * functie om request naar server te sturen om afspraak te verwijderen
-
   - makeList()
     * functie om een option list voor <select> element te maken op basis van een array
-
   - sendHour()
     * functie om een afspraak te creeren
-
   - sortTable()
     * functie om table alpahbatisch te sorteren
-
   - checkEmpty()
     * functie om te checken of een value null is
-
-  - String Prototype replaceChar()
-    * simpele functie om enkele karakters naar HTML entities te zetten
-
-  - buildDropdown()
-    * functie om de html van de dropdown te bouwen
-
-  - toggleDrop()
-    * functie om een dropdown te openen/sluiten
-      + check of geselecteerde element dezelfde is als de huidige open element
-        ~ als dat het geval is sluit het element
-        ~ als dat niet zo is sluit dan het duidige open element, open de nieuwe en update de variable
-
-  - filterDropdown()
-    * functie om de dropdown te filteren
-      + er wordt input in de search box getypt
-      + filter de innerHTML van alle <a> ellements
-
-  - setValue()
-    * zet value uit <a> element (in data-value) naar een hidden input in de dropdown parent div
 */
 
 var activeDrop = false;
@@ -303,6 +273,21 @@ function checkEmpty(input = []) {
   }
   return true;
 }
+
+//
+//
+// //makeProjectList
+// function makeProjectList(type, lable, listAvailable) {
+//   //haal de data uit de lijst met beschikbare docenten, klassen, etc
+//   let lijst = listAvailable[type];
+//   let html = '<option selected disabled value="None">'+lable+'</option>\n';
+//   html += '<option value="None">Geen</option>';
+//   for (var i = 0; i < lijst.length; i++) {
+//     html += '<option value="'+lijst[i]+'">'+lijst[i]+'</option>';
+//   }
+//   return html;
+// }
+
 
 //functies voor custom select boxes
 String.prototype.replaceChar = function(html = false) {

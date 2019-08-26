@@ -55,7 +55,7 @@
       + lokaal
 
   - deleteAll()
-    * functie om alle afspraken te verwijderen
+    * functie om alles te verwijderen
 */
 function toggleUsers(element, config) {
   load(true);

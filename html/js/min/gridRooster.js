@@ -1,23 +1,17 @@
 /*
 Script met functions om het volledige rooster te bouwen
-
   - setGridTimetable()
     * voorbereidingen voor volledige rooster (config laden, data parsen, etc)
-
   - setGridTimetableBody()
     * voorbereidingen voor body (request naar server voor data). zit in aparte function om te veel nested statements te voorkomen (leesbaarheid).
-
   - buildGridTimetableBody()
     * functie om de head van de table te bouwen, alle dagdelen + tijden.
-
   - buildGridTimetableBody()
     * functie om door klassen te loopen en body te "bouwen".
       + Als afspraak bestaat op uur voor klas, dan call naar buildGridTimetableAfspraak()
       + anders buildGridTimetableInput()
-
   - buildGridTimetableAfspraak()
     * als een afspraak bestaat op het gekozen dagdeel, build dan een entry waar al deze informatie in staat
-
   - buildGridTimetableInput()
     * als er geen afspraak bestaat, build dan een entry met inputs voor afspraak
 */

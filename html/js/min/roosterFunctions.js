@@ -1,18 +1,4 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-/*
-script met functions voor iedere rooster mode
-  - modeDefault()
-    * weekrooster
-    * bouw klas/docent selection
-    * laad docentenlijst
-
-  - modeGrid()
-    * volledig rooster
-
-  - modeJaarlaag()
-    * jaarlaag rooster
-    * bouw jaarlaag selection
-*/
 function modeDefault() {
   let main = document.getElementsByTagName('main')[0];
   let select = document.getElementsByClassName('select')[0];
@@ -24,8 +10,18 @@ function modeDefault() {
   main.style.display = 'block';
   //zorg dat de oude html weg is
   main.innerHTML = '<p class="mainMessage">Selecteer een docent of klas met de dropdown</p>';
+  // //zet de footer weer beneden
+  // document.getElementsByTagName('footer')[0].style.position = 'absolute';
   //zorg dat de selction weergegeven wordt
   select.style.display = 'block';
+  //bouw selection dropdown
+  // select.innerHTML = '<select name="displayMode" onchange="buildSelect(this.value, list);">\
+  // <option value="k" selected>Klassen</option>\
+  // <option value="d">docenten</option>\
+  // </select>\
+  // <select name="displayModeFinal" onchange="setWeekTimetable(this.value);">\
+  // <option>Klas</option>\
+  // </select>';
 
   select.innerHTML = '<div class="dropSelect">\
     <input type="button" value="Klas" onclick="toggleDrop(this)" data-title="">\

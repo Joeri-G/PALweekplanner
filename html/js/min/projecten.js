@@ -1,27 +1,4 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-/*
-script met functions die voor de projecten pagina nodig zijn
-  - toggleProjecten()
-     * functie om te kijken of projecten geladen moeten worden of juist weggehaald
-
-  - loadProjecten()
-    * functie om projecten te laden
-
-  - buildTable()
-    * functie om table te maken met alle projecten
-
-  - deleteProject()
-    * functie om geselecteerd project te verwijderen
-
-  - enlargeProject()
-    * functie om als er op het oogje geklikt wordt een modal weer te geven met alle project informatie
-
-  - addProject()
-    * functie om project toe te voegen
-
-  - script om lijst met projectleiders te bouwen
-
-*/
 function toggleProjecten(element) {
   load(true);
   let projectList = document.getElementById('projectList');
