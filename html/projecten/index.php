@@ -15,7 +15,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
     <title>Project Codes</title>
     <link rel="shortcut icon" href="/img/logo.svg">
     <link rel="stylesheet" href="/css/min/master.css">
-    <link rel="stylesheet" href="/css/min/admin.css">
+    <link rel="stylesheet" href="/css/min/panel.css">
   </head>
   <body>
     <!-- Navbar -->
