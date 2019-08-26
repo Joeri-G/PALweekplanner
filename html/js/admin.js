@@ -65,8 +65,7 @@ function toggleUsers(element, config) {
     loadUsers(userList, config);
     element.dataset.toggle = 'shown';
     element.innerHTML = 'Hide';
-  }
-  else if (element.dataset.toggle == 'shown') {
+  } else if (element.dataset.toggle == 'shown') {
     userList.style.display = 'none';
     element.dataset.toggle = 'hidden';
     element.innerHTML = 'Show';
@@ -84,8 +83,7 @@ function loadUsers(userList, config) {
         //stop loading animatie
         let data = JSON.parse(this.responseText);
         buildUsers(data, userList, config);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -113,14 +111,13 @@ function buildUsers(data, userList, config) {
     <td>' + data[i].role + '</td>\
     <td>' + data[i].userLVL + '</td>\n';
     for (var x = 0; x < config.dagen.length; x++) {
-      if(
+      if (
         typeof userAvailability[config.dagen[x]] !== undefined &&
         typeof userAvailability[config.dagen[x]] !== null &&
         userAvailability[config.dagen[x]]
       ) {
         html += '<td>&#10003;</td>';
-      }
-      else {
+      } else {
         html += '<td>&#10799;</td>';
       }
     }
@@ -144,8 +141,8 @@ function deleteUser(data, config) {
     return null;
   }
   let ID = JSON.parse(data).ID;
-  let url = '/admin/api.php?deleteUser=true&ID='+encodeURIComponent(ID);
-  sendURL(url, function(response){
+  let url = '/admin/api.php?deleteUser=true&ID=' + encodeURIComponent(ID);
+  sendURL(url, function(response) {
     message(response);
     let userList = document.getElementById('userList');
     loadUsers(userList, config);
@@ -160,14 +157,12 @@ function toggleKlassen(element, config) {
     loadKlassen(klasList, config);
     element.dataset.toggle = 'shown';
     element.innerHTML = 'Hide';
-  }
-  else if (element.dataset.toggle == 'shown') {
+  } else if (element.dataset.toggle == 'shown') {
     klasList.style.display = 'none';
     element.dataset.toggle = 'hidden';
     element.innerHTML = 'Show';
     load(false);
-  }
-  else {
+  } else {
     element.dataset.toggle = 'hidden';
   }
 }
@@ -182,8 +177,7 @@ function loadKlassen(klasList, config) {
         let data = JSON.parse(this.responseText);
         buildKlassen(data, klasList, config);
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -222,8 +216,8 @@ function deleteKlas(data) {
     return null;
   }
   let ID = JSON.parse(data).ID;
-  let url = '/admin/api.php?deleteKlas=true&ID='+encodeURIComponent(ID);
-  sendURL(url, function(response){
+  let url = '/admin/api.php?deleteKlas=true&ID=' + encodeURIComponent(ID);
+  sendURL(url, function(response) {
     message(response);
     let klasList = document.getElementById('klasList');
     loadKlassen(klasList);
@@ -238,14 +232,12 @@ function toggleLokalen(element) {
     loadLokalen(lokaalList);
     element.dataset.toggle = 'shown';
     element.innerHTML = 'Hide';
-  }
-  else if (element.dataset.toggle == 'shown') {
+  } else if (element.dataset.toggle == 'shown') {
     lokaalList.style.display = 'none';
     element.dataset.toggle = 'hidden';
     element.innerHTML = 'Show';
     load(false);
-  }
-  else {
+  } else {
     element.dataset.toggle = 'hidden';
   }
 }
@@ -260,8 +252,7 @@ function loadLokalen(lokaalList) {
         let data = JSON.parse(this.responseText);
         buildLokalen(data, lokaalList);
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -298,8 +289,8 @@ function deleteLokaal(data) {
     return null;
   }
   let ID = JSON.parse(data).ID;
-  let url = '/admin/api.php?deleteLokaal=true&ID='+encodeURIComponent(ID);
-  sendURL(url, function(response){
+  let url = '/admin/api.php?deleteLokaal=true&ID=' + encodeURIComponent(ID);
+  sendURL(url, function(response) {
     message(response);
     let lokaalList = document.getElementById('lokaalList');
     loadLokalen(lokaalList);
@@ -342,16 +333,15 @@ function addUser(config) {
     message('Niet alle velden zijn ingevuld');
     return 0;
   }
-  let POST = 'username='+encodeURIComponent(username)+
-  '&password='+encodeURIComponent(password)+
-  '&role='+encodeURIComponent(role)+
-  '&userLVL='+encodeURIComponent(userLVL);
+  let POST = 'username=' + encodeURIComponent(username) +
+    '&password=' + encodeURIComponent(password) +
+    '&role=' + encodeURIComponent(role) +
+    '&userLVL=' + encodeURIComponent(userLVL);
   //voeg dagdeel info aan POST toe
   for (var i = 0; i < config.dagen.length; i++) {
     if (document.getElementById('adduser' + config.dagen[i]).checked) {
       POST += '&dag' + config.dagen[i] + '=true';
-    }
-    else {
+    } else {
       POST += '&dag' + config.dagen[i] + '=false';
     }
   }
@@ -389,9 +379,9 @@ function addKlas() {
     message('Niet alle velden zijn ingevuld');
     return 0;
   }
-  let POST = 'jaar='+encodeURIComponent(jaar)+
-  '&niveau='+encodeURIComponent(niveau)+
-  '&nummer='+encodeURIComponent(nummer);
+  let POST = 'jaar=' + encodeURIComponent(jaar) +
+    '&niveau=' + encodeURIComponent(niveau) +
+    '&nummer=' + encodeURIComponent(nummer);
 
 
   let xhttp = new XMLHttpRequest();
@@ -422,7 +412,7 @@ function addLokaal() {
 
   lokaalObj.value = '';
 
-  let POST = 'lokaal='+encodeURIComponent(lokaal);
+  let POST = 'lokaal=' + encodeURIComponent(lokaal);
   let xhttp = new XMLHttpRequest();
   //stuur request met in body alle data
   xhttp.onreadystatechange = function() {
@@ -453,8 +443,7 @@ function deleteAll() {
     xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhttp.send();
-  }
-  else {
+  } else {
     load(false);
   }
 }

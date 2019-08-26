@@ -3,8 +3,8 @@
 session_start();
 //login check
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] <= 3) {
-  header("location: /login");
-  die('Not Logged In');
+    header("location: /login");
+    die('Not Logged In');
 }
 ?>
 <!DOCTYPE html>

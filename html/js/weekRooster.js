@@ -15,7 +15,10 @@ script met fumctions om het weekrooster te bouwen
     * functie om uur te bouwen
       + de inputs hangen af van de "mode" (docent/klas)
 */
-function buildSelect(type = 'klas', list = {d: [], k: []}) {
+function buildSelect(type = 'klas', list = {
+  d: [],
+  k: []
+}) {
   let title = {
     d: 'docent',
     k: 'klas',
@@ -63,14 +66,13 @@ function setWeekTimetable(input) {
   let inputObj = JSON.parse(input);
   //klas
   if (mode == 'k') {
-    url = '/api.php?readKlas=true&jaar='+encodeURIComponent(inputObj.j)+'&niveau='+encodeURIComponent(inputObj.ni)+'&nummer='+encodeURIComponent(inputObj.nu);
+    url = '/api.php?readKlas=true&jaar=' + encodeURIComponent(inputObj.j) + '&niveau=' + encodeURIComponent(inputObj.ni) + '&nummer=' + encodeURIComponent(inputObj.nu);
   }
   //docent
   else if (mode == 'd') {
-    url = '/api.php?readDocent=true&docent='+encodeURIComponent(inputObj.username);
+    url = '/api.php?readDocent=true&docent=' + encodeURIComponent(inputObj.username);
     availability = inputObj.availability
-  }
-  else {
+  } else {
     load(false);
     message('Invalid mode');
     return 0;
@@ -89,8 +91,7 @@ function setWeekTimetable(input) {
         document.getElementsByTagName('footer')[0].style.position = 'relative';
         buildWeekTimetable(response, mode, inputObj);
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         load(false);
         errorMessage(e);
       }
@@ -112,8 +113,7 @@ function buildWeekTimetable(data, mode, obj) {
       try {
         let config = JSON.parse(this.responseText);
         listAvailable(config, data, mode, obj);
-      }
-      catch (e) {
+      } catch (e) {
         load(false);
         errorMessage(e);
       }
@@ -140,8 +140,7 @@ function listAvailable(config, data, mode, obj) {
         //haal noP weg
         main.className = '';
         main.innerHTML = html;
-      }
-      catch (e) {
+      } catch (e) {
         load(false);
         errorMessage(e);
       }
@@ -166,7 +165,7 @@ function buildDay(conf, data, mode, obj, nmr, listAvailable) {
     return buildUnavailable(conf.uren, dag);
   }
   for (var i = 0; i < conf.uren; i++) {
-    html += buildHour(conf, data, mode, obj, dag+i, i, listAvailable);
+    html += buildHour(conf, data, mode, obj, dag + i, i, listAvailable);
     //voeg pauze toe als het niet het laatste uur is
     if (i < (conf.uren - 1)) {
       html += '<div class="pauze"></div>';
@@ -208,18 +207,16 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   //de bovenste row hangt af van de geselecterde mode
   if (mode == 'k') {
     //klas input
-    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-k=\'{"data":['+JSON.stringify(obj).replaceChar()+']}\'>\n';
+    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-k=\'{"data":[' + JSON.stringify(obj).replaceChar() + ']}\'>\n';
     //build select en voeg options toe
     html += makeList(dagdeel, 'd', 'Docent1', listAvailable, dagdeel + 'docent1');
     html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2');
-  }
-  else if (mode == 'd') {
+  } else if (mode == 'd') {
     //docent input
     html += '<input type="hidden" name="' + dagdeel + 'docent1" value="' + obj.username + '">\n';
     html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2');
-    html += makeList(dagdeel, 'k', 'Klas', listAvailable, dagdeel + 'klas1', 'data-k=\'{"data":'+JSON.stringify(listAvailable.k[dagdeel]).replaceChar()+'}\'');
-  }
-  else {
+    html += makeList(dagdeel, 'k', 'Klas', listAvailable, dagdeel + 'klas1', 'data-k=\'{"data":' + JSON.stringify(listAvailable.k[dagdeel]).replaceChar() + '}\'');
+  } else {
     message('Mode Error');
     load(false);
     return '<h1>Mode Error</h1>';

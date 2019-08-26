@@ -53,12 +53,14 @@ function modeDefault() {
         buildSelect('k', list);
         //stop loading animatie
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
-        let list = {d: [], k: []};
+        let list = {
+          d: [],
+          k: []
+        };
       }
     }
   };
@@ -89,8 +91,7 @@ function modeGrid() {
         setGridTimetable(afspraken);
         //stop loading animatie
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -121,7 +122,7 @@ function modeJaarlaag() {
             <input type="hidden" name="selectJaarlaag" onChange="setWeekTimetable(this.value)">\
             <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">';
         for (var i = 0; i < jaarlagen.k.length; i++) {
-          html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>'+jaarlagen.k[i].j+jaarlagen.k[i].ni+'</a>\n';
+          html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>' + jaarlagen.k[i].j + jaarlagen.k[i].ni + '</a>\n';
         }
         html += '<span>Geen resultaten...</span>\
           </div>\
@@ -135,8 +136,7 @@ function modeJaarlaag() {
         // //zet footer vast aan onderkant pagina
         // document.getElementsByTagName('footer')[0].style.position = 'absolute';
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         load(false);
         //stop loading animatie
         errorMessage(e);
@@ -164,15 +164,14 @@ function buildJaarlaag(input) {
         setGridTimetable(afspraken, modeJaarlaag, jaarlaag);
         //stop loading animatie
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
       }
     }
   };
-  xhttp.open("GET", "/api.php?readJaarlaag=true&jaar="+encodeURIComponent(jaarlaag.j)+"&niveau="+encodeURIComponent(jaarlaag.ni), true);
+  xhttp.open("GET", "/api.php?readJaarlaag=true&jaar=" + encodeURIComponent(jaarlaag.j) + "&niveau=" + encodeURIComponent(jaarlaag.ni), true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.send();
 }

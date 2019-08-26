@@ -7,8 +7,7 @@ function toggleProjecten(element) {
     loadProjecten(projectList);
     element.dataset.toggle = 'shown';
     element.innerHTML = 'Hide';
-  }
-  else if (element.dataset.toggle == 'shown') {
+  } else if (element.dataset.toggle == 'shown') {
     projectList.style.display = 'none';
     element.dataset.toggle = 'hidden';
     element.innerHTML = 'Show';
@@ -26,8 +25,7 @@ function loadProjecten(out) {
         buildTable(data, out);
         //stop loading animatie
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -70,8 +68,7 @@ function deleteProject(data) {
         buildTable(data, out);
         //stop loading animatie
         load(false);
-      }
-      catch (e) {
+      } catch (e) {
         //stop loading animatie
         load(false);
         errorMessage(e);
@@ -86,10 +83,10 @@ function deleteProject(data) {
 function enlargeProject(data) {
   let json = JSON.parse(data);
   let text = 'Titel: ' + json.title +
-  '\nAfkorting: ' + json.code +
-  '\n\nVerantwoordelijke: ' + json.verantwoordelijke +
-  '\n\nBeschrijving: ' + json.beschrijving +
-  '\n\nInstructie: ' + json.instructie;
+    '\nAfkorting: ' + json.code +
+    '\n\nVerantwoordelijke: ' + json.verantwoordelijke +
+    '\n\nBeschrijving: ' + json.beschrijving +
+    '\n\nInstructie: ' + json.instructie;
   message(text);
 }
 
@@ -104,10 +101,10 @@ function addProject() {
   let instructie = document.getElementById('projectInstructie').value;
 
   let POST = 'title=' + encodeURIComponent(title) +
-  '&afkorting=' + encodeURIComponent(afkorting) +
-  '&verantwoordelijke=' + encodeURIComponent(verantwoordelijke) +
-  '&beschrijving=' + encodeURIComponent(beschrijving) +
-  '&instructie=' + encodeURIComponent(instructie);
+    '&afkorting=' + encodeURIComponent(afkorting) +
+    '&verantwoordelijke=' + encodeURIComponent(verantwoordelijke) +
+    '&beschrijving=' + encodeURIComponent(beschrijving) +
+    '&instructie=' + encodeURIComponent(instructie);
 
   //check of wel in ieder veld wat is ingevuld
   if (!checkEmpty([title, afkorting, verantwoordelijke, beschrijving, instructie])) {
@@ -139,13 +136,16 @@ xhttp.onreadystatechange = function() {
       // for (var i = 0; i < data.length; i++) {
       //   html += '<option value="' + data[i] + '">' + data[i] + '</option>'
       // }
-      let input = {d: {a: data} };
+      let input = {
+        d: {
+          a: data
+        }
+      };
       let html = makeList('a', 'd', 'Docent', input, 'a' + 'docent2');
       el.innerHTML = html;
       //stop loading animatie
       load(false);
-    }
-    catch (e) {
+    } catch (e) {
       //stop loading animatie
       load(false);
       errorMessage(e);

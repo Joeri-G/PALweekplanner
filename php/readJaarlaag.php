@@ -12,7 +12,7 @@ erg vergelijkbaar met readAll maar deze neemt twee inputs, jaar en niveau
 */
 require('funcLib.php');
 if (!_GETIsset(['jaar', 'niveau'])) {
-  die("[INPUT]\tNOT ALL PARAMETERS SET");
+    die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 $jaar = $_GET['jaar'];
 $niveau = $_GET['niveau'];
@@ -20,7 +20,8 @@ $niveau = $_GET['niveau'];
 $out = new stdClass;
 
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT
+$stmt = $conn->prepare(
+    'SELECT
   daypart,
   klas1nummer,
   docent1,
@@ -40,27 +41,27 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resDaypart, $resKlas1Nummer, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);
 while ($stmt->fetch()) {
-  if (!isset($out->$resDaypart)) {
-    $out->$resDaypart = array();
-  }
-  $obj = new stdClass;
-  $klasObj = new stdClass;
-  $klasObj->j = $jaar;
-  $klasObj->ni = $niveau;
-  $klasObj->nu = $resKlas1Nummer;
+    if (!isset($out->$resDaypart)) {
+        $out->$resDaypart = array();
+    }
+    $obj = new stdClass;
+    $klasObj = new stdClass;
+    $klasObj->j = $jaar;
+    $klasObj->ni = $niveau;
+    $klasObj->nu = $resKlas1Nummer;
 
-  $obj->k = [$klasObj];
+    $obj->k = [$klasObj];
 
-  $obj->d = [$resDocent1, $resDocent2];
+    $obj->d = [$resDocent1, $resDocent2];
 
-  $obj->l = [$resLokaal1, $resLokaal2];
+    $obj->l = [$resLokaal1, $resLokaal2];
 
-  $obj->la = $resLaptop;
-  $obj->p = $resProjectCode;
-  $obj->no = $resNote;
-  $obj->ID = $resID;
+    $obj->la = $resLaptop;
+    $obj->p = $resProjectCode;
+    $obj->no = $resNote;
+    $obj->ID = $resID;
 
-  $out->$resDaypart[] = $obj;
+    $out->$resDaypart[] = $obj;
 }
 
 $stmt->close();
@@ -71,11 +72,9 @@ header('Content-Type: application/json');
 //als als input ?format is gezet doe dan prettyp print
 //we doen dit niet meteen omdat het het bestand aanzienlijk groter maakt
 if (isset($_GET['format']) && $_GET['format'] == 'true') {
-  $json = json_encode($out, JSON_PRETTY_PRINT);
-}
-else {
-  $json = json_encode($out);
+    $json = json_encode($out, JSON_PRETTY_PRINT);
+} else {
+    $json = json_encode($out);
 }
 //output JSON en stop execution
 die($json);
-?>

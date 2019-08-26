@@ -2,12 +2,13 @@ main {
   display: block;
   margin: auto;
 }
+
 section {
   background: #fff;
   display: block;
   margin: auto;
   max-width: 400px;
-    box-shadow: 0px 0px 4px 4px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 0px 4px 4px rgba(50, 50, 50, 0.5);
   padding: 32px;
 }
 
@@ -18,7 +19,7 @@ main::after {
   height: 200px;
 }
 
-section > p {
+section>p {
   display: block;
   font-size: 3em;
   text-align: center;
@@ -49,6 +50,7 @@ button:hover, input:hover, input:focus, button:focus {
   section {
     max-width: 600px;
   }
+
   input, button {
     width: 500px;
   }

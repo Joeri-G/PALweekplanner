@@ -3,8 +3,8 @@
 session_start();
 //login check
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] < 3) {
-  header("location: /login");
-  die('Not Logged In');
+    header("location: /login");
+    die('Not Logged In');
 }
 ?>
 <!DOCTYPE html>
@@ -26,7 +26,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       <?php
       //als de gebruiker een admin is geef dan de admin link weer
       if ($_SESSION['userLVL'] > 3) {
-        echo '<a href="/admin">Panel</a>';
+          echo '<a href="/admin">Panel</a>';
       }
        ?>
       <a href="/logout">Logout</a>
@@ -44,7 +44,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <?php
         //als de gebruiker een admin is geef dan de admin link weer
         if ($_SESSION['userLVL'] > 3) {
-          echo '<span><a href="/admin">Panel</a></span>';
+            echo '<span><a href="/admin">Panel</a></span>';
         }
          ?>
         <span><a href="/logout">Logout</a></span>

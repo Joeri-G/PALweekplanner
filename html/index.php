@@ -2,8 +2,8 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 if (!isset($_SESSION['loggedin'])) {
-  header("location: /login");
-  die();
+    header("location: /login");
+    die();
 }
  ?>
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ if (!isset($_SESSION['loggedin'])) {
       <?php
       //als de gebruiker een admin is geef dan de admin link weer
       if ($_SESSION['userLVL'] > 3) {
-        echo '<a href="/admin">Panel</a>';
+          echo '<a href="/admin">Panel</a>';
       }
        ?>
       <a href="/logout">Logout</a>
@@ -51,7 +51,7 @@ if (!isset($_SESSION['loggedin'])) {
         <?php
         //als de gebruiker een admin is geef dan de admin link weer
         if ($_SESSION['userLVL'] > 3) {
-          echo '<span><a href="/admin">Panel</a></span>';
+            echo '<span><a href="/admin">Panel</a></span>';
         }
          ?>
         <span><a href="/logout">Logout</a></span>

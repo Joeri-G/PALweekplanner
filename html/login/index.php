@@ -2,8 +2,8 @@
 //BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-  header('location: /');
-  die('Already logged in');
+    header('location: /');
+    die('Already logged in');
 }
  ?>
 <!DOCTYPE html>

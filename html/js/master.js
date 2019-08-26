@@ -31,8 +31,7 @@ var activeDrop = false;
 function menu(bool) {
   if (bool) {
     let menu = document.getElementsByTagName('menu')[0].style.display = 'block';
-  }
-  else if (!bool) {
+  } else if (!bool) {
     let menu = document.getElementsByTagName('menu')[0].style.display = 'none';
   }
 }
@@ -60,8 +59,9 @@ function load(mode) {
       //fade out
       loadingContent.setAttribute('class', 'fade-out');
       //remove fadeout
-      setTimeout(function(){
-        img.style.display = "none"; img.setAttribute('class', '');
+      setTimeout(function() {
+        img.style.display = "none";
+        img.setAttribute('class', '');
         loadingContent.innerHTML = '';
       }, 200);
     }, 500);
@@ -80,7 +80,7 @@ function message(text = '', escape = true) {
   //zet text
   messageModalContent.innerHTML = text;
 
-  setTimeout(function(){
+  setTimeout(function() {
     messageModal.style.display = 'block';
     messageModalContent.setAttribute('class', 'fade-in');
     //haal scroll weg uit document
@@ -93,7 +93,7 @@ function escapeHTML(input) {
   //replace less than
   let out = input.replace(/</g, '&lt;');
   //replace greater than
-  out = out.replace(/>/g,'&gt;');
+  out = out.replace(/>/g, '&gt;');
   //replace newline with line break
   out = out.replace(/\n/g, '<br>');
   //replace ' ' (space) with non-breaking space
@@ -117,8 +117,8 @@ function enlargeHour(data) {
 
 function deleteHour(data, mode = 0) {
   load(true);
-  if(confirm('Wilt u deze afspraak verwijderen?')) {
-    let xhttp= new XMLHttpRequest();
+  if (confirm('Wilt u deze afspraak verwijderen?')) {
+    let xhttp = new XMLHttpRequest();
     //laad list met alle docenten en klassen
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -127,11 +127,9 @@ function deleteHour(data, mode = 0) {
         setTimeout(function() {
           if (mode == 0) {
             setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
-          }
-          else if (mode == 1) {
+          } else if (mode == 1) {
             modeGrid();
-          }
-          else if (mode == 2) {
+          } else if (mode == 2) {
             let el = document.getElementsByName('selectJaarlaag')[0];
             buildJaarlaag(el.value, el.dataset.jaarlagen);
           }
@@ -139,12 +137,13 @@ function deleteHour(data, mode = 0) {
       }
     };
     let id = JSON.parse(data).ID;
-    xhttp.open("GET", "/api.php?delete=true&ID="+encodeURIComponent(id), true);
+    xhttp.open("GET", "/api.php?delete=true&ID=" + encodeURIComponent(id), true);
     xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
     xhttp.send();
-  }
-  else {
-    setTimeout(function() {load(false);}, 200);
+  } else {
+    setTimeout(function() {
+      load(false);
+    }, 200);
   }
 }
 
@@ -155,18 +154,16 @@ function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') 
   let lijst = [];
   if (type == 'p') {
     lijst = listAvailable[type];
-  }
-  else {
+  } else {
     lijst = listAvailable[type][dagdeel];
   }
   if (type == 'k') {
     for (var i = 0; i < lijst.length; i++) {
-      title.push(lijst[i].j+lijst[i].ni+lijst[i].nu);
-      value.push('klas'+i);
+      title.push(lijst[i].j + lijst[i].ni + lijst[i].nu);
+      value.push('klas' + i);
     }
     html = buildDropdown(title, value, lable, name, dataset)
-  }
-  else {
+  } else {
     for (var i = 0; i < lijst.length; i++) {
       title.push(lijst[i]);
     }
@@ -178,36 +175,36 @@ function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') 
 function sendHour(name, dagdeel, mode = 0) {
   load(true);
   //we moeten nu de values van alle selections/input uit het parent element halen
-  let inputs = ['docent1', 'docent2', 'klas1',/* 'klas2',*/ 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
-  let url = '/api.php?insert=true&daypart='+dagdeel;
+  let inputs = ['docent1', 'docent2', 'klas1', /* 'klas2',*/ 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
+  let url = '/api.php?insert=true&daypart=' + dagdeel;
   let value;
   let klassen = 0;
   for (var i = 0; i < inputs.length; i++) {
-    value = document.getElementsByName(name+inputs[i])[0].value;
+    value = document.getElementsByName(name + inputs[i])[0].value;
     //als het veld leeg is maak er dan None van
-    if (value == '') { value = "None"};
+    if (value == '') {
+      value = "None"
+    };
     //als de value een klas is moeten we wat meer doen om het jaar, niveau en nummer er uit te krijgen
-    if (inputs[i].substring(0,4) == 'klas' ) {
+    if (inputs[i].substring(0, 4) == 'klas') {
       klassen++;
-      if (value !=='None') {
+      if (value !== 'None') {
         let pos = Number(value.substring(4, 5));
-        let json = JSON.parse(document.getElementsByName(name+inputs[i])[0].dataset.k);
-        url += '&klas'+klassen+'jaar='+json.data[pos].j;
-        url += '&klas'+klassen+'niveau='+json.data[pos].ni;
-        url += '&klas'+klassen+'nummer='+json.data[pos].nu;
+        let json = JSON.parse(document.getElementsByName(name + inputs[i])[0].dataset.k);
+        url += '&klas' + klassen + 'jaar=' + json.data[pos].j;
+        url += '&klas' + klassen + 'niveau=' + json.data[pos].ni;
+        url += '&klas' + klassen + 'nummer=' + json.data[pos].nu;
+      } else {
+        url += '&klas' + klassen + 'jaar=None';
+        url += '&klas' + klassen + 'niveau=None';
+        url += '&klas' + klassen + 'nummer=None';
       }
-      else {
-        url += '&klas'+klassen+'jaar=None';
-        url += '&klas'+klassen+'niveau=None';
-        url += '&klas'+klassen+'nummer=None';
-      }
-    }
-    else {
+    } else {
       //voeg de key en value toe aan de url
-      url += '&'+encodeURIComponent(inputs[i])+'='+encodeURIComponent(value);
+      url += '&' + encodeURIComponent(inputs[i]) + '=' + encodeURIComponent(value);
     }
   }
-  let xhttp4= new XMLHttpRequest();
+  let xhttp4 = new XMLHttpRequest();
   //laad list met alle docenten en klassen
   xhttp4.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -215,11 +212,9 @@ function sendHour(name, dagdeel, mode = 0) {
       setTimeout(function() {
         if (mode == 0) {
           setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
-        }
-        else if (mode == 1) {
+        } else if (mode == 1) {
           modeGrid();
-        }
-        else if (mode == 2) {
+        } else if (mode == 2) {
           let el = document.getElementsByName('selectJaarlaag')[0];
           buildJaarlaag(el.value, el.dataset.jaarlagen);
         }
@@ -296,13 +291,20 @@ function checkEmpty(input = []) {
 
 //functies voor custom select boxes
 String.prototype.replaceChar = function(html = false) {
-  let obj = {'\"' : '\"', '&quot' : '\"'};
+  let obj = {
+    '\"': '\"',
+    '&quot': '\"'
+  };
   if (html) {
-    obj = {'>' : '&gt;', '<' : ' &lt;', '\"' : "&quot;"};
+    obj = {
+      '>': '&gt;',
+      '<': ' &lt;',
+      '\"': "&quot;"
+    };
   }
   var retStr = this;
   for (var x in obj) {
-      retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+    retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
   }
   return retStr;
 };
@@ -359,18 +361,15 @@ function filterDropdown(el) {
     if (txtValue.toUpperCase().indexOf(value) > -1) {
       item[i].style.display = "";
       hasContent = true;
-    }
-    else if (item[i].classList.contains('shown')) {
+    } else if (item[i].classList.contains('shown')) {
       item[i].style.display = "";
-    }
-    else {
+    } else {
       item[i].style.display = "none";
     }
   }
   if (!hasContent) {
     parent.getElementsByTagName("span")[0].style.display = 'block';
-  }
-  else {
+  } else {
     parent.getElementsByTagName("span")[0].style.display = 'none';
   }
 }

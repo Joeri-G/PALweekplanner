@@ -9,7 +9,7 @@ script om projecten toe te voegen
 */
 require('funcLib.php');
 if (!_POSTIsset(['title', 'afkorting', 'verantwoordelijke', 'beschrijving', 'instructie'])) {
-  die("[INPUT]\tNOT ALL PARAMETERS SET");
+    die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 echo "[INPUT]\tOK\n";
 $title = $_POST['title'];
@@ -25,9 +25,9 @@ $stmt->bind_param('ss', $title, $afkorting);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-  $stmt->close();
-  $conn->close();
-  die("[NAME]\tTITEL OF AFKORTING BESTAAT AL\n");
+    $stmt->close();
+    $conn->close();
+    die("[NAME]\tTITEL OF AFKORTING BESTAAT AL\n");
 }
 echo "[NAME]\tOK\n";
 //check of verantwoordelijke bestaat
@@ -38,9 +38,9 @@ $stmt->bind_param('s', $verantwoordelijke);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows !== 1) {
-  $stmt->close();
-  $conn->close();
-  die("[VERANTWOORDELIJKE]\tVERANTWOORDELIJKE BESTAAT NIET\n");
+    $stmt->close();
+    $conn->close();
+    die("[VERANTWOORDELIJKE]\tVERANTWOORDELIJKE BESTAAT NIET\n");
 }
 echo "[VERANTWOORDELIJKE]\tOK\n";
 $stmt->close();
@@ -62,13 +62,13 @@ $stmt = $conn->prepare('INSERT INTO projecten (
   ?
 )');
 $stmt->bind_param(
-  'ssssss',
-  $title,
-  $afkorting,
-  $beschrijving,
-  $instructie,
-  $verantwoordelijke,
-  $_SESSION['username']
+    'ssssss',
+    $title,
+    $afkorting,
+    $beschrijving,
+    $instructie,
+    $verantwoordelijke,
+    $_SESSION['username']
 );
 
 $stmt->execute();
@@ -77,4 +77,3 @@ $conn->close();
 echo "[INSERT]\tOK\n";
 
 die();
- ?>

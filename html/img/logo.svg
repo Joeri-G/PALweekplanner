@@ -6,18 +6,15 @@
         stroke: #e8e8e8;
         stroke-width: 23.79px;
       }
-
       .cls-2 {
         fill: #ffec9f;
       }
-
       .cls-3 {
         fill: #a0ecff;
         stroke: #a0ecff;
         stroke-width: 3px;
         fill-rule: evenodd;
       }
-
       .cls-4 {
         fill: #a0fea0;
       }

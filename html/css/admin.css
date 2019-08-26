@@ -8,7 +8,6 @@
 3.0 TABLES
   3.1 table css
 */
-
 /* 1.0 */
 /* 1.1 */
 main {
@@ -31,12 +30,12 @@ select {
 }
 
 textarea {
-  font-family: 'Barlow Semi Condensed',sans-serif;
+  font-family: 'Barlow Semi Condensed', sans-serif;
 }
 
 /* 2.0 */
 /* 2.1 */
-main > div {
+main>div {
   background: #fff;
   box-shadow: 0px 0px 4px 4px rgba(50, 50, 50, 0.5);
   padding: 32px;
@@ -44,7 +43,7 @@ main > div {
   display: block;
 }
 
-main > div > p:first-of-type {
+main>div>p:first-of-type {
   font-size: 2em;
   margin: 0;
 }
@@ -113,13 +112,12 @@ main > div > p:first-of-type {
   text-align: center;
 }
 
-#docentDagen > p {
+#docentDagen>p {
   display: block;
 }
 
 /* 3.0 */
 /* 3.1 */
-
 .list {
   overflow: auto;
   margin: 2px;
@@ -149,7 +147,7 @@ tr {
   margin: 0 auto;
 }
 
-td,  th {
+td, th {
   border: 1px solid #eee;
   width: auto;
   margin: auto;
@@ -162,13 +160,13 @@ td,  th {
   cursor: pointer;
 }
 
-td:first-of-type,  th:first-of-type {
+td:first-of-type, th:first-of-type {
   font-weight: bold;
   width: auto;
 }
 
-td:last-of-type,  th:last-of-type {
-   width: 100px;
+td:last-of-type, th:last-of-type {
+  width: 100px;
 }
 
 .tableFilling {

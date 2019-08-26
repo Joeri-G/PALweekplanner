@@ -11,7 +11,7 @@ op deze manier is het gemakkelijk voor de sysadmins om fouten terug te zetten en
 */
 require('funcLib.php');
 if (!_GETIsset(['ID'])) {
-  die("[INPUT]\tNOT ALL PARAMETERS SET\n");
+    die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 echo "[INPUT] OK\n";
 //maak variabelen voor ID en Username
@@ -41,28 +41,28 @@ $stmt->execute();
 $stmt->store_result();
 //als de query niets returned dan bestaat de afspraak niet
 if ($stmt->num_rows !== 1) {
-  $stmt->close();
-  $conn->close();
-  die("[ID] AFSPRAAK BESTAAT NIET\n");
+    $stmt->close();
+    $conn->close();
+    die("[ID] AFSPRAAK BESTAAT NIET\n");
 }
 echo "[ID] OK\n\nINSERTING...\n";
 
 $stmt->bind_result(
-  $resDaypart,
-  $resDocent1,
-  $resDocent2,
-  $resKlas1jaar,
-  $resKlas1niveau,
-  $resKlas1nummer,
+    $resDaypart,
+    $resDocent1,
+    $resDocent2,
+    $resKlas1jaar,
+    $resKlas1niveau,
+    $resKlas1nummer,
   /*$resKlas2jaar,
   $resKlas2niveau,
   $resKlas2nummer,*/
   $resLokaal1,
-  $resLokaal2,
-  $resLaptop,
-  $resProjectCode,
-  $resNote,
-  $resUser
+    $resLokaal2,
+    $resLaptop,
+    $resProjectCode,
+    $resNote,
+    $resUser
 );
 $stmt->fetch();
 $stmt->close();
@@ -90,31 +90,31 @@ echo "$conn->error";
 $stmt->bind_param(
   //"sssssssssssssssss",
   "ssssssssssssss",
-  $resDaypart,
-  $resDocent1,
-  $resDocent2,
-  $resKlas1jaar,
-  $resKlas1niveau,
-  $resKlas1nummer,
+    $resDaypart,
+    $resDocent1,
+    $resDocent2,
+    $resKlas1jaar,
+    $resKlas1niveau,
+    $resKlas1nummer,
   /*$resKlas2jaar,
   $resKlas2niveau,
   $resKlas2nummer,*/
   $resLokaal1,
-  $resLokaal2,
-  $resLaptop,
-  $resProjectCode,
-  $resNote,
-  $resUser,
-  $_SESSION['username'],
-  $_SERVER["REMOTE_ADDR"]
+    $resLokaal2,
+    $resLaptop,
+    $resProjectCode,
+    $resNote,
+    $resUser,
+    $_SESSION['username'],
+    $_SERVER["REMOTE_ADDR"]
 );
 $stmt->execute();
 
 //if an error occurs
 if ($conn->error !== '') {
-  $stmt->close();
-  $conn->close();
-  die("[INSERT] FAILED\n");
+    $stmt->close();
+    $conn->close();
+    die("[INSERT] FAILED\n");
 }
 echo "[INSERT] OK\n";
 $stmt->close();
@@ -125,11 +125,10 @@ $stmt->bind_param('i', $ID);
 $stmt->execute();
 $stmt->store_result();
 if ($conn->error !== '') {
-  $stmt->close();
-  $conn->close();
-  die("[DELETE] FAILED\n");
+    $stmt->close();
+    $conn->close();
+    die("[DELETE] FAILED\n");
 }
 $stmt->close();
 $conn->close();
 die("[DELETE] OK\n");
- ?>

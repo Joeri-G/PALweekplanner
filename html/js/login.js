@@ -25,7 +25,7 @@ function login() {
   }
 
   //maak post data string
-  let post = "username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
+  let post = "username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
   //maak request object
   let xhttp = new XMLHttpRequest();
   //laad list met alle docenten en klassen
@@ -36,8 +36,7 @@ function login() {
         usernameObj.className = '';
         passwordObj.className = '';
         window.location = '/';
-      }
-      else {
+      } else {
         usernameObj.className = 'incorrect';
         passwordObj.className = 'incorrect';
         load(false);
@@ -52,16 +51,16 @@ function login() {
 }
 
 //voeg trigger toe voor username en password boxes
-document.getElementById('username').addEventListener("keydown", function (e) {
-    if (e.keyCode === 13) {  //keyCode 13 is enter
-      //focus op password box
-      document.getElementById('password').focus();
-    }
+document.getElementById('username').addEventListener("keydown", function(e) {
+  if (e.keyCode === 13) { //keyCode 13 is enter
+    //focus op password box
+    document.getElementById('password').focus();
+  }
 });
-document.getElementById('password').addEventListener("keydown", function (e) {
-    if (e.keyCode === 13) {  //keyCode 13 is enter
-      login();
-    }
+document.getElementById('password').addEventListener("keydown", function(e) {
+  if (e.keyCode === 13) { //keyCode 13 is enter
+    login();
+  }
 });
 
 

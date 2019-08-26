@@ -1,7 +1,7 @@
 <?php
 require('funcLib.php');
 if (!_POSTIsset(['jaar', 'niveau', 'nummer'])) {
-  die("[INPUT]\tNOT ALL PARAMETERS SET\n");
+    die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
 $jaar = $_POST['jaar'];
@@ -9,7 +9,7 @@ $niveau = $_POST['niveau'];
 $nummer = $_POST['nummer'];
 
 if (empty($jaar) || empty($niveau) || empty($nummer)) {
-  die("[INPUT]\tNOT ALL PARAMETERS SET\n");
+    die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
 echo "[INPUT]\tOK\n";
@@ -21,9 +21,9 @@ $stmt->bind_param('sss', $jaar, $niveau, $nummer);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-  $stmt->close();
-  $conn->close();
-  die("[KLAS]\tTAKEN\n");
+    $stmt->close();
+    $conn->close();
+    die("[KLAS]\tTAKEN\n");
 }
 echo "[KLAS]\tOK\n";
 $stmt->close();
@@ -36,13 +36,12 @@ $stmt->execute();
 $stmt->store_result();
 
 if (!empty($conn->error)) {
-  $stmt->close();
-  $conn->close();
-  die("ERROR\n");
+    $stmt->close();
+    $conn->close();
+    die("ERROR\n");
 }
 
 echo "[INSERT]\tOK\n";
 
 $stmt->close();
 $conn->close();
- ?>
