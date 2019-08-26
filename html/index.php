@@ -16,9 +16,9 @@ if (!isset($_SESSION['loggedin'])) {
     <!-- icon -->
     <link rel="shortcut icon" href="/img/logo.svg">
     <!-- css -->
-    <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" href="/css/gridRooster.css">
-    <link rel="stylesheet" href="/css/weekRooster.css">
+    <link rel="stylesheet" href="/css/min/master.css">
+    <link rel="stylesheet" href="/css/min/gridRooster.css">
+    <link rel="stylesheet" href="/css/min/weekRooster.css">
   </head>
   <body>
     <!-- Navbar -->

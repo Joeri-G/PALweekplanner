@@ -14,8 +14,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
     <meta charset="utf-8">
     <title>Project Codes</title>
     <link rel="shortcut icon" href="/img/logo.svg">
-    <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/min/master.css">
+    <link rel="stylesheet" href="/css/min/admin.css">
   </head>
   <body>
     <!-- Navbar -->

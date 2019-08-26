@@ -17,8 +17,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <!-- Icon -->
     <link rel="shortcut icon" href="/img/logo.svg">
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/master.css">
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/min/master.css">
+    <link rel="stylesheet" href="/css/min/login.css">
   </head>
   <body>
     <!-- Navbar -->
