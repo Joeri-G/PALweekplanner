@@ -48,7 +48,6 @@ main>div>p:first-of-type {
   margin: 0;
 }
 
-
 .inputParent {
   border: 1px #000 solid;
   padding: 16px;
@@ -72,9 +71,12 @@ main>div>p:first-of-type {
   margin: 0 4px 0 0;
 }
 
-padding: 2px;
-.col_2 span, .col_3 span {
+.col_2 {
   grid-template-columns: 1fr 1fr;
+}
+
+.col_2 span, .col_3 span {
+  padding: 2px;
 }
 
 .col_3 {
@@ -86,6 +88,7 @@ padding: 2px;
   font-size: 1em;
   padding: 4px 8px;
 }
+
 .dropSelect {
   display: block;
   width: auto;
