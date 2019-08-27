@@ -56,17 +56,24 @@ $lokalenGroep = array($lokaal1, $lokaal2);
 //zorg dat voor de klas of een hele klas gezet is of de hele klas None is
 $klassenGroep = checkKlas(array($klas1/*, $klas2*/));
 
-//Op zijn minst een van de gegeven inputs moet niet none zijn
-if (!isPossible($docentenGroep)) {
-    die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE DOCENTEN MOET NIET NONE ZIJN");
+// //Op zijn minst een van de gegeven inputs moet niet none zijn
+// if (!isPossible($docentenGroep)) {
+//     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE DOCENTEN MOET NIET NONE ZIJN");
+// }
+// //de klas is anders omdat dit al een object is
+// if (!isPossibleKlas($klassenGroep)) {
+//     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
+// }
+// if (!isPossible($lokalenGroep)) {
+//     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE LOKALEN MOET NIET NONE ZIJN");
+// }
+
+//check of projectCode wel gezet is
+if (!notNone($projectCode)) {
+  die("[PROJECTEN] VUL PROJECT IN");
 }
-//de klas is anders omdat dit al een object is
-if (!isPossibleKlas($klassenGroep)) {
-    die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
-}
-if (!isPossible($lokalenGroep)) {
-    die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE LOKALEN MOET NIET NONE ZIJN");
-}
+
+
 echo "[INPUT]\tOK\n";
 
 //check of het dagdeel wel mogelijk is
