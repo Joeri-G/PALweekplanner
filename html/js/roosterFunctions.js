@@ -19,7 +19,7 @@ function modeDefault() {
   //start loading animatie
   load(true);
   //zorg dat er geen css rules meer in main zitten
-  main.className = '';
+  document.body.className = '';
   //zorg dat de css styling weer de default wordt
   main.style.display = 'block';
   //zorg dat de oude html weg is
@@ -79,7 +79,7 @@ function modeGrid() {
   //start laad animatie
   load(true);
   //voeg full class toe
-  main.className = 'full';
+  document.body.className = 'full';
   //haal klas/docent selection weg
   select.style.display = 'none';
   // //zet footer naar normale css
@@ -114,6 +114,7 @@ function modeJaarlaag() {
   load(true);
   //build jaarlaag input
   select.style.display = 'block';
+  document.body.className = 'full jaarlaag';
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -153,10 +154,8 @@ function modeJaarlaag() {
 }
 
 function buildJaarlaag(input) {
-
   load(true);
   let main = document.getElementsByTagName('main')[0];
-  main.className = 'full';
   let jaarlaag = JSON.parse(input);
   let xhttp = new XMLHttpRequest();
   //laad list met alle docenten en klassen

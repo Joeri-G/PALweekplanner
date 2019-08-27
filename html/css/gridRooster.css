@@ -9,7 +9,11 @@
 */
 /* 1.0 */
 /* 1.1 */
-main.full {
+body.full {
+  display: block;
+}
+
+.full main {
   margin: 24px;
   overflow: auto;
   max-width: none;
@@ -80,4 +84,16 @@ main.full {
   float: none;
   /* height: auto; */
   width: auto;
+}
+
+.full td:first-of-type, full tr:first-of-type {
+  display: absolute;
+}
+
+body.jaarlaag {
+  display: flex;
+}
+
+.select .drop {
+  position: absolute;
 }
