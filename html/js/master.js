@@ -53,6 +53,9 @@ script met functions die door alle "viewModes" en paginas gebruikt worden
 
   - setValue()
     * zet value uit <a> element (in data-value) naar een hidden input in de dropdown parent div
+
+  - sortDropdown()
+    * sorteer de dropdown op alpahbatische volgorder
 */
 
 var activeDrop = false;
@@ -360,6 +363,7 @@ function toggleDrop(el) {
     // drop.getElementsByTagName('input')[0].value = '';
     //laat alle items zien
     filterDropdown(drop.getElementsByTagName('input')[1], '');
+    sortDropdown(drop);
 
     activeDrop = drop;
   }
@@ -413,6 +417,32 @@ function setValue(el) {
   toggleDrop(el.parentElement);
 }
 
+function sortDropdown(drop) {
+  let items, switching, x, y, shouldSwitch;
+  switching = true;
+  while (switching) {
+    switching = false;
+
+    items = drop.getElementsByTagName('a');
+    for (var i = 0; i < (items.length - 1); i++) {
+      x = items[i];
+      y = items[i+1];
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() && x.innerHTML !== 'Geen Selectie') {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      switching = true;
+      if (typeof items[i + 1] !== 'undefined') {
+        drop.insertBefore(items[i + 1], items[i]);
+      }
+      else {
+        switching = false;
+      }
+    }
+  }
+}
 
 
 //JS voor message modal
