@@ -12,7 +12,7 @@ if (empty($jaar) || empty($niveau) || empty($nummer)) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 
 //check of klas al bestaat
 require('db-connect.php');
@@ -23,12 +23,12 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->close();
     $conn->close();
-    die("[KLAS]\tTAKEN\n");
+    die("[KLAS]\BEZET\n");
 }
-echo "[KLAS]\tOK\n";
+// echo "[KLAS]\tOK\n";
 $stmt->close();
 
-echo "INSERTING...\n";
+// echo "INSERTING...\n";
 
 $stmt = $conn->prepare('INSERT INTO klassen (jaar, niveau, nummer) VALUES (?, ?, ?)');
 $stmt->bind_param('sss', $jaar, $niveau, $nummer);
@@ -41,7 +41,7 @@ if (!empty($conn->error)) {
     die("ERROR\n");
 }
 
-echo "[INSERT]\tOK\n";
+// echo "[INSERT]\tOK\n";
 
 $stmt->close();
 $conn->close();

@@ -11,7 +11,7 @@ require('funcLib.php');
 if (!_POSTIsset(['title', 'afkorting', 'verantwoordelijke', 'beschrijving', 'instructie'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 $title = $_POST['title'];
 $afkorting = $_POST['afkorting'];
 $verantwoordelijke = $_POST['verantwoordelijke'];
@@ -29,7 +29,7 @@ if ($stmt->num_rows > 0) {
     $conn->close();
     die("[NAME]\tTITEL OF AFKORTING BESTAAT AL\n");
 }
-echo "[NAME]\tOK\n";
+// echo "[NAME]\tOK\n";
 //check of verantwoordelijke bestaat
 $stmt->close();
 
@@ -42,10 +42,10 @@ if ($stmt->num_rows !== 1) {
     $conn->close();
     die("[VERANTWOORDELIJKE]\tVERANTWOORDELIJKE BESTAAT NIET\n");
 }
-echo "[VERANTWOORDELIJKE]\tOK\n";
+// echo "[VERANTWOORDELIJKE]\tOK\n";
 $stmt->close();
 //insert in db
-echo "INSETING...\n";
+// echo "INSETING...\n";
 $stmt = $conn->prepare('INSERT INTO projecten (
   projectTitle,
   projectCode,
@@ -74,6 +74,6 @@ $stmt->bind_param(
 $stmt->execute();
 $stmt->close();
 $conn->close();
-echo "[INSERT]\tOK\n";
+// echo "[INSERT]\tOK\n";
 
 die();

@@ -3,7 +3,7 @@ require('funcLib.php');
 if (!_POSTIsset(['username', 'password', 'role', 'userLVL'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 
 $username = $_POST['username'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -14,19 +14,19 @@ $userLVL = $_POST['userLVL'];
 if (strlen($username) < 3) {
     die("[USERNAME]\tTOO SHORT\n");
 }
-echo "[USERNAME]\tOK LENGTH\n";
+// echo "[USERNAME]\tOK LENGTH\n";
 
 if (strlen($_POST['password']) < 8) {
     die("[PASSWORD]\tTOO SHORT\n");
 }
-echo "[PASSWORD]\tOK LENGTH\n";
+// echo "[PASSWORD]\tOK LENGTH\n";
 
 //check of username en passwd wel gezet zijn
 if (empty($username) || empty($_POST['password'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 
 //check of username al bezet is
 require('db-connect.php');
@@ -39,8 +39,8 @@ if ($stmt->num_rows > 0) {
     $conn->close();
     die("[USERNAME]\tTAKEN\n");
 }
-echo "[USERNAME]\tOK\n";
-echo "PARSING...\n";
+// echo "[USERNAME]\tOK\n";
+// echo "PARSING...\n";
 //maak userAvailability object
 $confText = file_get_contents('../../conf/conf.json');
 $conf = json_decode($confText);
@@ -57,7 +57,7 @@ for ($i=0; $i < count($conf->dagen); $i++) {
 }
 
 $userAvailability = json_encode($userAvailabilityObj);
-echo "INSERTING...\n";
+// echo "INSERTING...\n";
 $stmt = $conn->prepare("INSERT INTO users (username, password, role, userLVL, userAvailability, lastLoginIP) VALUES (?, ?, ?, ?, ?, '0.0.0.0')");
 $stmt->bind_param('sssis', $username, $password, $role, $userLVL, $userAvailability);
 $stmt->execute();
@@ -71,4 +71,5 @@ if (!empty($conn->error)) {
 }
 $stmt->close();
 $conn->close();
-die("[INSERT] OK\n");
+// die("[INSERT] OK\n");
+die();

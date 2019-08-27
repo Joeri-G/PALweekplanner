@@ -3,9 +3,9 @@ require('funcLib.php');
 if (!_GETIsset(['ID'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 require('db-connect.php');
-echo "[DELETE]\tDELETING...\n";
+// echo "[DELETE]\tDELETING...\n";
 if ($mode == 'user') {
     $stmt = $conn->prepare('DELETE FROM users WHERE ID = ?');
 } elseif ($mode == 'klas') {
@@ -19,4 +19,7 @@ if ($mode == 'user') {
 $stmt->bind_param('i', $_GET['ID']);
 $stmt->execute();
 $stmt->store_result();
-echo "[DELETE]\tDELETED";
+// echo "[DELETE]\tDELETED";
+$stmt->close();
+$conn->close();
+die();

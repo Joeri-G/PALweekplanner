@@ -74,13 +74,13 @@ if (!notNone($projectCode)) {
 }
 
 
-echo "[INPUT]\tOK\n";
+// echo "[INPUT]\tOK\n";
 
 //check of het dagdeel wel mogelijk is
 if (!daypartCheck($daypart)) {
     die("[DAGDEEL] BESTAAT NIET\n\nTERMINATING...");
 }
-echo "[DAGDEEL] OK\n";
+// echo "[DAGDEEL] OK\n";
 
 //connect met database
 require("db-connect.php");
@@ -211,11 +211,11 @@ while ($stmt->fetch()) {
     }
 }
 //feedback
-echo "[DOCENTEN]\tOK\n";
-echo "[KLASSEN]\tOK\n";
-echo "[LOKALEN]\tOK\n";
+// echo "[DOCENTEN]\tOK\n";
+// echo "[KLASSEN]\tOK\n";
+// echo "[LOKALEN]\tOK\n";
 
-echo "\nINSERTING...\n";
+// echo "\nINSERTING...\n";
 
 $stmt->close();
 //nu we zeker weten dat er geen overlap is kunnen we de data in de database "inserten"
@@ -270,4 +270,5 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-die("[INSERT]\tOK");
+// die("[INSERT]\tOK");
+die();

@@ -13,7 +13,7 @@ require('funcLib.php');
 if (!_GETIsset(['ID'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
-echo "[INPUT] OK\n";
+// echo "[INPUT] OK\n";
 //maak variabelen voor ID en Username
 $ID = (string) $_GET['ID'];
 
@@ -45,7 +45,7 @@ if ($stmt->num_rows !== 1) {
     $conn->close();
     die("[ID] AFSPRAAK BESTAAT NIET\n");
 }
-echo "[ID] OK\n\nINSERTING...\n";
+// echo "[ID] OK\n\nINSERTING...\n";
 
 $stmt->bind_result(
     $resDaypart,
@@ -116,10 +116,10 @@ if ($conn->error !== '') {
     $conn->close();
     die("[INSERT] FAILED\n");
 }
-echo "[INSERT] OK\n";
+// echo "[INSERT] OK\n";
 $stmt->close();
 //nu de data in de nieuwe table staat kunnen we het uit de oude verweideren
-echo "OUDE AFSPRAAK WORDT VERWIJDERD\n";
+// echo "OUDE AFSPRAAK WORDT VERWIJDERD\n";
 $stmt = $conn->prepare('DELETE FROM week WHERE ID=?');
 $stmt->bind_param('i', $ID);
 $stmt->execute();
@@ -131,4 +131,5 @@ if ($conn->error !== '') {
 }
 $stmt->close();
 $conn->close();
-die("[DELETE] OK\n");
+// die("[DELETE] OK\n");
+die();

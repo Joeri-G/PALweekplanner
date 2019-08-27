@@ -103,6 +103,10 @@ function load(mode) {
 
 //function om berichten weer te geven
 function message(text = '', escape = true) {
+  //als de text leeg is doe dan niets
+  if (text == '') {
+    return null;
+  }
   //declare objects
   let messageModal = document.getElementById('messageModal');
   let messageModalContent = document.getElementById('messageModalContent');
@@ -336,7 +340,7 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
     return '';
   }
   let html = '<div class="dropSelect">\
-  <input type="button" value="' + title.replaceChar() + '" onclick="toggleDrop(this)" data-title="' + title.replaceChar() + '">\
+  <input type="button" value="' + title.replaceChar() + '" onclick="toggleDrop(this)">\
   <div class="drop">\
   <input type="hidden" name="' + name.replaceChar() + '" value="None" ' + dataset + '>\
   <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
@@ -404,16 +408,10 @@ function setValue(el) {
     a[i].classList = '';
   }
   el.classList = 'geselecteerd';
-  //fix de title
 
   let master = parent.parentElement;
   let button = master.getElementsByTagName('input')[0];
-  let defaultTitle = button.dataset.title;
-  button.value = (defaultTitle + ' | ' + el.innerHTML.replaceChar()).substr(0, 12);
-  //als er geen title is zet dan de title naar alleen de value
-  if (defaultTitle == '') {
-    button.value = el.innerHTML.replaceChar().substr(0, 12);
-  }
+  button.value = el.innerHTML.replaceChar().substr(0, 12);
   toggleDrop(el.parentElement);
 }
 
