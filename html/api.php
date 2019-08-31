@@ -97,3 +97,8 @@ if (isset($_GET['insert']) && $_GET['insert'] == 'true') {
 if (isset($_GET['addProject']) && $_GET['addProject'] == 'true') {
     require('../php/addProject.php');
 }
+
+//export functie
+if (isset($_GET['export']) && $_GET['export'] == 'true') {
+  require('../php/csvParser.php');
+}

@@ -146,6 +146,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <button type="button" onclick="window.open('/phpmyadmin', '_blank', 'location=yes,scrollbars=yes,status=yes');" class="button">Panel</button>
         </div>
       </div>
+      <!-- export -->
+      <div>
+        <p>Export</p>
+        <p>Export naar *.CSV</p>
+        <div class="inputParent">
+          <button type="button" class="button" name="button" onclick="window.open('/api.php?export=true', '_blank', 'location=yes,scrollbars=yes,status=yes');">Export</button>
+        </div>
+      </div>
       <!-- delete all -->
       <div>
         <p>Delete</p>
