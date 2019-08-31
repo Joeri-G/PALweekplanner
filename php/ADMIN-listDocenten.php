@@ -1,23 +1,26 @@
+
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 /*
 script om array met alle users te sturen
-  - select docenten uit database
+  - select users uit database
   - sterilize
   - out naar JSON
   - return JSON
 */
-
 $out = array();
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT afkorting FROM docenten');
+$stmt = $conn->prepare('SELECT afkorting, userAvailability, ID FROM docenten');
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resUsername);
+$stmt->bind_result($resAfkorting, $resUserAvailability, $resID);
 while ($stmt->fetch()) {
-    $out[] = $resUsername;
+    $obj = new stdClass;
+    $obj->afkorting = $resAfkorting;
+    $obj->userAvailability = json_decode($resUserAvailability);
+    $obj->ID = $resID;
+    $out[] = $obj;
 }
-
 //set JSON header
 header('Content-Type: application/json');
 //als als input ?format is gezet doe dan prettyp print

@@ -119,7 +119,7 @@ function addProject() {
 
   let title = document.getElementById('projectTitel').value;
   let afkorting = document.getElementById('projectAfkorting').value;
-  let verantwoordelijke = document.getElementById('projectLeider').value;
+  let verantwoordelijke = document.getElementsByName('projectLeider')[0].value;
   let beschrijving = document.getElementById('projectBeschrijving').value;
   let instructie = document.getElementById('projectInstructie').value;
 
@@ -164,7 +164,7 @@ xhttp.onreadystatechange = function() {
           a: data
         }
       };
-      let html = makeList('a', 'd', 'Docent', input, 'a' + 'docent2');
+      let html = makeList('a', 'd', 'Docent', input, 'projectLeider');
       el.innerHTML = html;
       //stop loading animatie
       load(false);

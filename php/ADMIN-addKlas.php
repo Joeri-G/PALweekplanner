@@ -16,7 +16,7 @@ if (empty($jaar) || empty($niveau) || empty($nummer)) {
 
 //check of klas al bestaat
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT 1 FROM klassen WHERE jaar = ? AND niveau = ? AND nummer = ?');
+$stmt = $conn->prepare('SELECT ID FROM klassen WHERE jaar = ? AND niveau = ? AND nummer = ?');
 $stmt->bind_param('sss', $jaar, $niveau, $nummer);
 $stmt->execute();
 $stmt->store_result();

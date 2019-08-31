@@ -89,7 +89,7 @@ require("db-connect.php");
 for ($i=0; $i < count($docentenGroep); $i++) {
     if (notNone($docentenGroep[$i])) {
         //maak een query om de userAvailability te selecteren waar de username matcht, de role docent is en de username niet none
-        $stmt = $conn->prepare("SELECT userAvailability FROM users WHERE role='docent' AND username=?");
+        $stmt = $conn->prepare("SELECT userAvailability FROM docenten WHERE afkorting=?");
         $stmt->bind_param("s", $docentenGroep[$i]);
         $stmt->execute();
         $stmt->store_result();
@@ -127,8 +127,8 @@ for ($i=0; $i < count($docentenGroep); $i++) {
 for ($i=0; $i < count($klassenGroep); $i++) {
     //plaats in array, checkKlas verwacht een array
     if (notNoneKlas($klassenGroep[$i])) {
-        //select 1 omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
-        $stmt = $conn->prepare('SELECT 1 FROM klassen WHERE jaar=? AND niveau=? AND nummer=?');
+        //SELECT ID omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
+        $stmt = $conn->prepare('SELECT ID FROM klassen WHERE jaar=? AND niveau=? AND nummer=?');
         $stmt->bind_param("isi", $klassenGroep[$i]->jaar, $klassenGroep[$i]->niveau, $klassenGroep[$i]->nummer);
         $stmt->execute();
         $stmt->store_result();
@@ -143,8 +143,8 @@ for ($i=0; $i < count($klassenGroep); $i++) {
 //check of lokaal bestaat
 for ($i=0; $i < count($lokalenGroep); $i++) {
     if (notNone($lokalenGroep[$i])) {
-        //select 1 omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
-        $stmt = $conn->prepare('SELECT 1 FROM lokalen WHERE lokaal = ?');
+        //SELECT ID omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
+        $stmt = $conn->prepare('SELECT ID FROM lokalen WHERE lokaal = ?');
         $stmt->bind_param("s", $lokalenGroep[$i]);
         $stmt->execute();
         $stmt->store_result();

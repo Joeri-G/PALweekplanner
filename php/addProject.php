@@ -33,7 +33,7 @@ if ($stmt->num_rows > 0) {
 //check of verantwoordelijke bestaat
 $stmt->close();
 
-$stmt = $conn->prepare('SELECT 1 FROM users WHERE username = ? AND role = "docent"');
+$stmt = $conn->prepare('SELECT 1 FROM docenten WHERE afkorting = ?');
 $stmt->bind_param('s', $verantwoordelijke);
 $stmt->execute();
 $stmt->store_result();

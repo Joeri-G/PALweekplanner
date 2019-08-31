@@ -94,12 +94,11 @@ for ($x=0; $x < count($dagdelen); $x++) {
     $dagdeelTMP = $dagdelen[$x];
     //list alle vrije docenten per dagdeel
     $stmt = $conn->prepare("SELECT DISTINCT
-  username, userAvailability
+  afkorting, userAvailability
 FROM
-  users
+  docenten
 WHERE
-  role = 'docent'
-  AND username NOT IN (
+  afkorting NOT IN (
     SELECT
       docent1
     FROM
@@ -107,7 +106,7 @@ WHERE
     WHERE
       daypart = ?
   )
-  AND username NOT IN (
+  AND afkorting NOT IN (
     SELECT
       docent2
     FROM

@@ -2,15 +2,13 @@
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
 session_start();
 //login check
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] < 2) {
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: /login");
     die('Not Logged In');
 }
 
-//insert script
-if (isset($_GET['insert']) && $_GET['insert'] == 'true') {
-    require('../php/insert.php');
-}
+
+
 
 //read script voor docent
 //read rooster data van docent
@@ -18,20 +16,14 @@ if (isset($_GET['readDocent']) && $_GET['readDocent'] == 'true') {
     require('../php/readDocent.php');
 }
 
+//maak een lijst met alle docenten en klassen
+if (isset($_GET['listAll']) && $_GET['listAll'] =='true') {
+    require('../php/listAll.php');
+}
+
 //read script voor klas
 if (isset($_GET['readKlas']) && $_GET['readKlas'] == 'true') {
     require('../php/readKlas.php');
-}
-
-//update script
-//update alle vakken behalve ID en Daypart
-if (isset($_GET['update']) && $_GET['update'] == 'true') {
-    require('../php/update.php');
-}
-
-//script om afspraken te verwijderen
-if (isset($_GET['delete']) && $_GET['delete'] == 'true') {
-    require('../php/delete.php');
 }
 
 //als er om de config gevraagd wordt haal deze dan op en verstuur alleen de dagen en uren
@@ -44,11 +36,6 @@ if (isset($_GET['loadConfig']) && $_GET['loadConfig'] == 'true') {
     $out->dagen = $conf->dagen;
     $out->lestijden = $conf->lestijden;
     die(json_encode($out));
-}
-
-//maak een lijst met alle docenten en klassen
-if (isset($_GET['listAll']) && $_GET['listAll'] =='true') {
-    require('../php/listAll.php');
 }
 
 //listAvailable
@@ -86,6 +73,24 @@ if (isset($_GET['listProjects']) && $_GET['listProjects'] == 'true') {
 //list alle docenten
 if (isset($_GET['listDocent']) && $_GET['listDocent'] == 'true') {
     require('../php/listDocent.php');
+}
+
+//PERMISSION SWITCH
+
+//hier na alle scripts waarvoor write permission nodig is
+if ($_SESSION['userLVL'] < 1) {
+    die("Insufficient Permissions");
+}
+
+//script om afspraken te verwijderen
+if (isset($_GET['delete']) && $_GET['delete'] == 'true') {
+    require('../php/delete.php');
+}
+
+//insert script
+//dit is write, dus userLVL > 3
+if (isset($_GET['insert']) && $_GET['insert'] == 'true') {
+  require('../php/insert.php');
 }
 
 //voeg project toe

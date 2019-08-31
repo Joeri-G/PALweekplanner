@@ -24,7 +24,7 @@ $k = array();
 //MySQL connection
 require('db-connect.php');
 //lees alle docenten
-$stmt = $conn->prepare('SELECT DISTINCT username, userAvailability FROM users WHERE role=\'docent\'');
+$stmt = $conn->prepare('SELECT DISTINCT afkorting, userAvailability FROM docenten');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resUsername, $resUserAvailability);

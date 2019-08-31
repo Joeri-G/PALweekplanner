@@ -15,7 +15,7 @@ if (empty($lokaal)) {
 
 //check of het lokaal al bestaat
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT 1 FROM lokalen WHERE lokaal = ?');
+$stmt = $conn->prepare('SELECT ID FROM lokalen WHERE lokaal = ?');
 $stmt->bind_param('s', $lokaal);
 $stmt->execute();
 $stmt->store_result();

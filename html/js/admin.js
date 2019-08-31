@@ -96,32 +96,18 @@ function loadUsers(userList, config) {
 }
 
 function buildUsers(data, userList, config) {
+  let userAvailability;
   let html = '<table id="userTable">\n';
-  html += '<tr><th>Username</th><th>Password</th><th>&nbsp;&nbsp;Role&nbsp;&nbsp;</th><th>UserLVL</th>';
-  for (var i = 0; i < config.dagen.length; i++) {
-    html += '<th>' + config.dagen[i] + '</th>';
-  }
-  html += '<th>Delete</th></tr>';
+  html += '<tr><th>Username</th><th>Password</th>\
+  <th>Rechten</th>\
+  <th>Delete</th></tr>';
   for (var i = 0; i < data.length; i++) {
-    let userAvailability = JSON.parse(data[i].userAvailability);
-
+    userAvailability = data[i].userAvailability;
     html += '<tr>\
     <td>' + data[i].username + '</td>\
     <td> *** </td>\
-    <td>' + data[i].role + '</td>\
-    <td>' + data[i].userLVL + '</td>\n';
-    for (var x = 0; x < config.dagen.length; x++) {
-      if (
-        typeof userAvailability[config.dagen[x]] !== undefined &&
-        typeof userAvailability[config.dagen[x]] !== null &&
-        userAvailability[config.dagen[x]]
-      ) {
-        html += '<td>&#10003;</td>';
-      } else {
-        html += '<td>&#10799;</td>';
-      }
-    }
-    html += '<td>\
+    <td>' + data[i].userLVL + '</td>\
+    <td>\
     <div class="actions" data-user=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteUser(this.parentElement.dataset.user, config)"></div>\
     </td>\
@@ -315,12 +301,10 @@ function addUser(config) {
   //haal data uit textboxes
   let usernameObj = document.getElementById('adduserUsername');
   let passwordObj = document.getElementById('adduserPassword');
-  let roleObj = document.getElementById('adduserRole');
-  let userLVLObj = document.getElementById('adduserUserLVL');
+  let userLVLObj = document.getElementsByName('adduserUserLVL')[0];
 
   let username = usernameObj.value;
   let password = passwordObj.value;
-  let role = roleObj.value;
   let userLVL = userLVLObj.value;
 
   //maak username en password velden leeg
@@ -328,23 +312,14 @@ function addUser(config) {
   passwordObj.value = '';
 
   //check of een van de inputs leeg is
-  if (username == '' || password == '' || role == '' || userLVL == '') {
+  if (username == '' || password == '' || userLVL == '') {
     load(false);
     message('Niet alle velden zijn ingevuld');
     return 0;
   }
   let POST = 'username=' + encodeURIComponent(username) +
     '&password=' + encodeURIComponent(password) +
-    '&role=' + encodeURIComponent(role) +
     '&userLVL=' + encodeURIComponent(userLVL);
-  //voeg dagdeel info aan POST toe
-  for (var i = 0; i < config.dagen.length; i++) {
-    if (document.getElementById('adduser' + config.dagen[i]).checked) {
-      POST += '&dag' + config.dagen[i] + '=true';
-    } else {
-      POST += '&dag' + config.dagen[i] + '=false';
-    }
-  }
   let xhttp = new XMLHttpRequest();
   //laad list met alle docenten en klassen
   xhttp.onreadystatechange = function() {
@@ -446,4 +421,124 @@ function deleteAll() {
   } else {
     load(false);
   }
+}
+
+function addDocent() {
+  load(true);
+  let afkortingObj = document.getElementById('addDocentAfkorting');
+  let afkorting = afkortingObj.value;
+
+  let POST = "afkorting=" + encodeURIComponent(afkorting);
+
+  // voeg dagdeel info aan POST toe
+  for (var i = 0; i < config.dagen.length; i++) {
+    if (document.getElementById('adduser' + config.dagen[i]).checked) {
+      POST += '&dag' + config.dagen[i] + '=true';
+    } else {
+      POST += '&dag' + config.dagen[i] + '=false';
+    }
+  }
+  //send data
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      load(false);
+      message(this.responseText);
+      //maak modal leeg
+      afkortingObj.value = '';
+    }
+  };
+  xhttp.open("POST", '/admin/api.php?addDocent=true', true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(POST);
+}
+
+function toggleDocenten(element) {
+  load(true);
+  let docentList = document.getElementById('docentList');
+  if (element.dataset.toggle == 'hidden') {
+    docentList.style.display = 'block';
+    loadDocenten(docentList);
+    element.dataset.toggle = 'shown';
+    element.innerHTML = 'Hide';
+  } else if (element.dataset.toggle == 'shown') {
+    docentList.style.display = 'none';
+    element.dataset.toggle = 'hidden';
+    element.innerHTML = 'Show';
+    load(false);
+  } else {
+    element.dataset.toggle = 'hidden';
+  }
+}
+
+function loadDocenten(docentList) {
+  let xhttp = new XMLHttpRequest();
+  //laad list met alle docenten en klassen
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      try {
+        //stop loading animatie
+        let data = JSON.parse(this.responseText);
+        buildDocenten(data, docentList, config);
+      } catch (e) {
+        //stop loading animatie
+        load(false);
+        errorMessage(e);
+      }
+    }
+  };
+  xhttp.open("GET", "/admin/api.php?listDocenten=true", true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.send();
+}
+
+function buildDocenten(data, docentList, config) {
+  let html = '<table id="docentTable">\n';
+  html += '<tr><th>Afkorting</th>';
+  for (var i = 0; i < config.dagen.length; i++) {
+    html += '<th>' + config.dagen[i] + '</th>';
+  }
+  html += '<th>Delete</th></tr>';
+  for (var i = 0; i < data.length; i++) {
+    let userAvailability = data[i].userAvailability;
+
+    html += '<tr>\
+    <td>' + data[i].afkorting + '</td>';
+    for (var x = 0; x < config.dagen.length; x++) {
+      if (
+        typeof userAvailability[config.dagen[x]] !== undefined &&
+        typeof userAvailability[config.dagen[x]] !== null &&
+        userAvailability[config.dagen[x]]
+      ) {
+        html += '<td>&#10003;</td>';
+      } else {
+        html += '<td>&#10799;</td>';
+      }
+    }
+    html += '<td>\
+    <div class="actions" data-docent=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
+    <img src="/img/closeBlack.svg" alt="remove" onclick="deleteDocent(this.parentElement.dataset.docent, config)"></div>\
+    </td>\
+    </tr>\n';
+  }
+  html += '</table>\n';
+  load(false);
+  docentList.innerHTML = html;
+  //sort table
+  sortTable(document.getElementById('docentTable'));
+}
+
+function deleteDocent(data, config) {
+  load(true);
+  if (!confirm("Wilt u deze gebruiker verwijderen?")) {
+    load(false);
+    return null;
+  }
+  let ID = JSON.parse(data).ID;
+  let url = '/admin/api.php?deleteDocent=true&ID=' + encodeURIComponent(ID);
+  sendURL(url, function(response) {
+    message(response);
+    let docentList = document.getElementById('docentList');
+    loadDocenten(docentList);
+  });
 }

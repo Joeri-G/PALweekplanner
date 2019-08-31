@@ -46,13 +46,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Gebruiker Toevoegen</p>
         <p>Vul alle velden in om een gebruiker toe te voegen.</p>
         <div class="inputParent">
-          <span class="col_2">
+          <span class="col_3">
             <span><input type="text" placeholder="Username" id="adduserUsername"></span>
             <span><input type="password" placeholder="Password" id="adduserPassword"></span>
-            <span><input type="text" placeholder="Role" id="adduserRole"></span>
-            <span><input type="number" placeholder="UserLVL" id="adduserUserLVL"></span>
+            <!-- <span><input type="text" placeholder="Role" id="adduserRole"></span> -->
+            <!-- <span><input type="number" placeholder="UserLVL" id="adduserUserLVL"></span> -->
+            <!-- Checkbox -->
+            <span id="userPerm"></span>
           </span>
-          <span id="docentDagen"></span>
           <span class="buttonContaier">
             <button type="button" class="button" onclick="addUser(config)">Add</button>
           </span>
@@ -65,6 +66,29 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <div class="inputParent">
           <button type="button" class="button" data-toggle="hidden" onclick="toggleUsers(this, config)">Show</button>
           <div id="userList" class="list" style="display:none;"></div>
+        </div>
+      </div>
+      <!-- Add Docent -->
+      <div>
+        <p>Docent Toevoegen</p>
+        <p>Vul alle velden in om een docent toe te voegen</p>
+        <div class="inputParent">
+          <span class="col_1">
+            <input type="text" id="addDocentAfkorting" placeholder="Afkorting">
+          </span>
+          <span id="docentDagen"></span>
+          <span class="buttonContaier">
+            <button type="button" onclick="addDocent()" class="button">Add</button>
+          </span>
+        </div>
+      </div>
+      <!-- listDocent -->
+      <div>
+        <p>Docenten</p>
+        <p>Lijst met alle docenten</p>
+        <div class="inputParent">
+          <button type="button" class="button" data-toggle="hidden" onclick="toggleDocenten(this, config)">Show</button>
+          <div id="docentList" class="list" style="display:none;"></div>
         </div>
       </div>
       <!-- Add Klas -->
@@ -111,6 +135,15 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <div class="inputParent">
           <button type="button" class="button" data-toggle="hidden" onclick="toggleLokalen(this, config)">show</button>
           <div id="lokaalList" class="list" style="display:none;"></div>
+        </div>
+      </div>
+      <!-- phpMyAdmin -->
+      <div>
+        <p>Database Control Panel</p>
+        <p>Control panel om database beter te kunnen besturen. Powered By <a href="https://www.phpmyadmin.net/" target="_blank" rel="noreferrer">phpMyAdmin</a></p>
+        <div class="inputParent">
+          <?php // NOTE: URL CAN DIFFER DEPENDING ON SETUP?>
+          <button type="button" onclick="window.open('/phpmyadmin', '_blank', 'location=yes,scrollbars=yes,status=yes');" class="button">Panel</button>
         </div>
       </div>
       <!-- delete all -->
@@ -176,6 +209,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
     xhttp.open("GET", "/api.php?loadConfig=true", true);
     xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
     xhttp.send();
+    document.getElementById("userPerm").innerHTML = buildDropdown(["Read", "Read/Write", "Admin"], ['0', '1', '2'], "Rechten", "adduserUserLVL");
     </script>
     <script src="/js/admin.js" charset="utf-8"></script>
   </body>
