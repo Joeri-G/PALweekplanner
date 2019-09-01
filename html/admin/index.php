@@ -53,9 +53,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <span class="col_3">
             <span><input type="text" placeholder="Username" id="adduserUsername"></span>
             <span><input type="password" placeholder="Password" id="adduserPassword"></span>
-            <!-- <span><input type="text" placeholder="Role" id="adduserRole"></span> -->
-            <!-- <span><input type="number" placeholder="UserLVL" id="adduserUserLVL"></span> -->
-            <!-- Checkbox -->
             <span id="userPerm"></span>
           </span>
           <span class="buttonContaier">

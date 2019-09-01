@@ -25,7 +25,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
       <a href="/projecten">Projecten</a>
       <?php
       //als de gebruiker een admin is geef dan de admin link weer
-      if ($_SESSION['userLVL'] > 3) {
+      if ($_SESSION['userLVL'] >= 2) {
           echo '<a href="/admin">Panel</a>';
       }
        ?>
@@ -43,7 +43,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <span><a href="/projecten">Projecten</a></span>
         <?php
         //als de gebruiker een admin is geef dan de admin link weer
-        if ($_SESSION['userLVL'] > 3) {
+        if ($_SESSION['userLVL'] >= 2) {
             echo '<span><a href="/admin">Panel</a></span>';
         }
          ?>
