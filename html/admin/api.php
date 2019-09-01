@@ -3,7 +3,7 @@
 session_start();
 //login check
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['userLVL'] < 2) {
-  if ($_SESSION['userLVL'] < 2) {
+  if (!isset($_SESSION['userLVL']) || $_SESSION['userLVL'] < 2) {
     header("location: /");
     die("Insufficient Permissions");
   }
