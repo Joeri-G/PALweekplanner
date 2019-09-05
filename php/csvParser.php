@@ -118,4 +118,4 @@ echo "$out";
 //Download headers
 header('Content-Type: text/csv');
 header("Content-Transfer-Encoding: Binary");
-header("Content-disposition: attachment; filename=\"planner-export-".date('Y-m-d_H.i.s')."\"");
+header("Content-disposition: attachment; filename=\"planner-export-".date('Y-m-d_H.i.s').".csv\"");
