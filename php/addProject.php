@@ -20,7 +20,7 @@ $instructie = $_POST['instructie'];
 
 //check of titel / afkorting al gezet is
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT 1 FROM projecten WHERE projectTitle = ? OR projectCode = ?');
+$stmt = $conn->prepare('SELECT ID FROM projecten WHERE projectTitle = ? OR projectCode = ?');
 $stmt->bind_param('ss', $title, $afkorting);
 $stmt->execute();
 $stmt->store_result();
@@ -52,8 +52,10 @@ $stmt = $conn->prepare('INSERT INTO projecten (
   projectBeschrijving,
   projectInstructie,
   verantwoordelijke,
-  user
+  user,
+  IP
 ) VALUES (
+  ?,
   ?,
   ?,
   ?,
@@ -62,16 +64,18 @@ $stmt = $conn->prepare('INSERT INTO projecten (
   ?
 )');
 $stmt->bind_param(
-    'ssssss',
+    'sssssss',
     $title,
     $afkorting,
     $beschrijving,
     $instructie,
     $verantwoordelijke,
-    $_SESSION['username']
+    $_SESSION['username'],
+    $_SERVER['REMOTE_ADDR']
 );
 
 $stmt->execute();
+
 $stmt->close();
 $conn->close();
 // echo "[INSERT]\tOK\n";
