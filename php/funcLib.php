@@ -18,6 +18,10 @@ script met functies die in verschilldende sripts gebruikt worden
     * functie om te checken of alle nodige values van een klas object gezet zijn ($klas->jaar, $klas->niveau, $klas->nummer)
   - daypartCheck()
     * functie om te checken of het opgegeven dagdeel wel valid is vergeleken met de config files
+  - toNum()
+    * check of input een nummer is en als dat het geval is maak nummer
+  - getConf()
+    * load config file to object
 */
 //function om snel te checken of alle inputs gezet zijn
 function _POSTIsset($input = array())
@@ -174,4 +178,28 @@ function daypartCheck($daypart = null)
         return false;
     }
     return true;
+}
+
+function toNum($in = '0')
+{
+  if (ctype_digit($in))
+    return intval($in);
+  return 0;
+}
+
+function getConf($file = "../conf/conf.json")
+{
+  $json = file_get_contents($file);
+  try {
+    $data = json_decode($json);
+  } catch (\Exception $e) {
+    $data = new stdClass;
+    $data->dagen = array();
+    $data->uren = 0;
+    $data->lestijden = array();
+    $data->lesuurStart = array();
+    $data->lesuurDuur = 0;
+    $data->laptops = 0;
+  }
+  return $data;
 }

@@ -56,6 +56,15 @@
 
   - deleteAll()
     * functie om alle afspraken te verwijderen
+
+  - updateLaptops()
+    * neem de input uit #lokaalList en update conf.json, nerd shit gebeurt in backend
+
+  - addDay()
+    *functie om dag aan aantal dagen toe te voegen
+
+  - updateDays()
+    * functie om het aantal dagen in de UI te updaten
 */
 function toggleUsers(element, config) {
   load(true);
@@ -541,4 +550,30 @@ function deleteDocent(data, config) {
     let docentList = document.getElementById('docentList');
     loadDocenten(docentList);
   });
+}
+
+
+function updateLaptops() {
+  load(true);
+  let laptops = document.getElementById("laptopInput").value;
+  let url = "/admin/api.php?updateLaptops=true&laptops="+encodeURIComponent(laptops);
+  sendURL(url, function(response) {
+    load(false);
+    message(response);
+  });
+}
+
+function addDay(days = 0) {
+  days++;
+  let dag = document.createElement('input');
+  dag.type = "text";
+  dag.id = "weekDag"+days;
+  dag.placeholder = "Dag " + days;
+
+  document.getElementById("weekDagen").appendChild(dag);
+  return days;
+}
+
+function updateDays() {
+  alert("UNFINISHED");
 }

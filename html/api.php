@@ -102,3 +102,12 @@ if (isset($_GET['addProject']) && $_GET['addProject'] == 'true') {
 if (isset($_GET['export']) && $_GET['export'] == 'true') {
   require('../php/csvParser.php');
 }
+
+//export functie
+if (isset($_GET['somtodayExport']) && $_GET['somtodayExport'] == 'true') {
+  require('../php/somtodayExport.php');
+}
+
+if(isset($_GET['edit']) && $_GET['edit'] == 'true') {
+  require('../php/edit.php');
+}

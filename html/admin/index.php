@@ -138,6 +138,25 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
           <div id="lokaalList" class="list" style="display:none;"></div>
         </div>
       </div>
+      <!-- Laptops -->
+      <div>
+        <p>Laptops</p>
+        <p>Vul hier het totaal aantal laptops in</p>
+        <div class="inputParent">
+          <input type="number" id="laptopInput" placeholder="Laptops">
+          <button type="button" class="button" onclick="updateLaptops()">Update</button>
+        </div>
+      </div>
+      <!-- dagen -->
+      <div>
+        <p>Dagen</p>
+        <p>Gebruik dit panel om de dagen in een week aan te passen. Een dag is max twee (2) karakters</p>
+        <div class="inputParent">
+          <span id="weekDagen"></span>
+          <button type="button" class="button" onclick="weekDagen = addDay(weekDagen)">+</button>
+          <button type="button" class="button" onclick="updateDays()">Update</button>
+        </div>
+      </div>
       <!-- phpMyAdmin -->
       <div>
         <p>Database Control Panel</p>
@@ -190,6 +209,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       </span>
     </footer>
     <script src="/js/master.js" charset="utf-8"></script>
+    <script src="/js/admin.js" charset="utf-8"></script>
     <script type="text/javascript">
     load(true);
     let xhttp = new XMLHttpRequest();
@@ -205,6 +225,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
             <label for="adduser' + config.dagen[i] + '">' + config.dagen[i] + '</label>\
             <input type="checkbox" checked="checked" id="adduser' + config.dagen[i] + '">\
             </span>';
+            //insert number in laptops box
+            document.getElementById('laptopInput').value = config.laptops;
           }
           load(false);
         }
@@ -215,11 +237,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         }
       }
     };
-    xhttp.open("GET", "/api.php?loadConfig=true", true);
+    xhttp.open("GET", "/admin/api.php?loadConf=true", true);
     xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
     xhttp.send();
     document.getElementById("userPerm").innerHTML = buildDropdown(["Read", "Read/Write", "Admin"], ['0', '1', '2'], "Rechten", "adduserUserLVL");
+    let weekDagen = addDay(0);
     </script>
-    <script src="/js/admin.js" charset="utf-8"></script>
   </body>
 </html>

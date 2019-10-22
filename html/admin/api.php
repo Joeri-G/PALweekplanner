@@ -27,21 +27,22 @@ if (isset($_GET['listDocenten']) && $_GET['listDocenten'] == 'true') {
   require('../../php/ADMIN-listDocenten.php');
 }
 
-if (isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true' ||
-isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true' ||
-isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true'||
-isset($_GET['deleteDocent']) && $_GET['deleteDocent'] == 'true') {
-    if (isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true') {
+if (
+  isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true' ||
+  isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true' ||
+  isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true'||
+  isset($_GET['deleteDocent']) && $_GET['deleteDocent'] == 'true'
+) {
+    if (isset($_GET['deleteUser']) && $_GET['deleteUser'] == 'true')
         $mode = 'user';
-    } elseif (isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true') {
+    elseif (isset($_GET['deleteKlas']) && $_GET['deleteKlas'] == 'true')
         $mode = 'klas';
-    } elseif (isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true') {
+    elseif (isset($_GET['deleteLokaal']) && $_GET['deleteLokaal'] == 'true')
         $mode = 'lokaal';
-    } elseif (isset($_GET['deleteDocent']) && $_GET['deleteDocent'] == 'true') {
+    elseif (isset($_GET['deleteDocent']) && $_GET['deleteDocent'] == 'true')
         $mode = 'docent';
-    } else {
+    else
         die('[MODE] INVALID');
-    }
     require('../../php/ADMIN-deleteEntry.php');
 }
 
@@ -63,4 +64,12 @@ if (isset($_GET['deleteAll']) && $_GET['deleteAll'] == 'true') {
 
 if (isset($_GET['addDocent']) && $_GET['addDocent'] == 'true') {
   require('../../php/ADMIN-addDocent.php');
+}
+
+if (isset($_GET["updateLaptops"]) && $_GET["updateLaptops"] == "true") {
+  require('../../php/ADMIN-updateLaptops.php');
+}
+
+if (isset($_GET["loadConf"]) && $_GET["loadConf"] == "true") {
+  require('../../php/ADMIN-loadConf.php');
 }

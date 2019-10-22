@@ -8,7 +8,6 @@ script om roosterdata in database te "inserten"
     * check of de lokalen, docenten of klassen al bezet zijn
   - push naar database
 
-
 !important
 klas2 is uitgeschakeld omdat deze niet nodig was
 als klas2 weer nodig is kan deze vrij gemakkelijk aangezet worden door te uncommenten
@@ -20,6 +19,7 @@ require("funcLib.php");
 if (!_GETIsset(["daypart", "lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", /*"klas2jaar", "klas2niveau", "klas2nummer",*/ "docent1", "docent2", "laptops"])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
+
 $daypart = $_GET["daypart"];
 
 $docent1 = $_GET["docent1"];
@@ -38,12 +38,8 @@ $klas1->nummer = $_GET["klas1nummer"];
 $lokaal1 = $_GET["lokaal1"];
 $lokaal2 = $_GET["lokaal2"];
 
-$laptops = 0;
 //zorg er voor dat laptops een int is
-if (ctype_digit($_GET["laptops"])) {
-  $laptops = intval($_GET["laptops"]);
-}
-
+$laptops = toNum($_GET["laptops"]);
 
 //omdat sommige browsers geen leeg item in de url plaatsen worden notes en project codes zo gedaan
 $note = "None";
@@ -51,6 +47,7 @@ $projectCode = "None";
 if (isset($_GET["note"]) && !empty($_GET['note'])) {
     $note = $_GET["note"];
 }
+
 if (isset($_GET["projectCode"]) && !empty($_GET['projectCode'])) {
     $projectCode = $_GET['projectCode'];
 }
@@ -75,8 +72,9 @@ $klassenGroep = checkKlas(array($klas1/*, $klas2*/));
 
 //check of projectCode wel gezet is
 if (!notNone($projectCode)) {
-  die("[PROJECTEN] VUL PROJECT IN");
+    die("[PROJECTEN] VUL PROJECT IN");
 }
+
 
 
 // echo "[INPUT]\tOK\n";
@@ -85,10 +83,36 @@ if (!notNone($projectCode)) {
 if (!daypartCheck($daypart)) {
     die("[DAGDEEL] BESTAAT NIET\n\nTERMINATING...");
 }
+
 // echo "[DAGDEEL] OK\n";
 
 //connect met database
 require("db-connect.php");
+
+//check of er wel genoeg laptops beschikbaar zijn
+$totalLaptops = getConf()->laptops;
+
+$takenLaptops = 0;
+
+$stmt = $conn->prepare("SELECT laptops FROM week WHERE daypart = ?");
+$stmt->bind_param("s", $daypart);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($l);
+while ($stmt->fetch()) {
+    //loop door bestaande afspraken en voeg ze toe aan het aantal bezette laptops
+    $takenLaptops += $l;
+}
+$stmt->close();
+
+if ($laptops > $totalLaptops - $takenLaptops) {
+    $conn->close();
+    $limit = $totalLaptops - $takenLaptops;
+    if ($limit < 0) {
+      $limit = 0;
+    }
+    die("[LAPTOPS] NOT ENOUGH LAPTOPS AVAILABLE, MAX " . $limit);
+}
 
 //check of docent wel bestaat en beschikbaar is op tijdstip
 for ($i=0; $i < count($docentenGroep); $i++) {
@@ -183,10 +207,10 @@ $stmt->bind_result(
     $resKlas1->jaar,
     $resKlas1->niveau,
     $resKlas1->nummer,
-  // $resKlas2->jaar,
-  // $resKlas2->niveau,
-  // $resKlas2->nummer,
-  $resLokaal1,
+    // $resKlas2->jaar,
+    // $resKlas2->niveau,
+    // $resKlas2->nummer,
+    $resLokaal1,
     $resLokaal2
 );
 
