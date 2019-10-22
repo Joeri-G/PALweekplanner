@@ -99,11 +99,11 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
       }
     }
   };
-  if (modeJaarlaag) {
+  if (modeJaarlaag)
     xhttp.open("GET", "/api.php?listJaarlaagKlassen=true&jaar=" + encodeURIComponent(dataJaarlaag.j) + "&niveau=" + encodeURIComponent(dataJaarlaag.ni), true);
-  } else {
+  else
     xhttp.open("GET", "/api.php?listAll=true", true);
-  }
+
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.send();
 }
@@ -127,9 +127,9 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
         }
       }
       //als er geen afspraak is build dan de input
-      if (!heeftAfspraak) {
+      if (!heeftAfspraak)
         html += buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag);
-      }
+
     }
     //voeg nog een keer de klas toe
   }
@@ -143,21 +143,21 @@ function buildGridTimetableAfspraak(data, modeJaarlaag = false) {
   html += '<td>' + data.d[1].replace(/\'/g, "&#39;") + '</td>\n';
   html += '<td>' + data.l[0].replace(/\'/g, "&#39;") + '</td>\n';
   html += '<td>' + data.l[1].replace(/\'/g, "&#39;") + '</td>\n';
-  html += '<td>' + data.la.replace(/\'/g, "&#39;") + '</td>\n';
+  html += '<td>' + data.la/*.replace(/\'/g, "&#39;")*/ + '</td>\n';
   html += '<td>' + data.p.replace(/\'/g, "&#39;") + '</td>\n';
   //om te voorkomen dat lange notities de table verpesten truncaten we de note als deze meer dan 7 characters is
   let note = data.no;
-  if (note.length > 7) {
+  if (note.length > 7)
     note = note.substr(0, 6) + "\u2026";
-  }
+
   html += '<td>' + note + '</td>\n';
   html += '<td data-hour=\'' + JSON.stringify(data).replace(/\'/g, "&#39;") + '\'>';
   html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge" class="svgButton">\n';
-  if (modeJaarlaag) {
+  if (modeJaarlaag)
     html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 2)">';
-  } else {
+  else
     html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)">';
-  }
+
   html += '</td>';
 
   return html;
@@ -176,11 +176,11 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
   html += '<td>';
   //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
   html += '<input type="hidden" name="' + dagdeel + klasTitle + 'klas1" value="klas0" data-k=\'{"data":[' + JSON.stringify(klas).replace(/\'/g, "&#39;") + ']}\'>';
-  if (modeJaarlaag) {
+  if (modeJaarlaag)
     html += '<img src="/img/save.svg" alt="Save" onclick="sendHour(\'' + dagdeel + klasTitle + '\', \'' + dagdeel + '\', 2)" class="svgButton">';
-  } else {
+  else
     html += '<img src="/img/save.svg" alt="Save" onclick="sendHour(\'' + dagdeel + klasTitle + '\', \'' + dagdeel + '\', 1)" class="svgButton">';
-  }
+
   html += '</td>';
 
   return html;

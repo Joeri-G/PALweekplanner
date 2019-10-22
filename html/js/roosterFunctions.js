@@ -23,12 +23,12 @@ function modeDefault() {
   //zorg dat de css styling weer de default wordt
   main.style.display = 'block';
   //zorg dat de oude html weg is
-  main.innerHTML = '<p class="mainMessage">Selecteer een docent of klas met de dropdown</p>';
+  main.innerHTML = '<p class="mainMessage">Selecteer een <b>mode</b> en vervolgens een <b>docent</b> of <b>klas</b></p>';
   //zorg dat de selction weergegeven wordt
   select.style.display = 'block';
 
   select.innerHTML = '<div class="dropSelect">\
-    <input type="button" value="Klas" onclick="toggleDrop(this)" data-title="">\
+    <input type="button" value="Mode" onclick="toggleDrop(this)" data-title="">\
       <div class="drop">\
       <input type="hidden" name="displayMode" value="k">\
       <input type="hidden">\
@@ -38,7 +38,7 @@ function modeDefault() {
     </div>\
   </div>\
   <div class="dropSelect">\
-    <input type="button" value="Klas" onclick="toggleDrop(this)" data-title="klas">\
+    <input type="button" value="[klas]" onclick="toggleDrop(this)" data-title="[klas]" style="display:none">\
     <div class="drop" id="selectKlasDocent">\
       <input type="hidden" name="displayModeFinal" onChange="setWeekTimetable(this.value)">\
       <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
@@ -54,7 +54,7 @@ function modeDefault() {
       try {
         list = JSON.parse(this.responseText);
         //nu we de docent/klassen data hebben kunnen we de lijst maken
-        buildSelect('k', list);
+        // buildSelect('k', list);
         //stop loading animatie
         load(false);
       } catch (e) {

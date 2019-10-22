@@ -38,7 +38,12 @@ $klas1->nummer = $_GET["klas1nummer"];
 $lokaal1 = $_GET["lokaal1"];
 $lokaal2 = $_GET["lokaal2"];
 
-$laptops = $_GET["laptops"];
+$laptops = 0;
+//zorg er voor dat laptops een int is
+if (ctype_digit($_GET["laptops"])) {
+  $laptops = intval($_GET["laptops"]);
+}
+
 
 //omdat sommige browsers geen leeg item in de url plaatsen worden notes en project codes zo gedaan
 $note = "None";

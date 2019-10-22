@@ -164,7 +164,7 @@ xhttp.onreadystatechange = function() {
           a: data
         }
       };
-      let html = makeList('a', 'd', 'Docent', input, 'projectLeider');
+      let html = makeList('a', 'd', 'Projectleider', input, 'projectLeider');
       el.innerHTML = html;
       //stop loading animatie
       load(false);

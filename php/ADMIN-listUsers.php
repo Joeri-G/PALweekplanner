@@ -10,16 +10,31 @@ script om array met alle users te sturen
 
 $out = array();
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT username, role, userLVL, userAvailability, ID FROM users');
+$stmt = $conn->prepare(
+  'SELECT
+    username,
+    /*role,*/
+    userLVL,
+    /*userAvailability,*/
+    ID
+  FROM
+    users'
+);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resUsername, $resRole, $resUserLVL, $resUserAvailability, $resID);
+$stmt->bind_result(
+  $resUsername,
+  /*$resRole,*/
+  $resUserLVL,
+  /*$resUserAvailability,*/
+  $resID
+);
 while ($stmt->fetch()) {
     $obj = new stdClass;
     $obj->username = $resUsername;
-    $obj->role = $resRole;
+    //$obj->role = $resRole;
     $obj->userLVL = $resUserLVL;
-    $obj->userAvailability = $resUserAvailability;
+    //$obj->userAvailability = $resUserAvailability;
     $obj->ID = $resID;
 
     $out[] = $obj;

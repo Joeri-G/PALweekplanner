@@ -12,7 +12,7 @@ if (!isset($_SESSION['loggedin'])) {
   <head>
     <meta charset="utf-8">
     <!-- title -->
-    <title>Rooster</title>
+    <title>Planner | Overview</title>
     <!-- icon -->
     <link rel="shortcut icon" href="/img/logo.svg">
     <!-- css -->

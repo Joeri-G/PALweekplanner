@@ -127,6 +127,8 @@ function message(text = '', escape = true) {
 
 //functie om HTML te escapen
 function escapeHTML(input) {
+  if (typeof input !== "string")
+    return input;
   //replace less than
   let out = input.replace(/</g, '&lt;');
   //replace greater than
@@ -424,7 +426,7 @@ function sortDropdown(drop) {
     items = drop.getElementsByTagName('a');
     for (var i = 0; i < (items.length - 1); i++) {
       x = items[i];
-      y = items[i+1];
+      y = items[i + 1];
       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() && x.innerHTML !== 'Geen Selectie') {
         shouldSwitch = true;
         break;
@@ -434,8 +436,7 @@ function sortDropdown(drop) {
       switching = true;
       if (typeof items[i + 1] !== 'undefined') {
         drop.insertBefore(items[i + 1], items[i]);
-      }
-      else {
+      } else {
         switching = false;
       }
     }

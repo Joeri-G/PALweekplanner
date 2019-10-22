@@ -45,7 +45,7 @@ CREATE TABLE `week` (
     `klas2nummer` int(4) NOT NULL,*/
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
-  `laptops` varchar(4) NOT NULL COMMENT 'laptops',
+  `laptops` int(4) NOT NULL COMMENT 'laptops',
   `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
   `notes` varchar(128) NOT NULL COMMENT 'notes',
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',

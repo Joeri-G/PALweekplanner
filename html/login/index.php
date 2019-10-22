@@ -13,7 +13,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <meta charset="utf-8">
     <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
     <!-- Title -->
-    <title>Login</title>
+    <title>Planner | Login</title>
     <!-- Icon -->
     <link rel="shortcut icon" href="/img/logo.svg">
     <!-- CSS -->

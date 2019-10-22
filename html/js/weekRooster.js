@@ -35,8 +35,8 @@ function buildSelect(type = 'klas', list = {
       //maak option met klas en als value klas object
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].j + list[type][i].ni + list[type][i].nu + '</a>';
     }
-    button.value = 'Klas';
-    button.dataset.title = 'Klas';
+    button.value = '[klas]';
+    button.dataset.title = '[klas]';
   }
   //select voor docent
   else if (type == 'd') {
@@ -44,8 +44,8 @@ function buildSelect(type = 'klas', list = {
     for (var i = 0; i < list.d.length; i++) {
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].username + '</a>';
     }
-    button.value = 'Docent';
-    button.dataset.title = 'Docent';
+    button.value = '[docent]';
+    button.dataset.title = '[docent]';
   }
   //selectt voor jaarlagen
   else if (type == 'jl') {
@@ -53,10 +53,11 @@ function buildSelect(type = 'klas', list = {
       //maak option met klas en als value klas object
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)"' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].j + list[type][i].ni + '</a>';
     }
-    button.value = 'Jaarlaag';
-    button.dataset.title = 'Jaarlaag';
+    button.value = '[jaarlaag]';
+    button.dataset.title = '[jaarlaag]';
   }
   document.getElementById('selectKlasDocent').innerHTML = html;
+  button.style.display = "";
 }
 
 function setWeekTimetable(input) {
@@ -187,17 +188,17 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     //remove button en afspraak data
     html += '<div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour)">'
     //docenten
-    html += '<span>Docent1:</span><span>' + data[dagdeel].d[0] + '</span>\n';
-    html += '<span>Docent2:</span><span>' + data[dagdeel].d[1] + '</span>\n';
+    html += '<span>Docent1:</span><span>' + escapeHTML(data[dagdeel].d[0]) + '</span>\n';
+    html += '<span>Docent2:</span><span>' + escapeHTML(data[dagdeel].d[1]) + '</span>\n';
     //klassen
-    html += '<span>Klas:</span><span>' + data[dagdeel].k[0].j + data[dagdeel].k[0].ni + data[dagdeel].k[0].nu + '</span>';
+    html += '<span>Klas:</span><span>' + escapeHTML(data[dagdeel].k[0].j) + data[dagdeel].k[0].ni + data[dagdeel].k[0].nu + '</span>';
     //lokalen
-    html += '<span>Lokaal1:</span><span>' + data[dagdeel].l[0] + '</span>\n';
-    html += '<span>Lokaal2:</span><span>' + data[dagdeel].l[1] + '</span>\n';
+    html += '<span>Lokaal1:</span><span>' + escapeHTML(data[dagdeel].l[0]) + '</span>\n';
+    html += '<span>Lokaal2:</span><span>' + escapeHTML(data[dagdeel].l[1]) + '</span>\n';
     //overig
-    html += '<span>Laptops:</span><span>' + data[dagdeel].la + '</span>\n';
+    html += '<span>Laptops:</span><span>' + escapeHTML(data[dagdeel].la) + '</span>\n';
     html += '<span class="L1">ProjectCode&#xfeff;:</span><span class="projectCode">' + data[dagdeel].p + '</span>\n';
-    html += '<span>Note:</span><span class="note">' + data[dagdeel].no + '</span>\n';
+    html += '<span>Note:</span><span class="note">' + escapeHTML(data[dagdeel].no) + '</span>\n';
 
     html += '</div>\n</div>\n'
     return html;
@@ -226,7 +227,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   html += makeList(dagdeel, 'l', 'Lokaal2', listAvailable, dagdeel + 'lokaal2');
   //laptops
   html += '<div>\
-  <input type="number" name="' + dagdeel + 'laptops" min="0" max="80" placeholder="Laptops">\
+  <input type="number" name="' + dagdeel + 'laptops" placeholder="Laptops">\
   </div>';
   //project code
   html += makeList(dagdeel, 'p', 'Project', listAvailable, dagdeel + 'projectCode');

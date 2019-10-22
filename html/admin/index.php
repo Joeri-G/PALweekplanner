@@ -16,7 +16,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
   <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
-    <title>Admin Panel</title>
+    <title>Planner | Admin</title>
     <link rel="shortcut icon" href="/img/logo.svg">
     <link rel="stylesheet" href="/css/min/master.css">
     <link rel="stylesheet" href="/css/min/panel.css">
@@ -144,7 +144,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Control panel om database beter te kunnen besturen. Powered By <a href="https://www.phpmyadmin.net/" target="_blank" rel="noreferrer">phpMyAdmin</a></p>
         <div class="inputParent">
           <?php // NOTE: URL CAN DIFFER DEPENDING ON SETUP?>
-          <button type="button" onclick="window.open('/phpmyadmin', '_blank', 'location=yes,scrollbars=yes,status=yes');" class="button">Panel</button>
+          <a href="/phpmyadmin" target="_blank"><button type="button" class="button">Panel</button></a>
         </div>
       </div>
       <!-- export -->
@@ -152,7 +152,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Export</p>
         <p>Export naar *.CSV</p>
         <div class="inputParent">
-          <button type="button" class="button" name="button" onclick="window.open('/api.php?export=true', '_blank', 'location=yes,scrollbars=yes,status=yes');">Export</button>
+          <a href="/api.php?export=true" target="_blank"><button type="button" class="button" name="button">Export</button></a>
         </div>
       </div>
       <!-- delete all -->

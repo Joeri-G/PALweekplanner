@@ -12,7 +12,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   <!-- BY JOERI GEUZINGE (https://www.joerigeuzinge.nl) -->
   <head>
     <meta charset="utf-8">
-    <title>Project Codes</title>
+    <title>Planner | Projects</title>
     <link rel="shortcut icon" href="/img/logo.svg">
     <link rel="stylesheet" href="/css/min/master.css">
     <link rel="stylesheet" href="/css/min/panel.css">

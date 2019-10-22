@@ -87,8 +87,9 @@ nav>*:last-child {
   display: none;
 }
 
-nav img, nav span {
-  height: 2em;
+nav img, nav span, .icon > img {
+  height: 2em!important;
+  cursor: pointer;
 }
 
 .icon {
@@ -98,6 +99,7 @@ nav img, nav span {
   max-width: 3em;
   padding: 0;
   text-align: center;
+  cursor: pointer;
 }
 
 /* 1.3 */
