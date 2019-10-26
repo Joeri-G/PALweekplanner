@@ -185,7 +185,7 @@ menu img {
   }
 }
 
-#loading, #messageModal {
+#loading, .messageModal {
   display: none;
   position: fixed;
   z-index: 1;
@@ -209,12 +209,33 @@ menu img {
 }
 
 /* 2.3 */
-#messageModalContent {
+.messageModalContent {
   margin: 0 auto 32px auto;
   width: 40%;
   background: white;
   border-radius: 24px;
   padding: 32px;
+}
+
+.messageModal img {
+  max-height: 1.25em;
+  max-width: 1.25em;
+  display: inline;
+}
+
+#editModal p:first-of-type {
+  font-size: 1.5em;
+}
+
+#editModal button, #editModal input, #editModal img {
+  display: block!important;
+  width: 100%!important;
+  max-width: 100%;
+}
+
+.editModalDropdowns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 /* 3.0 */
@@ -358,7 +379,7 @@ footer>span>p:first-child {
   }
 
   /* op kleine schermen wordt de message modal box groter */
-  #messageModalContent {
+  .messageModalContent {
     width: 70%;
   }
 

@@ -108,6 +108,7 @@ if (isset($_GET['somtodayExport']) && $_GET['somtodayExport'] == 'true') {
   require('../php/somtodayExport.php');
 }
 
+//edit script
 if(isset($_GET['edit']) && $_GET['edit'] == 'true') {
   require('../php/edit.php');
 }

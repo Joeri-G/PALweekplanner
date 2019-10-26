@@ -121,7 +121,7 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
           let afspraak = data[dagdeel][x];
           if (afspraak.k[0].j == klas.j && afspraak.k[0].ni == klas.ni && afspraak.k[0].nu == klas.nu) {
             heeftAfspraak = true;
-            html += buildGridTimetableAfspraak(afspraak, modeJaarlaag);
+            html += buildGridTimetableAfspraak(afspraak, dagdeel, modeJaarlaag);
             // break;
           }
         }
@@ -136,27 +136,34 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
   return html;
 }
 
-function buildGridTimetableAfspraak(data, modeJaarlaag = false) {
+function buildGridTimetableAfspraak(data, dagdeel, modeJaarlaag = false) {
   let html = '';
   //voeg content toe
   html += '<td>' + data.d[0].replace(/\'/g, "&#39;") + '</td>\n';
   html += '<td>' + data.d[1].replace(/\'/g, "&#39;") + '</td>\n';
   html += '<td>' + data.l[0].replace(/\'/g, "&#39;") + '</td>\n';
   html += '<td>' + data.l[1].replace(/\'/g, "&#39;") + '</td>\n';
-  html += '<td>' + data.la/*.replace(/\'/g, "&#39;")*/ + '</td>\n';
+  html += '<td>' + data.la /*.replace(/\'/g, "&#39;")*/ + '</td>\n';
   html += '<td>' + data.p.replace(/\'/g, "&#39;") + '</td>\n';
   //om te voorkomen dat lange notities de table verpesten truncaten we de note als deze meer dan 7 characters is
   let note = data.no;
   if (note.length > 7)
     note = note.substr(0, 6) + "\u2026";
 
+  //voeg daypart aan data toe
+  data.daypart = dagdeel;
   html += '<td>' + note + '</td>\n';
   html += '<td data-hour=\'' + JSON.stringify(data).replace(/\'/g, "&#39;") + '\'>';
   html += '<img src="/img/enlarge.svg" onclick="enlargeHour(this.parentElement.dataset.hour)" alt="Enlarge" class="svgButton">\n';
-  if (modeJaarlaag)
+  //edit
+
+  if (modeJaarlaag) {
+    html += '<img src="/img/pencil-edit-button.svg" class="SVGbutton" onclick="editHour(this.parentElement.dataset.hour, 2)">\n';
     html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 2)">';
-  else
+  } else {
+    html += '<img src="/img/pencil-edit-button.svg" class="SVGbutton" onclick="editHour(this.parentElement.dataset.hour, 1)">\n';
     html += '<img src="/img/closeBlack.svg" alt="Close" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour, 1)">';
+  }
 
   html += '</td>';
 

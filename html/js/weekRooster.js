@@ -180,13 +180,21 @@ function buildDay(conf, data, mode, obj, nmr, listAvailable) {
 function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   //check of er een afspraak gezet is in het huidige dagdeel
   if (typeof data[dagdeel] !== 'undefined' && data[dagdeel] !== null) {
+    //voeg daypart aan data toe
+    data[dagdeel].daypart = dagdeel;
     //geef afspraak view
     let html = '<div class="uur afspraak" data-hour=\'' + JSON.stringify(data[dagdeel]).replace(/\'/g, "&#39;") + '\'>\n';
     //roostertijden
+    //delete
     html += '<button type="button" class="SVGbutton" onclick="deleteHour(this.parentElement.dataset.hour)"><img src="/img/closeBlack.svg"></button>\n';
+    //edit
+    html += '<button type="button" class="SVGbutton" onclick="editHour(this.parentElement.dataset.hour)"><img src="/img/pencil-edit-button.svg"></button>\n';
+    //enlarge
+    html += '<button type="button" class="SVGbutton" onclick="enlargeHour(this.parentElement.dataset.hour)"><img src="/img/enlarge.svg"></button>';
+
     html += '<p>' + conf.lestijden[uur] + '</p>\n';
     //remove button en afspraak data
-    html += '<div class="menu list" onclick="enlargeHour(this.parentElement.dataset.hour)">'
+    html += '<div class="menu list">'
     //docenten
     html += '<span>Docent1:</span><span>' + escapeHTML(data[dagdeel].d[0]) + '</span>\n';
     html += '<span>Docent2:</span><span>' + escapeHTML(data[dagdeel].d[1]) + '</span>\n';
@@ -197,7 +205,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     html += '<span>Lokaal2:</span><span>' + escapeHTML(data[dagdeel].l[1]) + '</span>\n';
     //overig
     html += '<span>Laptops:</span><span>' + escapeHTML(data[dagdeel].la) + '</span>\n';
-    html += '<span class="L1">ProjectCode&#xfeff;:</span><span class="projectCode">' + data[dagdeel].p + '</span>\n';
+    html += '<span class="L1">Project&#xfeff;:</span><span class="projectCode">' + data[dagdeel].p + '</span>\n';
     html += '<span>Note:</span><span class="note">' + escapeHTML(data[dagdeel].no) + '</span>\n';
 
     html += '</div>\n</div>\n'

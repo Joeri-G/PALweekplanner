@@ -46,14 +46,11 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     </main>
     <!-- Loading svg -->
     <div id="loading">
-      <div id="loadingContent">
-        <img src="/img/loading.svg" alt="Loading...">
-      </div>
+      <div id="loadingContent"></div>
     </div>
     <!-- Message modal -->
-    <div id="messageModal">
-      <div id="messageModalContent">
-      </div>
+    <div id="messageModal" class="messageModal">
+      <div id="messageModalContent" class="messageModalContent"></div>
     </div>
     <!-- Footer -->
     <footer>

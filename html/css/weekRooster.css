@@ -46,7 +46,7 @@ section>p {
 .uur {
   background: #FFECA0;
   padding: 16px;
-  min-height: 250px;
+  height: 260px;
 }
 
 .uur>p {
@@ -64,13 +64,13 @@ div p {
 }
 
 .menu {
+  position: sticky;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 .list {
   grid-template-columns: 1fr 1fr;
-  cursor: pointer;
 }
 
 .afspraak {

@@ -56,6 +56,11 @@ script met functions die door alle "viewModes" en paginas gebruikt worden
 
   - sortDropdown()
     * sorteer de dropdown op alpahbatische volgorder
+
+  - updateHour()
+    * functie om een item te updaten
+    * doe een call om oude te deleten
+    * doe een call om de nieuwe te updaten
 */
 
 var activeDrop = false;
@@ -107,6 +112,8 @@ function message(text = '', escape = true) {
   if (text == '') {
     return null;
   }
+
+
   //declare objects
   let messageModal = document.getElementById('messageModal');
   let messageModalContent = document.getElementById('messageModalContent');
@@ -119,7 +126,7 @@ function message(text = '', escape = true) {
 
   setTimeout(function() {
     messageModal.style.display = 'block';
-    messageModalContent.setAttribute('class', 'fade-in');
+    messageModalContent.setAttribute('class', 'messageModalContent fade-in');
     //haal scroll weg uit document
     document.body.style.overflow = 'hidden';
   }, 200);
@@ -333,7 +340,7 @@ String.prototype.replaceChar = function(html = false) {
   return retStr;
 };
 
-function buildDropdown(data = [], value = false, title = 'Title', name = 'Name', dataset = '') {
+function buildDropdown(data = [], value = false, title = 'Title', name = 'Name', dataset = '', st = '') {
   if (!value) {
     value = data;
   }
@@ -341,10 +348,16 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
     errorMessage('invalid array length');
     return '';
   }
+  if (st == '') {
+    st = 'None';
+  } else if (typeof st == "number") {
+    st = st.toString();
+  }
+
   let html = '<div class="dropSelect">\
   <input type="button" value="' + title.replaceChar() + '" onclick="toggleDrop(this)">\
   <div class="drop">\
-  <input type="hidden" name="' + name.replaceChar() + '" value="None" ' + dataset + '>\
+  <input type="hidden" name="' + name.replaceChar() + '" value="' + st.replaceChar() + '" ' + dataset + '>\
   <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
   <a href="javascript:void(0)" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
   for (var i = 0; i < data.length; i++) {
@@ -444,21 +457,239 @@ function sortDropdown(drop) {
 }
 
 
+
+function sendReq(url = '/', callback = function(resp) {
+  message(resp);
+}, arg = {}) {
+  let xhttp = new XMLHttpRequest(arg);
+  xhttp.onreadystatechange = (function(xhttp, arg) {
+    return function() {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        return callback(xhttp.responseText, arg);
+      }
+    }
+  })(xhttp, arg);
+  xhttp.open("GET", url, true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.send();
+}
+
+function notNone(inp = "None", isKlas = false) {
+  let none = ["None", "none", "NONE", "", " "];
+  if (none.includes(inp))
+    return false;
+  if (isKlas && inp.j == "0" && inp.ni == !notNone(inp.ni) && inp.nu == "0")
+    return false;
+  return true;
+}
+
+function editHour(json, mode = 0) {
+  //test JSON
+  //'{"d":["AB","None"],"k":[{"j":1,"ni":"H","nu":1}],"l":["103","104"],"la":0,"p":"Lor2","no":"None","ID":2,"daypart":"MA0"}'
+  //neem dagdeel uit JSON en forward deze naar function
+  json = JSON.parse(json);
+  sendReq('/api.php?listAvailable=true', function(resp, arg) {
+    let json = arg[0];
+    let mode = arg[1];
+    let dagdeel = json.daypart;
+    //parse response
+    let list = JSON.parse(resp);
+    //haal alleen de dagdelen die we nodig hebben uit de list
+    list.d = list.d[dagdeel];
+    list.k = list.k[dagdeel];
+    list.l = list.l[dagdeel];
+    //voeg de geselecteerde items toe aan de list
+    //docent
+    for (var i = 0; i < json.d.length; i++) {
+      if (notNone(json.d[i])) {
+        list.d.push(json.d[i]);
+      }
+    }
+    //klas
+    let klasIndex = 'None';
+    for (var i = 0; i < json.k.length; i++) {
+      if (notNone(json.k[i], true)) {
+        //moeilijk doen want anders worden het integers en dan krijgen we later problemen
+        let obj = json.k[i];
+        obj.j = obj.j.toString();
+        obj.nu = obj.nu.toString();
+        list.k.push(obj);
+        klasIndex = (json.k.length);
+      }
+    }
+    //lokaal
+    for (var i = 0; i < json.l.length; i++) {
+      if (notNone(json.l[i])) {
+        list.l.push(json.l[i]);
+      }
+    }
+    //daypart
+    let html = "<p>Edit</p>\
+    <p>Laat de dropdown leeg om de huidige waarde te laten staan</p>\
+    <span class=\"editModalDropdowns\">\
+    <input type=\"hidden\" value=\"" + dagdeel.replaceChar() + "\" name=\"updateDaypart\">";
+    //docent1
+    html += buildDropdown(list.d, false, "Docent1", "updateDocent1", '', json.d[0]);
+    //docent2
+    html += buildDropdown(list.d, false, "Docent2", "updateDocent2", '', json.d[1]);
+
+    //Klas1
+
+    let titleKlas = [];
+    let valueKlas = [];
+    for (var i = 0; i < list.k.length; i++) {
+      titleKlas.push(list.k[i].j + list.k[i].ni + list.k[i].nu);
+      valueKlas.push(i.toString());
+    }
+
+    html += buildDropdown(titleKlas, valueKlas, "Klas", "updateKlas1", 'data-k=\'{"data":' + JSON.stringify(list.k).replaceChar() + '}\'', klasIndex);
+
+    //lokaal1
+    html += buildDropdown(list.l, false, "Lokaal1", "updateLokaal1", '', json.l[0]);
+    //lokaal1
+    html += buildDropdown(list.l, false, "Lokaal2", "updateLokaal2", '', json.l[0]);
+    //project code
+    html += buildDropdown(list.p, false, 'Project', "updatePC", '', json.p);
+    html += '<input type="number" name="updateLaptops" placeholder="Laptops" value="';
+    //zorg dat laptops altijd een string is
+    if (typeof json.la == "string") {
+      html += json.la.replaceChar();
+    } else {
+      html += json.la.toString();
+    }
+    html += '">';
+    //note
+    html += '<input type="text" name="updateNote" placeholder="Note" value="' + json.no.replaceChar() + '">\n';
+
+    html += '</span><button type="button" class="button" onclick="updateHour(\'' + json.ID + '\', ' + mode + ')">Go!</button>';
+
+    document.getElementById("editModalContent").innerHTML = html;
+
+    //fade-in
+    setTimeout(function() {
+      let editModal = document.getElementById("editModal");
+      let editModalContent = document.getElementById("editModalContent");
+
+      editModal.style.display = 'block';
+      editModalContent.setAttribute('class', 'messageModalContent fade-in');
+    }, 200);
+  }, [json, mode]);
+}
+
+function updateHour(id = "", mode = 0) {
+  load(true);
+  let url = "/api.php?delete=true&ID=" + encodeURIComponent(id);
+
+  sendReq(url, function(resp) {
+    if (resp !== '') {
+      load(false);
+      message("Something went wrong:\n" + resp);
+      return;
+    }
+    let url = "/api.php?insert=true&" +
+      "daypart=" + val("updateDaypart") +
+      "&docent1=" + val("updateDocent1") +
+      "&docent2=" + val("updateDocent2") +
+
+      // "&klas1jaar=" + val("updateKlas1jaar") +
+      // "&klas1niveau=" + val("updateKlas1niveau") +
+      // "&klas1nummer=" + val("updateKlas1nummer") +
+
+      "&lokaal1=" + val("updateLokaal1") +
+      "&lokaal2=" + val("updateLokaal2") +
+
+      "&laptops=" + val("updateLaptops") +
+      "&projectCode=" + val("updatePC");
+
+    //klas
+    let klasN = val("updateKlas1");
+    let klas;
+    if (notNone(klasN)) {
+      try {
+        let klassen = JSON.parse(document.getElementsByName("updateKlas1")[0].dataset.k).data;
+        klas = klassen[klasN];
+        if (typeof klas == "undefined" || klas == null) {
+          throw "No klas selected";
+        }
+
+      } catch (e) {
+        klas = {
+          j: "0",
+          ni: "None",
+          nu: "0"
+        };
+      }
+
+    } else {
+      klas = {
+        j: "0",
+        ni: "None",
+        nu: "0"
+      };
+    }
+
+    url += "&klas1jaar=" + klas.j +
+      "&klas1niveau=" + klas.ni +
+      "&klas1nummer=" + klas.nu;
+
+    if (val("updateNote") == "") {
+      url += "&note=" + "None";
+    } else {
+      url += "&note=" + val("updateNote");
+    }
+    console.log(url);
+    sendReq(url, function(resp) {
+      let editModal = document.getElementById("editModal");
+      let editModalContent = document.getElementById('editModalContent');
+      //fade out
+      editModalContent.setAttribute('class', 'messageModalContent fade-out');
+      //remove fadeout
+      setTimeout(function() {
+        let editModal = document.getElementById('editModal');
+        editModal.style.display = "none";
+        editModal.setAttribute('class', 'messageModal');
+      }, 200);
+
+      load(false);
+      message(resp);
+      //refresh afspraken
+      setTimeout(function() {
+        if (mode == 0) {
+          setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
+        } else if (mode == 1) {
+          modeGrid();
+        } else if (mode == 2) {
+          let el = document.getElementsByName('selectJaarlaag')[0];
+          buildJaarlaag(el.value, el.dataset.jaarlagen);
+        }
+      }, 1000);
+
+    });
+  }, '');
+}
+
+function val(el) {
+  return encodeURIComponent(document.getElementsByName(el)[0].value);
+}
+
 //JS voor message modal
 //wanneer er buiten de modal geklikt wordt, sluit de modal
-let modalBox = document.getElementById("messageModal");
+let messageModal = document.getElementById("messageModal");
+let messageModalContent = document.getElementById('messageModalContent');
+
+let editModal = document.getElementById("editModal");
+
 window.onclick = function(event) {
-  if (event.target == modalBox) {
-    //haal no-scroll weg uit HTML
-    let messageModal = document.getElementById('messageModal');
-    let messageModalContent = document.getElementById('messageModalContent');
+  if (event.target == messageModal) {
     //fade out
-    messageModalContent.setAttribute('class', 'fade-out');
+    messageModalContent.setAttribute('class', 'messageModalContent fade-out');
     //remove fadeout
     setTimeout(function() {
+      //haal no-scroll weg uit HTML
       document.body.style.overflow = '';
+      let messageModal = document.getElementById('messageModal');
       messageModal.style.display = "none";
-      messageModal.setAttribute('class', '');
+      messageModal.setAttribute('class', 'messageModal');
     }, 200);
   }
   //add dropdown
@@ -466,5 +697,18 @@ window.onclick = function(event) {
   else if (event.target.parentElement !== activeDrop && activeDrop !== false && event.target !== activeDrop.parentElement.children[0]) {
     let dropBtn = activeDrop.parentElement.children[0];
     toggleDrop(dropBtn)
+  }
+  //check of edit modal bestaat
+  else if (editModal != "undefined" && editModal != null && event.target == editModal) {
+
+    let editModalContent = document.getElementById('editModalContent');
+    //fade out
+    editModalContent.setAttribute('class', 'messageModalContent fade-out');
+    //remove fadeout
+    setTimeout(function() {
+      let editModal = document.getElementById('editModal');
+      editModal.style.display = "none";
+      editModal.setAttribute('class', 'messageModal');
+    }, 200);
   }
 }

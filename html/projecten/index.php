@@ -86,8 +86,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
       <div id="loadingContent"></div>
     </div>
     <!-- Message modal -->
-    <div id="messageModal">
-      <div id="messageModalContent"></div>
+    <div id="messageModal" class="messageModal">
+      <div id="messageModalContent" class="messageModalContent"></div>
     </div>
     <!-- Footer -->
     <footer>
