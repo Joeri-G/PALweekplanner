@@ -39,7 +39,7 @@ require('db-connect.php');
 //<TMP FIX>
 $klassenAll = array();
 //list alle vrije klassen per dagdeel
-$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau, nummer FROM klassen;');
+$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen;');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau, $resNummer);
@@ -56,7 +56,7 @@ $stmt->close();
 $klas1 = new stdClass;
 // $klas2 = new stdClass;
 $klassenBezet = new stdClass;
-$stmt = $conn->prepare('SELECT DISTINCT
+$stmt = $conn->prepare('SELECT
   klas1jaar,
   klas1niveau,
   klas1nummer,
@@ -88,6 +88,8 @@ while ($stmt->fetch()) {
   // }
 }
 //</TMP FIX>
+
+
 
 //loop door de dagdelen en query de database
 for ($x=0; $x < count($dagdelen); $x++) {
@@ -137,7 +139,7 @@ WHERE
 
     for ($i=0; $i < count($klassenAll); $i++) {
         if (!isset($klassenBezet->$dagdeelTMP) || !in_array($klassenAll[$i], $klassenBezet->$dagdeelTMP)) {
-            if (!isset($out->klas->$dagdeelTMP)) {
+            if (!isset($out->k->$dagdeelTMP)) {
                 $out->k->$dagdeelTMP = array();
             }
             $out->k->$dagdeelTMP[] = $klassenAll[$i];
