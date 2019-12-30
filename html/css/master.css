@@ -31,7 +31,7 @@ html, body {
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box!important;
   /*idk waarom en hoe maar dit fixt problemen op Chrome for Android*/
   max-width: 999999px;
   max-height: 999999px;
@@ -298,6 +298,11 @@ input[type=number] {
   font-size: 16px;
   display: none;
   background: #ccc;
+}
+
+.uur .drop {
+  max-height: 190px;
+  width: 150px;
 }
 
 .show {

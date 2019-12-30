@@ -35,8 +35,8 @@ function buildSelect(type = 'klas', list = {
       //maak option met klas en als value klas object
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].j + list[type][i].ni + list[type][i].nu + '</a>';
     }
-    button.value = '[klas]';
-    button.dataset.title = '[klas]';
+    button.value = 'Selecteer een klas';
+    button.dataset.title = 'Selecteer een klas';
   }
   //select voor docent
   else if (type == 'd') {
@@ -44,8 +44,8 @@ function buildSelect(type = 'klas', list = {
     for (var i = 0; i < list.d.length; i++) {
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].username + '</a>';
     }
-    button.value = '[docent]';
-    button.dataset.title = '[docent]';
+    button.value = 'Selecteer een docent';
+    button.dataset.title = 'Selecteer een docent';
   }
   //selectt voor jaarlagen
   else if (type == 'jl') {
@@ -53,8 +53,8 @@ function buildSelect(type = 'klas', list = {
       //maak option met klas en als value klas object
       html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)"' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].j + list[type][i].ni + '</a>';
     }
-    button.value = '[jaarlaag]';
-    button.dataset.title = '[jaarlaag]';
+    button.value = 'Selecteer een jaarglaag';
+    button.dataset.title = 'Selecteer een jaarglaag';
   }
   document.getElementById('selectKlasDocent').innerHTML = html;
   button.style.display = "";

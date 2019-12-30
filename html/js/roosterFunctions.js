@@ -38,7 +38,7 @@ function modeDefault() {
     </div>\
   </div>\
   <div class="dropSelect">\
-    <input type="button" value="[klas]" onclick="toggleDrop(this)" data-title="[klas]" style="display:none">\
+    <input type="button" value="Selecteer een klas" onclick="toggleDrop(this)" data-title="Selecteer een klas" style="display:none">\
     <div class="drop" id="selectKlasDocent">\
       <input type="hidden" name="displayModeFinal" onChange="setWeekTimetable(this.value)">\
       <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\

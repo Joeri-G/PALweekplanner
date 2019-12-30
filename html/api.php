@@ -37,7 +37,6 @@ if (isset($_GET['loadConfig']) && $_GET['loadConfig'] == 'true') {
     $out->lestijden = $conf->lestijden;
     die(json_encode($out));
 }
-
 //listAvailable
 //maak een lijst met alle docenten, klassen en lokalen die niet bezet zijn.
 if (isset($_GET['listAvailable']) && $_GET['listAvailable'] == 'true') {
@@ -91,6 +90,12 @@ if (isset($_GET['delete']) && $_GET['delete'] == 'true') {
 //dit is write, dus userLVL > 3
 if (isset($_GET['insert']) && $_GET['insert'] == 'true') {
   require('../php/insert.php');
+}
+
+
+//edit
+if (isset($_GET['edit']) && $_GET['edit'] == 'true') {
+    require('../php/edit.php');
 }
 
 //voeg project toe

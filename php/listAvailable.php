@@ -1,197 +1,140 @@
 <?php
 // BY JOERI GEUZINGE (https://www.joerigeuzinge.nl)
-/*
-we willen een lijst van alles wat vrij is op een gegeven tijdstip
-  - maak een list met alle dagdelen
-  - maak een list met alle klassen
-  - maak een list met alle klassen die bezet zijn
-  - maak list met alle projectCodes
-  - loop door dagdelen
-    * query alle docenten die niet bezet zijn op het huidige dagdeel
-      + als de ook beschikbaar zijn, voeg ze toe aan het Available object onder het correcte dagdeel
-    * query alle klassen die op dat dagdeel reregistreerd zijn
-      + loop door de list met klassen
-        ~ als de klas niet voor komt in de list met bezette klassen onder het huidige uur ($klassenBezet->[dagdeel]->[klasObject]) voeg klas dan toe aan output
-    * query alle lokalen die niet bezet zijn op het huidige dagdeel
-  - encode object naar JSON
-  - output JSON
-*/
-require('funcLib.php');
-//maak object voor output
+//functie om klassen te vergelijken
+function compareKlas($k1, $k2)
+{
+    if ($k1->j === $k2->j && $k1->ni === $k2->ni && $k2->nu === $k2->nu) {
+        return true;
+    }
+    return false;
+}
+require('../php/funcLib.php');
+//maak output variable
 $out = new stdClass;
-$out->d = new stdClass;
-$out->k = new stdClass;
-$out->l = new stdClass;
-$out->p = array();
-//maak list met alle dagdelen
-$data = file_get_contents('../conf/conf.json');
-$conf = json_decode($data);
-$dagdelen = array();
-
-for ($i=0; $i < count($conf->dagen); $i++) {
-    for ($x=0; $x < $conf->uren; $x++) {
-        $dagdelen[] = $conf->dagen[$i]."$x";
+$out->d = new stdClass;   //docenten
+$out->k = new stdClass;   //klassen
+$out->l = new stdClass;   //lokalen
+$out->p = [];             //projecten
+//maak array met dagdelen
+$dagen = getConf()->dagen;
+$uren = getConf()->uren;
+$dagdelen = [];
+foreach ($dagen as $dag) {
+    for ($uur=0; $uur < $uren; $uur++) {
+        $dagdelen[] = $dag.$uur;
     }
 }
 
-require('db-connect.php');
-
-//<TMP FIX>
-$klassenAll = array();
-//list alle vrije klassen per dagdeel
-$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen;');
+require('../php/db-connect.php');
+//maak list met klassen
+$klassen = [];
+$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen');
 $stmt->execute();
-$stmt->store_result();
 $stmt->bind_result($resJaar, $resNiveau, $resNummer);
 while ($stmt->fetch()) {
-    $klasObject = new stdClass;
-    $klasObject->j = $resJaar;
-    $klasObject->ni = $resNiveau;
-    $klasObject->nu = $resNummer;
-    $klassenAll[] = $klasObject;
+    $klas = new stdClass;
+    $klas->j = $resJaar;
+    $klas->ni = $resNiveau;
+    $klas->nu = $resNummer;
+    $klassen[] = $klas;
 }
 $stmt->close();
 
-//laad nu de rooster data
-$klas1 = new stdClass;
-// $klas2 = new stdClass;
-$klassenBezet = new stdClass;
-$stmt = $conn->prepare('SELECT
-  klas1jaar,
-  klas1niveau,
-  klas1nummer,
-  /*klas2jaar,
-  klas2niveau,
-  klas2nummer,*/
-  daypart
-  FROM week');
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result(
-    $klas1->j,
-    $klas1->ni,
-    $klas1->nu,
-  // $klas2->jaar,
-  // $klas2->niveau,
-  // $klas2->nummer,
-  $resDaypart
-);
-while ($stmt->fetch()) {
-    if (!isset($resDaypart)) {
-        $klassenBezet->$resDaypart = array();
-    }
-    if (notNone($klas1->ni)) {
-        $klassenBezet->$resDaypart[] = $klas1;
-    }
-    // if (notNone($klas2->niveau)) {
-  //   $klassenBezet->$resDaypart[] = $klas2;
-  // }
-}
-//</TMP FIX>
-
-
-
-//loop door de dagdelen en query de database
-for ($x=0; $x < count($dagdelen); $x++) {
-    $dagdeelTMP = $dagdelen[$x];
-    //list alle vrije docenten per dagdeel
-    $stmt = $conn->prepare("SELECT DISTINCT
-  afkorting, userAvailability
-FROM
-  docenten
-WHERE
-  afkorting NOT IN (
-    SELECT
-      docent1
-    FROM
-      week
-    WHERE
-      daypart = ?
-  )
-  AND afkorting NOT IN (
-    SELECT
-      docent2
-    FROM
-      week
-    WHERE
-      daypart = ?
-  );");
-    $stmt->bind_param('ss', $dagdeelTMP, $dagdeelTMP);
+//select alle vrije klassen per dagdeel
+foreach ($dagdelen as $dagdeel) {
+    //klassen
+    $out->k->$dagdeel = $klassen;   //alle klassen zijn beschikbaar, de bezette klassen worden er laten tussenuit gehaald
+    $out->d->$dagdeel = [];
+    $out->l->$dagdeel = [];
+    $stmt = $conn->prepare('SELECT klas1jaar, klas1niveau, klas1nummer FROM week WHERE daypart = ?');
+    $stmt->bind_param('s', $dagdeel);
     $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($resDocent, $resUserAvailability);
-    //maak array voor resulsts
-    $out->d->$dagdeelTMP = array();
-    $out->k->$dagdeelTMP = array();
-    //loop door de results
+    $stmt->bind_result($resJaar, $resNiveau, $resNummer);
     while ($stmt->fetch()) {
-        //nu moeten we checken of de docent op dat tijdstip wel beschikbaar is
-        $beschikbaar = json_decode($resUserAvailability);
-        //haal de dag uit $daypart
-        $dag = substr($dagdeelTMP, 0, 2);
-        //check of er een key is (zou er moeten zijn maar idk wat de sysadmin allemaal gaat doen)
-        if (isset($beschikbaar->$dag) && $beschikbaar->$dag == true) {
-            //plaats ieder result in de docenten array in het $out object
-            $out->d->$dagdeelTMP[] = $resDocent;
+        $klas = new stdClass;
+        $klas->j = $resJaar;
+        $klas->ni = $resNiveau;
+        $klas->nu = $resNummer;
+        if (($key = array_search($klas, $out->k->$dagdeel)) !== false) {
+            //als deze klas deel maakt van het beschikbaar array haal deze er dan uit
+            unset($out->k->$dagdeel[$key]);
+            //omdat php om de een of andere reden het array aanpast van [val, val, val] naar {0:val, 1:val, 2:val} moeten we moeilijk gaan doen
+            $tempArr = [];
+            foreach ($out->k->$dagdeel as $klas) {
+                $tempArr[] = $klas;
+            }
+            $out->k->$dagdeel = $tempArr;
         }
     }
     $stmt->close();
+    //docenten
+    //omdat een docent niet altijd beschikbaar is moet de "userAvailability" nu meegerekend worden
+    //vind dag door index van dagdeel in dagdelen array te nemen, deze te delen door het aantal uren en dit naar beneden af te ronden
+    $dagdeelIndex = array_search($dagdeel, $dagdelen);
+    $offset = floor($dagdeelIndex / $uren);
+    $dag = $dagen[$offset];
 
-    for ($i=0; $i < count($klassenAll); $i++) {
-        if (!isset($klassenBezet->$dagdeelTMP) || !in_array($klassenAll[$i], $klassenBezet->$dagdeelTMP)) {
-            if (!isset($out->k->$dagdeelTMP)) {
-                $out->k->$dagdeelTMP = array();
-            }
-            $out->k->$dagdeelTMP[] = $klassenAll[$i];
+    $stmt = $conn->prepare(
+        "SELECT DISTINCT afkorting,
+                userAvailability
+      FROM docenten
+      WHERE afkorting NOT IN
+          (SELECT docent1
+           FROM week
+           WHERE daypart = ? )
+        AND afkorting NOT IN
+          (SELECT docent2
+           FROM week
+           WHERE daypart = ? );"
+    );
+    $stmt->bind_param("ss", $dagdeel, $dagdeel);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($resDocent, $resUserAvailability);
+    while ($stmt->fetch()) {
+        $availability = json_decode($resUserAvailability);
+        //check of de docent beschikbaar is op de dag
+        if (isset($availability->$dag) && $availability->$dag == true) {
+            $out->d->$dagdeel[] = $resDocent;
         }
     }
-
-
+    $stmt->close();
     //list alle vrije lokalen per dagdeel
-    $stmt = $conn->prepare('SELECT DISTINCT
-  lokaal
-FROM
-  lokalen
-WHERE
-  lokaal NOT IN (
-    SELECT
-      lokaal1
-    FROM
-      week
-    WHERE
-      daypart = ?
-  )
-  AND lokaal NOT IN (
-    SELECT
-      lokaal2
-    FROM
-      week
-    WHERE
-      daypart = ?
-  );
-');
-    $stmt->bind_param('ss', $dagdeelTMP, $dagdeelTMP);
+    $stmt = $conn->prepare(
+        "SELECT DISTINCT
+        lokaal
+      FROM lokalen
+      WHERE lokaal NOT IN (SELECT
+        lokaal1
+      FROM week
+      WHERE daypart = ?)
+      AND lokaal NOT IN (SELECT
+        lokaal2
+      FROM week
+      WHERE daypart = ?);"
+    );
+    $stmt->bind_param('ss', $dagdeel, $dagdeel);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($resLokaal);
     while ($stmt->fetch()) {
-        $out->l->$dagdeelTMP[] = $resLokaal;
+        $out->l->$dagdeel[] = $resLokaal;
     }
     $stmt->close();
 }
-
 //selecteer projectCodes
+//buiten loop omdat deze altijd beschikbaar zijn
 $stmt = $conn->prepare('SELECT DISTINCT projectCode FROM projecten');
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($resProjectCode);
 while ($stmt->fetch()) {
-    $out->p[] = $resProjectCode;
+  $out->p[] = $resProjectCode;
 }
 $stmt->close();
 $conn->close();
 //zet header
-header('Content-Type: application/json');
+// header('Content-Type: application/json');
 
 //als als input ?format is gezet doe dan prettyp print
 //we doen dit niet meteen omdat het het bestand aanzienlijk groter maakt

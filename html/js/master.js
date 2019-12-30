@@ -323,7 +323,7 @@ function checkEmpty(input = []) {
 //functies voor custom select boxes
 String.prototype.replaceChar = function(html = false) {
   let obj = {
-    '\"': '\"',
+    "\'": '&apos;',
     '&quot': '\"'
   };
   if (html) {
@@ -355,13 +355,13 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
   }
 
   let html = '<div class="dropSelect">\
-  <input type="button" value="' + title.replaceChar() + '" onclick="toggleDrop(this)">\
+  <input type="button" value=\'' + title.replaceChar() + '\' onclick="toggleDrop(this)">\
   <div class="drop">\
-  <input type="hidden" name="' + name.replaceChar() + '" value="' + st.replaceChar() + '" ' + dataset + '>\
+  <input type="hidden" name=\'' + name.replaceChar() + '\' value=\'' + st.replaceChar() + '\' ' + dataset + '>\
   <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
   <a href="javascript:void(0)" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
   for (var i = 0; i < data.length; i++) {
-    html += '<a href="javascript:void(0)" onclick="setValue(this)" data-value="' + value[i].replaceChar() + '">' + data[i].replaceChar(true) + '</a>';
+    html += '<a href="javascript:void(0)" onclick="setValue(this)" data-value=\'' + value[i].replaceChar() + '\'>' + data[i].replaceChar(true) + '</a>';
   }
   html += '<span>Geen resultaten...</span>\
   </div></div>';
@@ -484,88 +484,57 @@ function notNone(inp = "None", isKlas = false) {
 }
 
 function editHour(json, mode = 0) {
-  //test JSON
-  //'{"d":["AB","None"],"k":[{"j":1,"ni":"H","nu":1}],"l":["103","104"],"la":0,"p":"Lor2","no":"None","ID":2,"daypart":"MA0"}'
-  //neem dagdeel uit JSON en forward deze naar function
-  json = JSON.parse(json);
+  //haal beschikbare waardes op
   sendReq('/api.php?listAvailable=true', function(resp, arg) {
-    let json = arg[0];
-    let mode = arg[1];
-    let dagdeel = json.daypart;
-    //parse response
-    let list = JSON.parse(resp);
-    //haal alleen de dagdelen die we nodig hebben uit de list
-    list.d = list.d[dagdeel];
-    list.k = list.k[dagdeel];
-    list.l = list.l[dagdeel];
-    //voeg de geselecteerde items toe aan de list
-    //docent
-    for (var i = 0; i < json.d.length; i++) {
-      if (notNone(json.d[i])) {
-        list.d.push(json.d[i]);
-      }
+    let list = JSON.parse(resp)
+    let json = arg[0]
+    let mode = arg[1]
+    let klas = json.k[0] //de klas
+    //zorg er voor dat alles in klas een string is
+    klas.j = klas.j.toString()
+    klas.nu = klas.nu.toString()
+    list.k = list.k[json["daypart"]] //beschikbare klassen op dagdeel
+    list.d = list.d[json["daypart"]] //beschikbare docenten op dagdeel
+    list.l = list.l[json["daypart"]] //beschikbare lokalen op dagdeel
+    list.k.push(klas)
+    let listKstring = []
+    let listKname = []
+    //maak appart array met values en met titles
+    for (var i = 0; i < list.k.length; i++) {
+      listKstring.push(JSON.stringify(list.k[i]))
+      listKname.push(list.k[i].j.toString() + list.k[i].ni + list.k[i].nu.toString())
     }
-    //klas
-    let klasIndex = 'None';
-    for (var i = 0; i < json.k.length; i++) {
-      if (notNone(json.k[i], true)) {
-        //moeilijk doen want anders worden het integers en dan krijgen we later problemen
-        let obj = json.k[i];
-        obj.j = obj.j.toString();
-        obj.nu = obj.nu.toString();
-        list.k.push(obj);
-        klasIndex = (json.k.length);
-      }
+    //maak laptops string
+    if (typeof json.la == "string") {
+      json.la = json.la.replaceChar()
+    } else {
+      json.la = json.la.toString()
     }
-    //lokaal
-    for (var i = 0; i < json.l.length; i++) {
-      if (notNone(json.l[i])) {
-        list.l.push(json.l[i]);
-      }
-    }
-    //daypart
+    //html
     let html = "<p>Edit</p>\
     <p>Laat de dropdown leeg om de huidige waarde te laten staan</p>\
     <span class=\"editModalDropdowns\">\
-    <input type=\"hidden\" value=\"" + dagdeel.replaceChar() + "\" name=\"updateDaypart\">";
-    //docent1
-    html += buildDropdown(list.d, false, "Docent1", "updateDocent1", '', json.d[0]);
-    //docent2
-    html += buildDropdown(list.d, false, "Docent2", "updateDocent2", '', json.d[1]);
-
-    //Klas1
-
-    let titleKlas = [];
-    let valueKlas = [];
-    for (var i = 0; i < list.k.length; i++) {
-      titleKlas.push(list.k[i].j + list.k[i].ni + list.k[i].nu);
-      valueKlas.push(i.toString());
-    }
-
-    html += buildDropdown(titleKlas, valueKlas, "Klas", "updateKlas1", 'data-k=\'{"data":' + JSON.stringify(list.k).replaceChar() + '}\'', klasIndex);
-
-    //lokaal1
-    html += buildDropdown(list.l, false, "Lokaal1", "updateLokaal1", '', json.l[0]);
-    //lokaal1
-    html += buildDropdown(list.l, false, "Lokaal2", "updateLokaal2", '', json.l[0]);
-    //project code
-    html += buildDropdown(list.p, false, 'Project', "updatePC", '', json.p);
-    html += '<input type="number" name="updateLaptops" placeholder="Laptops" value="';
-    //zorg dat laptops altijd een string is
-    if (typeof json.la == "string") {
-      html += json.la.replaceChar();
-    } else {
-      html += json.la.toString();
-    }
-    html += '">';
+    <input type=\"hidden\" value=\"" + json["daypart"].replaceChar() + "\" name=\"updateDaypart\">"
+    //docent 1 & 2
+    html += buildDropdown(list.d, false, "Docent1", "updateDocent1", '', json.d[0]) +
+      buildDropdown(list.d, false, "Docent2", "updateDocent2", '', json.d[1])
+    //klas 1
+    html += buildDropdown(listKname, listKstring, 'Klas', "updateKlas1", '', JSON.stringify(json.k[0]))
+    //lokaal 1 & 2
+    html += buildDropdown(list.l, false, "Lokaal1", "updateLokaal1", '', json.l[0]) +
+      buildDropdown(list.l, false, "Lokaal2", "updateLokaal2", '', json.l[0])
+    //project
+    html += buildDropdown(list.p, false, 'Project', "updatePC", '', json.p)
+    //laptops
+    html += '<input type="number" name="updateLaptops" placeholder="Laptops" value="' + json.la.replaceChar() + '">';
     //note
     html += '<input type="text" name="updateNote" placeholder="Note" value="' + json.no.replaceChar() + '">\n';
 
     html += '</span><button type="button" class="button" onclick="updateHour(\'' + json.ID + '\', ' + mode + ')">Go!</button>';
 
-    document.getElementById("editModalContent").innerHTML = html;
-
-    //fade-in
+    //set content
+    document.getElementById("editModalContent").innerHTML = html
+    //fadein
     setTimeout(function() {
       let editModal = document.getElementById("editModal");
       let editModalContent = document.getElementById("editModalContent");
@@ -573,99 +542,66 @@ function editHour(json, mode = 0) {
       editModal.style.display = 'block';
       editModalContent.setAttribute('class', 'messageModalContent fade-in');
     }, 200);
-  }, [json, mode]);
+  }, [ //dit zijn arguments die aan de callback worden doorgegeven
+    JSON.parse(json),
+    mode
+  ])
 }
 
-function updateHour(id = "", mode = 0) {
-  load(true);
-  let url = "/api.php?delete=true&ID=" + encodeURIComponent(id);
 
+function updateHour(id = "-1", mode = 0) {
+  load(true)
+  let url = "/api.php?edit=true" +
+    "&id=" + id +
+    "&daypart=" + val("updateDaypart") +
+
+    "&docent1=" + val("updateDocent1") +
+    "&docent2=" + val("updateDocent2") +
+
+    "&lokaal1=" + val("updateLokaal1") +
+    "&lokaal2=" + val("updateLokaal2") +
+
+    "&laptops=" + val("updateLaptops") +
+    "&projectCode=" + val("updatePC")
+
+  //klas
+  let klas = JSON.parse(document.getElementsByName("updateKlas1")[0].value)
+  url += "&klas1jaar=" + klas.j +
+    "&klas1niveau=" + klas.ni +
+    "&klas1nummer=" + klas.nu;
+
+  if (val("updateNote") == "") {
+    url += "&note=" + "None";
+  } else {
+    url += "&note=" + val("updateNote");
+  }
+  //stuur request, haal de edit modal weg en geef wanneer nodig een error message
   sendReq(url, function(resp) {
-    if (resp !== '') {
-      load(false);
-      message("Something went wrong:\n" + resp);
-      return;
-    }
-    let url = "/api.php?insert=true&" +
-      "daypart=" + val("updateDaypart") +
-      "&docent1=" + val("updateDocent1") +
-      "&docent2=" + val("updateDocent2") +
+    let editModal = document.getElementById("editModal");
+    let editModalContent = document.getElementById('editModalContent');
+    //fade out
+    editModalContent.setAttribute('class', 'messageModalContent fade-out');
+    //remove fadeout
+    setTimeout(function() {
+      let editModal = document.getElementById('editModal');
+      editModal.style.display = "none";
+      editModal.setAttribute('class', 'messageModal');
+    }, 200);
 
-      // "&klas1jaar=" + val("updateKlas1jaar") +
-      // "&klas1niveau=" + val("updateKlas1niveau") +
-      // "&klas1nummer=" + val("updateKlas1nummer") +
-
-      "&lokaal1=" + val("updateLokaal1") +
-      "&lokaal2=" + val("updateLokaal2") +
-
-      "&laptops=" + val("updateLaptops") +
-      "&projectCode=" + val("updatePC");
-
-    //klas
-    let klasN = val("updateKlas1");
-    let klas;
-    if (notNone(klasN)) {
-      try {
-        let klassen = JSON.parse(document.getElementsByName("updateKlas1")[0].dataset.k).data;
-        klas = klassen[klasN];
-        if (typeof klas == "undefined" || klas == null) {
-          throw "No klas selected";
-        }
-
-      } catch (e) {
-        klas = {
-          j: "0",
-          ni: "None",
-          nu: "0"
-        };
+    load(false);
+    message(resp);
+    //refresh afspraken
+    setTimeout(function() {
+      if (mode == 0) {
+        setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
+      } else if (mode == 1) {
+        modeGrid();
+      } else if (mode == 2) {
+        let el = document.getElementsByName('selectJaarlaag')[0];
+        buildJaarlaag(el.value, el.dataset.jaarlagen);
       }
-
-    } else {
-      klas = {
-        j: "0",
-        ni: "None",
-        nu: "0"
-      };
-    }
-
-    url += "&klas1jaar=" + klas.j +
-      "&klas1niveau=" + klas.ni +
-      "&klas1nummer=" + klas.nu;
-
-    if (val("updateNote") == "") {
-      url += "&note=" + "None";
-    } else {
-      url += "&note=" + val("updateNote");
-    }
-    console.log(url);
-    sendReq(url, function(resp) {
-      let editModal = document.getElementById("editModal");
-      let editModalContent = document.getElementById('editModalContent');
-      //fade out
-      editModalContent.setAttribute('class', 'messageModalContent fade-out');
-      //remove fadeout
-      setTimeout(function() {
-        let editModal = document.getElementById('editModal');
-        editModal.style.display = "none";
-        editModal.setAttribute('class', 'messageModal');
-      }, 200);
-
-      load(false);
-      message(resp);
-      //refresh afspraken
-      setTimeout(function() {
-        if (mode == 0) {
-          setWeekTimetable(document.getElementsByName('displayModeFinal')[0].value);
-        } else if (mode == 1) {
-          modeGrid();
-        } else if (mode == 2) {
-          let el = document.getElementsByName('selectJaarlaag')[0];
-          buildJaarlaag(el.value, el.dataset.jaarlagen);
-        }
-      }, 1000);
-
-    });
-  }, '');
+    }, 1000);
+  })
 }
 
 function val(el) {

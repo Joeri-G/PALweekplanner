@@ -62,10 +62,10 @@ $klassenGroep = checkKlas(array($klas1/*, $klas2*/));
 // if (!isPossible($docentenGroep)) {
 //     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE DOCENTEN MOET NIET NONE ZIJN");
 // }
-// //de klas is anders omdat dit al een object is
-// if (!isPossibleKlas($klassenGroep)) {
-//     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
-// }
+//de klas is anders omdat dit al een object is
+if (!isPossibleKlas($klassenGroep)) {
+    die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
+}
 // if (!isPossible($lokalenGroep)) {
 //     die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE LOKALEN MOET NIET NONE ZIJN");
 // }
