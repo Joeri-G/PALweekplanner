@@ -8,7 +8,7 @@ function compareKlas($k1, $k2)
     }
     return false;
 }
-require('../php/funcLib.php');
+require('funcLib.php');
 //maak output variable
 $out = new stdClass;
 $out->d = new stdClass;   //docenten
@@ -25,7 +25,7 @@ foreach ($dagen as $dag) {
     }
 }
 
-require('../php/db-connect.php');
+require('db-connect.php');
 //maak list met klassen
 $klassen = [];
 $stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen');
