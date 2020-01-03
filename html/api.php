@@ -89,7 +89,7 @@ if (isset($_GET['delete']) && $_GET['delete'] == 'true') {
 //insert script
 //dit is write, dus userLVL > 3
 if (isset($_GET['insert']) && $_GET['insert'] == 'true') {
-  require('../php/insert.php');
+    require('../php/insert.php');
 }
 
 
@@ -110,15 +110,15 @@ if (isset($_GET['updateProject']) && $_GET['updateProject'] == 'true') {
 
 //export functie
 if (isset($_GET['export']) && $_GET['export'] == 'true') {
-  require('../php/csvParser.php');
+    require('../php/csvParser.php');
 }
 
 //export functie
 if (isset($_GET['somtodayExport']) && $_GET['somtodayExport'] == 'true') {
-  require('../php/somtodayExport.php');
+    require('../php/somtodayExport.php');
 }
 
 //edit script
-if(isset($_GET['edit']) && $_GET['edit'] == 'true') {
-  require('../php/edit.php');
+if (isset($_GET['edit']) && $_GET['edit'] == 'true') {
+    require('../php/edit.php');
 }

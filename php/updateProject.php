@@ -44,7 +44,7 @@ if ($stmt->num_rows !== 1) {
 $stmt->close();
 //update stuff
 $stmt = $conn->prepare(
-  "UPDATE
+    "UPDATE
     projecten
   SET
     projectTitle = ?,
@@ -57,7 +57,8 @@ $stmt = $conn->prepare(
     `IP` = ?
   WHERE
     ID = ?
-");
+"
+);
 
 $timestamp = date('Y-m-d H:i:s');
 

@@ -162,13 +162,13 @@ function editProject(data) {
   <p>Laat de dropdown leeg om de huidige waarde te laten staan</p>\
   <div class=\"editInput\">\
   <span class=\"col_3\">\
-  <span><input type=\"text\" placeholder=\"Titel\" id=\"editProjectTitle\" value=\""+data.title.replaceChar(true)+"\"></span>\
-  <span><input type=\"text\" placeholder=\"Afkorting\" id=\"editProjectAfkorting\" value=\""+data.code.replaceChar(true)+"\"></span>\
-  <span id=\"editProjectLeider\">"+document.getElementById("projectLeider").innerHTML+"</span>\
+  <span><input type=\"text\" placeholder=\"Titel\" id=\"editProjectTitle\" value=\"" + data.title.replaceChar(true) + "\"></span>\
+  <span><input type=\"text\" placeholder=\"Afkorting\" id=\"editProjectAfkorting\" value=\"" + data.code.replaceChar(true) + "\"></span>\
+  <span id=\"editProjectLeider\">" + document.getElementById("projectLeider").innerHTML + "</span>\
   </span>\
-  <textarea placeholder=\"Beschrijving van project\" id=\"editProjectBeschrijving\">"+data.beschrijving.replaceChar(true)+"</textarea>\
-  <textarea placeholder=\"Instructies voor leerlingen\" id=\"editProjectInstructie\">"+data.instructie.replaceChar(true)+"</textarea>\
-  <button type=\"button\" class=\"button\" onclick=\"updateProject('"+data.ID+"')\">Go!</button>\
+  <textarea placeholder=\"Beschrijving van project\" id=\"editProjectBeschrijving\">" + data.beschrijving.replaceChar(true) + "</textarea>\
+  <textarea placeholder=\"Instructies voor leerlingen\" id=\"editProjectInstructie\">" + data.instructie.replaceChar(true) + "</textarea>\
+  <button type=\"button\" class=\"button\" onclick=\"updateProject('" + data.ID + "')\">Go!</button>\
   </div>"
   //voor de dropdown wordt de data van de andere dropdown gecloned. De docenten veranderen (meestal) niet
   //waarde kan geselecteerd worden met document.getElementsByName("projectLeider")[1].value

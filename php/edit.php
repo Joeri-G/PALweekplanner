@@ -278,7 +278,7 @@ $stmt->bind_param(
 $stmt->execute();
 
 if ($conn->error !== "") {
-  echo "[ERROR] $conn->error";
+    echo "[ERROR] $conn->error";
 }
 
  //sluit alles
