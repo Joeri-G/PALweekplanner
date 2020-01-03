@@ -19,6 +19,12 @@ script met functions die voor de projecten pagina nodig zijn
   - addProject()
     * functie om project toe te voegen
 
+  - editProject()
+    * functie om projectspecificaties aan te passen
+
+  - updateProject()
+    * functie om aangepaste projectspecificaties naar de server te sturen
+
   - script om lijst met projectleiders te bouwen
 
 */
@@ -74,6 +80,7 @@ function buildTable(data, out) {
     <td>' + data[i].instructie.substr(0, 10) + '</td>\
     <td><div class="actions" data-project=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/enlarge.svg" onclick="enlargeProject(this.parentElement.dataset.project)" alt="Enlarge">\
+    <img src="/img/pencil-edit-button.svg" onclick="editProject(this.parentElement.dataset.project)" alt="Edit">\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteProject(this.parentElement.dataset.project)">\
     </div></td>\
     </tr>';
@@ -143,6 +150,78 @@ function addProject() {
     }
   };
   xhttp.open("POST", "/api.php?addProject=true", true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(POST);
+}
+
+function editProject(data) {
+  data = JSON.parse(data)
+
+  let html = "<p>Edit</p>\
+  <p>Laat de dropdown leeg om de huidige waarde te laten staan</p>\
+  <div class=\"editInput\">\
+  <span class=\"col_3\">\
+  <span><input type=\"text\" placeholder=\"Titel\" id=\"editProjectTitle\" value=\""+data.title.replaceChar(true)+"\"></span>\
+  <span><input type=\"text\" placeholder=\"Afkorting\" id=\"editProjectAfkorting\" value=\""+data.code.replaceChar(true)+"\"></span>\
+  <span id=\"editProjectLeider\">"+document.getElementById("projectLeider").innerHTML+"</span>\
+  </span>\
+  <textarea placeholder=\"Beschrijving van project\" id=\"editProjectBeschrijving\">"+data.beschrijving.replaceChar(true)+"</textarea>\
+  <textarea placeholder=\"Instructies voor leerlingen\" id=\"editProjectInstructie\">"+data.instructie.replaceChar(true)+"</textarea>\
+  <button type=\"button\" class=\"button\" onclick=\"updateProject('"+data.ID+"')\">Go!</button>\
+  </div>"
+  //voor de dropdown wordt de data van de andere dropdown gecloned. De docenten veranderen (meestal) niet
+  //waarde kan geselecteerd worden met document.getElementsByName("projectLeider")[1].value
+
+  //set content
+  document.getElementById("editModalContent").innerHTML = html
+  //fadein
+  setTimeout(function() {
+    let editModal = document.getElementById("editModal");
+    let editModalContent = document.getElementById("editModalContent");
+
+    editModal.style.display = 'block';
+    editModalContent.setAttribute('class', 'messageModalContent fade-in');
+  }, 200);
+  //zet verantwoordelijke
+  document.getElementsByName("projectLeider")[1].value = data.verantwoordelijke
+}
+
+function updateProject(ID = "-1") {
+  //haal modal weg
+  let editModal = document.getElementById("editModal");
+  let editModalContent = document.getElementById('editModalContent');
+  //fade out
+  editModalContent.setAttribute('class', 'messageModalContent fade-out');
+  //remove fadeout
+  setTimeout(function() {
+    let editModal = document.getElementById('editModal');
+    editModal.style.display = "none";
+    editModal.setAttribute('class', 'messageModal');
+  }, 200);
+
+  load(true)
+  let title = document.getElementById('editProjectTitle').value
+  let afkorting = document.getElementById('editProjectAfkorting').value
+  let verantwoordelijke = document.getElementsByName('projectLeider')[1].value
+  let beschrijving = document.getElementById('editProjectBeschrijving').value
+  let instructie = document.getElementById('editProjectInstructie').value
+
+  let POST = 'title=' + encodeURIComponent(title) +
+    '&afkorting=' + encodeURIComponent(afkorting) +
+    '&verantwoordelijke=' + encodeURIComponent(verantwoordelijke) +
+    '&beschrijving=' + encodeURIComponent(beschrijving) +
+    '&instructie=' + encodeURIComponent(instructie) +
+    '&id=' + encodeURIComponent(ID)
+
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      message(this.responseText);
+      load(false);
+    }
+  };
+  xhttp.open("POST", "/api.php?editProject=true", true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send(POST);

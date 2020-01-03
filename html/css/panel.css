@@ -54,6 +54,24 @@ main>div>p:first-of-type {
   overflow: auto;
 }
 
+.editInput {
+  overflow: hidden;
+}
+
+.editInput textarea {
+  min-height: 200px;
+  width: 100%;
+  font-size: 1em;
+  padding: 0.5em;
+  margin: 8px 2px;
+}
+
+.editInput input {
+  margin: 2px;
+  background: #f2f1f0;
+  border: 1px solid #ccc;
+}
+
 .inputParent a {
   text-decoration: none;
 }
@@ -83,7 +101,7 @@ main>div>p:first-of-type {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.inputParent input, .inputParent textarea {
+.inputParent input, .editInput input, .inputParent textarea {
   width: 100%;
   font-size: 1em;
   padding: 4px 8px;
