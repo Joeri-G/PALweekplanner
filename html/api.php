@@ -69,6 +69,11 @@ if (isset($_GET['listProjects']) && $_GET['listProjects'] == 'true') {
     require('../php/PROJECTS-listProjects.php');
 }
 
+//export project
+if (isset($_GET['exportProjects']) && $_GET['exportProjects'] == 'true') {
+    require('../php/export-projecten.php');
+}
+
 //list alle docenten
 if (isset($_GET['listDocent']) && $_GET['listDocent'] == 'true') {
     require('../php/listDocent.php');

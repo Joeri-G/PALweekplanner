@@ -80,6 +80,15 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
           <div id="projectList" class="list" style="display:none;"></div>
         </div>
       </div>
+      <div>
+        <p>Export</p>
+        <p>Exporteer projecten naar CSV</p>
+        <div class="inputParent">
+          <a href="/api.php?exportProjects=true" target="_blank">
+            <button type="button" class="button" name="button">Export</button>
+          </a>
+        </div>
+      </div>
     </main>
     <!-- Loading svg -->
     <div id="loading">
