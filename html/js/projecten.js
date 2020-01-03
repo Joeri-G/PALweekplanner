@@ -214,14 +214,17 @@ function updateProject(ID = "-1") {
     '&instructie=' + encodeURIComponent(instructie) +
     '&id=' + encodeURIComponent(ID)
 
-  let xhttp = new XMLHttpRequest();
+  let xhttp = new XMLHttpRequest()
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      message(this.responseText);
-      load(false);
+      message(this.responseText)
+      //update de projecten list
+      let projectList = document.getElementById('projectList')
+      loadProjecten(projectList)
+      load(false)
     }
   };
-  xhttp.open("POST", "/api.php?editProject=true", true);
+  xhttp.open("POST", "/api.php?updateProject=true", true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send(POST);
@@ -234,10 +237,6 @@ xhttp.onreadystatechange = function() {
     try {
       let data = JSON.parse(this.responseText);
       let el = document.getElementById('projectLeider');
-      // let html = '<option disabled selected>Projectleider</option>';
-      // for (var i = 0; i < data.length; i++) {
-      //   html += '<option value="' + data[i] + '">' + data[i] + '</option>'
-      // }
       let input = {
         d: {
           a: data
