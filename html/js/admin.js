@@ -428,7 +428,7 @@ function deleteAllReq(pwd) {
     return;
   }
   load(true)
-  let postData = "password="+encodeURIComponent(pwd.value)
+  let postData = "password=" + encodeURIComponent(pwd.value)
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       load(false);
@@ -539,50 +539,98 @@ function buildDocenten(data, docentList, config) {
     </td>\
     </tr>\n';
   }
-  html += '</table>\n';
-  load(false);
-  docentList.innerHTML = html;
+  html += '</table>\n'
+  load(false)
+  docentList.innerHTML = html
   //sort table
-  sortTable(document.getElementById('docentTable'));
+  sortTable(document.getElementById('docentTable'))
 }
 
 function deleteDocent(data, config) {
-  load(true);
+  load(true)
   if (!confirm("Wilt u deze gebruiker verwijderen?")) {
-    load(false);
-    return null;
+    load(false)
+    return null
   }
-  let ID = JSON.parse(data).ID;
-  let url = '/admin/api.php?deleteDocent=true&ID=' + encodeURIComponent(ID);
+  let ID = JSON.parse(data).ID
+  let url = '/admin/api.php?deleteDocent=true&ID=' + encodeURIComponent(ID)
   sendURL(url, function(response) {
-    message(response);
-    let docentList = document.getElementById('docentList');
-    loadDocenten(docentList);
+    message(response)
+    let docentList = document.getElementById('docentList')
+    loadDocenten(docentList)
   });
 }
 
 
 function updateLaptops() {
-  load(true);
-  let laptops = document.getElementById("laptopInput").value;
-  let url = "/admin/api.php?updateLaptops=true&laptops=" + encodeURIComponent(laptops);
+  load(true)
+  let laptops = document.getElementById("laptopInput").value
+  let url = "/admin/api.php?updateLaptops=true&laptops=" + encodeURIComponent(laptops)
   sendURL(url, function(response) {
-    load(false);
-    message(response);
+    load(false)
+    message(response)
   });
 }
 
 function addDay(days = 0) {
-  days++;
-  let dag = document.createElement('input');
-  dag.type = "text";
-  dag.id = "weekDag" + days;
-  dag.placeholder = "Dag " + days;
+  days++
+  let dag = document.createElement('input')
+  dag.type = "text"
+  dag.name = "weekDag"
+  dag.placeholder = "Dag " + days
 
-  document.getElementById("weekDagen").appendChild(dag);
-  return days;
+  document.getElementById("weekDagen").appendChild(dag)
+  return days
 }
 
 function updateDays() {
-  alert("UNFINISHED");
+  load(true)
+  //haal alle daginputs op en stop alle values in een array, mits deze waarde niet none is
+  let inputs = document.getElementsByName("weekDag")
+  let dagen = []
+  let dag
+  for (var i = 0; i < inputs.length; i++) {
+    //check of het niet none is
+    if (notNone(inputs[i].value)) {
+      //check tegen duplicates
+      //max 2 chars en alleen letters
+      dag = inputs[i].value
+      dag = dag.slice(0,2)
+      dag = dag.replace(/[^a-zA-Z]/gi, '_')
+      if (dagen.indexOf(dag) < 0) {
+        dagen.push(dag)
+      }
+    }
+  }
+
+  if (dagen.length == 0) {
+    load(false)
+    message("Geen dagen ingevuld")
+    return
+  }
+
+  //maak een string om vervolgens te vragen of het klopt
+  let qString = "Weet u zeker dat u de dagen in de volgende volgorde wilt gebruiken: " + dagen[0]
+  for (var i = 1; i < dagen.length; i++) {
+    qString += ', ' + dagen[i]
+  }
+  //check of de volgorde klopt
+  if (!confirm(qString)) {
+    load(false)
+    return
+  }
+  //mak url volgorde
+  let url = "/admin/api.php?changeDays=true"
+  url += "&dag[]=" + encodeURIComponent(dagen[0])
+  for (var i = 1; i < dagen.length; i++) {
+    url += "&dag[]=" + encodeURIComponent(dagen[i])
+  }
+
+  console.log(url);
+
+  sendReq(url, function(resp) {
+    load(false)
+    message(resp)
+  })
+
 }

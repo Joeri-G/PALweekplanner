@@ -44,7 +44,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <span><a href="/logout">Logout</a></span>
       </div>
     </menu>
-    <main>
+    <main>array
       <!-- Add User -->
       <div>
         <p>Gebruiker Toevoegen</p>
@@ -151,6 +151,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
       <div>
         <p>Dagen</p>
         <p>Gebruik dit panel om de dagen in een week aan te passen. Een dag is max twee (2) karakters</p>
+        <p>WAARSCHUWING: Dit kan bestaande afspraken in de war schoppen</p>
         <div class="inputParent">
           <span id="weekDagen"></span>
           <button type="button" class="button" onclick="weekDagen = addDay(weekDagen)">+</button>

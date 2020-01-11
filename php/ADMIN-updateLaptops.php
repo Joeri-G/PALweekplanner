@@ -13,7 +13,7 @@ $confFile = "../../conf/conf.json";
 $conf = json_decode(file_get_contents($confFile));
 $conf->laptops = $laptops;
 
-$json = json_encode($conf);
+$json = json_encode($conf, JSON_PRETTY_PRINT);
 
 file_put_contents($confFile, $json);
 die();

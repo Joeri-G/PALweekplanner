@@ -188,7 +188,7 @@ function toNum($in = '0')
     return 0;
 }
 
-function getConf($file = "../conf/conf.json")
+function getConf($file = __DIR__."/../conf/conf.json")
 {
     $json = file_get_contents($file);
     try {

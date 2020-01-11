@@ -73,3 +73,7 @@ if (isset($_GET["updateLaptops"]) && $_GET["updateLaptops"] == "true") {
 if (isset($_GET["loadConf"]) && $_GET["loadConf"] == "true") {
   require('../../php/ADMIN-loadConf.php');
 }
+
+if (isset($_GET["changeDays"]) && $_GET["changeDays"] == "true") {
+  require('../../php/ADMIN-changeDays.php');
+}
