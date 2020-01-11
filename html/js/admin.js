@@ -411,25 +411,54 @@ function addLokaal() {
   xhttp.send(POST);
 }
 
+// function deleteAll() {
+//   load(true);
+//   if (confirm("Wilt u alle alle afspraken verwijderen?")) {
+//     load(false);
+//     let xhttp = new XMLHttpRequest();
+//     //stuur request met in body alle data
+//     xhttp.onreadystatechange = function() {
+//       if (this.readyState == 4 && this.status == 200) {
+//         load(false);
+//         message(this.responseText);
+//       }
+//     };
+//     xhttp.open("GET", '/admin/api.php?deleteAll=true', true);
+//     xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+//     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+//     xhttp.send();
+//   } else {
+//     load(false);
+//   }
+// }
 function deleteAll() {
-  load(true);
-  if (confirm("Wilt u alle alle afspraken verwijderen?")) {
-    load(false);
-    let xhttp = new XMLHttpRequest();
-    //stuur request met in body alle data
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        load(false);
-        message(this.responseText);
-      }
-    };
-    xhttp.open("GET", '/admin/api.php?deleteAll=true', true);
-    xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhttp.send();
-  } else {
-    load(false);
+  load(true)
+  //popup modal om voor wachtwoord te vragen
+  let html = "<p style=\"font-size:1.5em\">Wachtwoord</p>\
+  <p>Vul uw wachtwoord in om de huidige planning leeg te maken</p>\
+  <input type=\"password\" placeholder=\"password\" id=\"delPassword\" style=\"display:block;width:100%\">\
+  <button onclick=\"deleteAllReq(document.getElementById('delPassword'))\" style=\"display:block;width:100%\">Verwijder</button>"
+  load(false)
+  message(html, false)
+}
+
+function deleteAllReq(pwd) {
+  if (pwd.value == "") {
+
+    return;
   }
+  load(true)
+  let postData = "password="+encodeURIComponent(pwd.value)
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      load(false);
+      message(this.responseText);
+    }
+  }
+  xhttp.open("POST", '/admin/api.php?deleteAll=true', true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(postData);
 }
 
 function addDocent() {
@@ -556,7 +585,7 @@ function deleteDocent(data, config) {
 function updateLaptops() {
   load(true);
   let laptops = document.getElementById("laptopInput").value;
-  let url = "/admin/api.php?updateLaptops=true&laptops="+encodeURIComponent(laptops);
+  let url = "/admin/api.php?updateLaptops=true&laptops=" + encodeURIComponent(laptops);
   sendURL(url, function(response) {
     load(false);
     message(response);
@@ -567,7 +596,7 @@ function addDay(days = 0) {
   days++;
   let dag = document.createElement('input');
   dag.type = "text";
-  dag.id = "weekDag"+days;
+  dag.id = "weekDag" + days;
   dag.placeholder = "Dag " + days;
 
   document.getElementById("weekDagen").appendChild(dag);

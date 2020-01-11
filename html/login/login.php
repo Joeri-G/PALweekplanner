@@ -35,6 +35,7 @@ if (password_verify($password, $resPassword)) {
     $_SESSION['loggedin'] = true;
     $_SESSION['userLVL'] = $resUserLVL;
     $_SESSION['username'] = $username;
+    $_SESSION['id'] = $resID;
     //schrijf lastLoginIP naar server
     echo "OK";
 } else {

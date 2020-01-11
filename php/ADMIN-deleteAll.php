@@ -1,9 +1,31 @@
 <?php
 //script om alle items naar de deleted table te verplaatsen
-
-
+//check eerst of password klopt
+require('funcLib.php');
+if (!_POSTIsset(['password'])) {
+    die("[INPUT]\tNOT ALL PARAMETERS SET\n");
+}
+$pwd = $_POST['password'];
 //connect met db
 require('db-connect.php');
+
+$stmt = $conn->prepare("SELECT password FROM users WHERE ID = ?");
+$stmt->bind_param("i", $_SESSION["id"]);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($resPWD);
+$stmt->fetch();
+
+if (!password_verify($pwd, $resPWD)) {
+  $stmt->close();
+  $conn->close();
+  die("[PASSWORD] INVALID");
+}
+
+
+
+$stmt->close();
+
 $stmt = $conn->prepare('SELECT
   daypart,
   docent1,
