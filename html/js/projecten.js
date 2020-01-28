@@ -89,25 +89,14 @@ function buildTable(data, out) {
 }
 
 function deleteProject(data) {
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      try {
-        let data = JSON.parse(this.responseText);
-        //build table
-        buildTable(data, out);
-        //stop loading animatie
-        load(false);
-      } catch (e) {
-        //stop loading animatie
-        load(false);
-        errorMessage(e);
-      }
-    }
-  };
-  xhttp.open("GET", "/api.php?deleteProject=true", true);
-  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-  xhttp.send();
+  load(true)
+  let id = JSON.parse(data).ID
+  let url = "/api.php?deleteProject=true&id="+encodeURIComponent(id)
+  sendReq(url, function(resp) {
+    load(false)
+    message(resp)
+    loadProjecten(document.getElementById("projectList"))
+  })
 }
 
 function enlargeProject(data) {

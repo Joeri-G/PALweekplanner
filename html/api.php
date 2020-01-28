@@ -110,7 +110,12 @@ if (isset($_GET['addProject']) && $_GET['addProject'] == 'true') {
 
 //update project
 if (isset($_GET['updateProject']) && $_GET['updateProject'] == 'true') {
-    require('../php/updateProject.php');
+    require('../php/PROJECTS-updateProject.php');
+}
+
+//delete project
+if (isset($_GET['deleteProject']) && $_GET['deleteProject'] == 'true') {
+    require("../php/PROJECTS-deleteProject.php");
 }
 
 //export functie

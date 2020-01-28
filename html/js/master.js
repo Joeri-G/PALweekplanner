@@ -57,6 +57,13 @@ script met functions die door alle "viewModes" en paginas gebruikt worden
   - sortDropdown()
     * sorteer de dropdown op alpahbatische volgorder
 
+  - sendReq()
+    * functie om XMLHTTP GET request te sturen
+    * callback
+
+  - sendPostReq()
+    * zelfde alse sendReq maar dan POST
+
   - updateHour()
     * functie om een item te updaten
     * doe een call om oude te deleten
@@ -456,8 +463,6 @@ function sortDropdown(drop) {
   }
 }
 
-
-
 function sendReq(url = '/', callback = function(resp) {
   message(resp);
 }, arg = {}) {
@@ -472,6 +477,23 @@ function sendReq(url = '/', callback = function(resp) {
   xhttp.open("GET", url, true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.send();
+}
+
+function sendPostReq(url = '/', data, callback = function(resp) {
+  message(resp);
+}, arg = {}) {
+  let xhttp = new XMLHttpRequest(arg);
+  xhttp.onreadystatechange = (function(xhttp, arg) {
+    return function() {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        return callback(xhttp.responseText, arg);
+      }
+    }
+  })(xhttp, arg);
+  xhttp.open("POST", url, true);
+  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(data);
 }
 
 function notNone(inp = "None", isKlas = false) {
