@@ -44,7 +44,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <span><a href="/logout">Logout</a></span>
       </div>
     </menu>
-    <main>array
+    <main>
       <!-- Add User -->
       <div>
         <p>Gebruiker Toevoegen</p>
