@@ -23,12 +23,7 @@ require('db-connect.php');
 $stmt = $conn->prepare('SELECT daypart,
   docent1,
   docent2,
-  klas1jaar,
-  klas1niveau,
-  klas1nummer,
-  /*klas2jaar,
-  klas2niveau,
-  klas2nummer,*/
+  klas,
   lokaal1,
   lokaal2,
   laptops,
@@ -51,13 +46,8 @@ $stmt->bind_result(
     $resDaypart,
     $resDocent1,
     $resDocent2,
-    $resKlas1jaar,
-    $resKlas1niveau,
-    $resKlas1nummer,
-  /*$resKlas2jaar,
-  $resKlas2niveau,
-  $resKlas2nummer,*/
-  $resLokaal1,
+    $resKlas,
+    $resLokaal1,
     $resLokaal2,
     $resLaptop,
     $resProjectCode,
@@ -71,12 +61,7 @@ $stmt = $conn->prepare('INSERT INTO deleted (
   daypart,
   docent1,
   docent2,
-  klas1jaar,
-  klas1niveau,
-  klas1nummer,
-  /*klas2jaar,
-  klas2niveau,
-  klas2nummer,*/
+  klas,
   lokaal1,
   lokaal2,
   laptops,
@@ -85,21 +70,15 @@ $stmt = $conn->prepare('INSERT INTO deleted (
   userCreate,
   userDelete,
   IP
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?/*, ?, ?, ?*/)');
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 echo "$conn->error";
 $stmt->bind_param(
-  //"sssssssssssssssss",
-  "ssssssssssssss",
+  "ssssssssssss",
     $resDaypart,
     $resDocent1,
     $resDocent2,
-    $resKlas1jaar,
-    $resKlas1niveau,
-    $resKlas1nummer,
-  /*$resKlas2jaar,
-  $resKlas2niveau,
-  $resKlas2nummer,*/
-  $resLokaal1,
+    $resKlas,
+    $resLokaal1,
     $resLokaal2,
     $resLaptop,
     $resProjectCode,
@@ -112,6 +91,7 @@ $stmt->execute();
 
 //if an error occurs
 if ($conn->error !== '') {
+    echo "$conn->error";
     $stmt->close();
     $conn->close();
     die("[INSERT] FAILED\n");
@@ -119,7 +99,6 @@ if ($conn->error !== '') {
 // echo "[INSERT] OK\n";
 $stmt->close();
 //nu de data in de nieuwe table staat kunnen we het uit de oude verweideren
-// echo "OUDE AFSPRAAK WORDT VERWIJDERD\n";
 $stmt = $conn->prepare('DELETE FROM week WHERE ID=?');
 $stmt->bind_param('i', $ID);
 $stmt->execute();
@@ -131,5 +110,4 @@ if ($conn->error !== '') {
 }
 $stmt->close();
 $conn->close();
-// die("[DELETE] OK\n");
 die();

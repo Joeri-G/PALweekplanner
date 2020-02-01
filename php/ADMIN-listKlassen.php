@@ -10,15 +10,14 @@ script om array met alle klassen te sturen
 
 $out = array();
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT jaar, niveau, nummer, ID FROM klassen');
+$stmt = $conn->prepare('SELECT jaar, klasNaam, ID FROM klassen');
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resJaar, $resNiveau, $resNummer, $resID);
+$stmt->bind_result($resJaar, $resNaam, $resID);
 while ($stmt->fetch()) {
     $obj = new stdClass;
     $obj->jaar = $resJaar;
-    $obj->niveau = $resNiveau;
-    $obj->nummer = $resNummer;
+    $obj->naam = $resNaam;
     $obj->ID = $resID;
 
     $out[] = $obj;

@@ -11,7 +11,7 @@ check of alles mogelijk is, delete de oude afspraak en maak een nieuwe
 
  //check of alle velder ingevuld zijn
  //lege velden mogen niet, in plaats daar van moet er None worden ingevuld
- if (!_GETIsset(["daypart","lokaal1", "lokaal2", "klas1jaar", "klas1niveau", "klas1nummer", "docent1", "docent2", "laptops", "id", "projectCode"])) {
+ if (!_GETIsset(["daypart","lokaal1", "lokaal2", "klas", "docent1", "docent2", "laptops", "id", "projectCode"])) {
      die("[INPUT]\tNOT ALL PARAMETERS SET");
  }
 
@@ -21,10 +21,7 @@ check of alles mogelijk is, delete de oude afspraak en maak een nieuwe
  $docent1 = $_GET["docent1"];
  $docent2 = $_GET["docent2"];
 
- $klas1 = new stdClass;
- $klas1->jaar = $_GET["klas1jaar"];
- $klas1->niveau = $_GET["klas1niveau"];
- $klas1->nummer = $_GET["klas1nummer"];
+ $klas = $_GET["klas"];
 
  $lokaal1 = $_GET["lokaal1"];
  $lokaal2 = $_GET["lokaal2"];
@@ -45,9 +42,9 @@ $projectCode = $_GET['projectCode'];
  $lokalenGroep = array($lokaal1, $lokaal2);
 
  //zorg dat voor de klas of een hele klas gezet is of de hele klas None is
- $klassenGroep = checkKlas(array($klas1));
+ $klassenGroep = array($klas);
 
- if (!isPossibleKlas($klassenGroep)) {
+ if (!isPossible($klassenGroep)) {
      die("[DOCENTEN] MINIMAAL EEN VAN DE GESELECTEERDE KLASSEN MOET NIET NONE ZIJN");
  }
  //check of projectCode wel gezet is
@@ -139,22 +136,20 @@ $projectCode = $_GET['projectCode'];
      }
  }
 
- //check of klas bestaat
- for ($i=0; $i < count($klassenGroep); $i++) {
-     //plaats in array, checkKlas verwacht een array
-     if (notNoneKlas($klassenGroep[$i])) {
-         //SELECT ID omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
-         $stmt = $conn->prepare('SELECT ID FROM klassen WHERE jaar=? AND niveau=? AND nummer=?');
-         $stmt->bind_param("isi", $klassenGroep[$i]->jaar, $klassenGroep[$i]->niveau, $klassenGroep[$i]->nummer);
-         $stmt->execute();
-         $stmt->store_result();
-         if ($stmt->num_rows !== 1) {
-             $stmt->close();
-             $conn->close();
-             die("[KLASSEN] KLAS BESTAAT NIET");
-         }
-     }
- }
+   //plaats in array, checkKlas verwacht een array
+   if (notNone($klas)) {
+       //SELECT ID omdat we alleen willen weten of de klas bestaat en geen aanvullende data nodig hebben
+       $stmt = $conn->prepare('SELECT ID FROM klassen WHERE klasNaam = ?');
+       $stmt->bind_param("s", $klas);
+       $stmt->execute();
+       $stmt->store_result();
+       if ($stmt->num_rows !== 1) {
+           $stmt->close();
+           $conn->close();
+           die("[KLASSEN] KLAS BESTAAT NIET");
+       }
+   }
+
 
  //check of lokaal bestaat
  for ($i=0; $i < count($lokalenGroep); $i++) {
@@ -175,7 +170,7 @@ $projectCode = $_GET['projectCode'];
  //laad alle data van het geselecteerde dagdeel
  //exclude de huidige ID
  //gebruik prepared statement om SQL injections te vermijden
- $stmt = $conn->prepare("SELECT docent1, docent2, klas1jaar, klas1niveau, klas1nummer, lokaal1, lokaal2, id FROM week WHERE `daypart` = ? AND ID != ?");
+ $stmt = $conn->prepare("SELECT docent1, docent2, klas, lokaal1, lokaal2, id FROM week WHERE `daypart` = ? AND ID != ?");
  $stmt->bind_param("si", $daypart, $id);
 
  //execute SQL query
@@ -185,18 +180,13 @@ $projectCode = $_GET['projectCode'];
 
  //res voor result
  //maak legen objects voor result klassen
- $resKlas1 = new stdClass;
+ $resKlas = new stdClass;
 
  //bind alle results aan variabelen
  $stmt->bind_result(
      $resDocent1,
      $resDocent2,
-     $resKlas1->jaar,
-     $resKlas1->niveau,
-     $resKlas1->nummer,
-     // $resKlas2->jaar,
-     // $resKlas2->niveau,
-     // $resKlas2->nummer,num
+     $resKlas->n,
      $resLokaal1,
      $resLokaal2,
      $resID
@@ -204,10 +194,9 @@ $projectCode = $_GET['projectCode'];
 
  while ($stmt->fetch()) {
      //vergelijk input met opgegeven variabelen
-     //place docent, klas and lokaal in groups since klas2 and klas2 will both have to be checked against resKlas1 and resKlas2
      $resDocentenGroep = array($resDocent1, $resDocent2);
 
-     $resKlassenGroep = array($resKlas1);
+     $resKlassenGroep = array($resKlas);
 
      $resLokalenGroep = array($resLokaal1, $resLokaal2);
 
@@ -216,7 +205,7 @@ $projectCode = $_GET['projectCode'];
          $conn->close();
          die("[DOCENTEN]\tBEZET\n\nTERMINATING...");
      }
-     if (isOverlapKlas($klassenGroep, $resKlassenGroep)) {
+     if (isOverlap($klassenGroep, $resKlassenGroep)) {
          $stmt->close();
          $conn->close();
          die("[KLASSEN]\tBEZET\n\nTERMINATING...");
@@ -237,9 +226,7 @@ SET
   daypart = ?,
   docent1 = ?,
   docent2 = ?,
-  klas1jaar = ?,
-  klas1niveau = ?,
-  klas1nummer = ?,
+  klas = ?,
   lokaal1 = ?,
   lokaal2 = ?,
   laptops = ?,
@@ -256,14 +243,11 @@ $timestamp = date('Y-m-d H:i:s');
 
 
 $stmt->bind_param(
-  //"ssssssssssssssss",
-  "sssssssssssssss",
+    "sssssssssssss",
     $daypart,
     $docent1,
     $docent2,
-    $klas1->jaar,
-    $klas1->niveau,
-    $klas1->nummer,
+    $klas,
     $lokaal1,
     $lokaal2,
     $laptops,
@@ -276,13 +260,8 @@ $stmt->bind_param(
 );
 
 $stmt->execute();
+//sluit alles
+$stmt->close();
+$conn->close();
 
-if ($conn->error !== "") {
-    echo "[ERROR] $conn->error";
-}
-
- //sluit alles
- $stmt->close();
- $conn->close();
-
- die();
+die();

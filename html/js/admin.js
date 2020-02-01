@@ -186,13 +186,11 @@ function loadKlassen(klasList, config) {
 
 function buildKlassen(data, klasList, config) {
   let html = '<table id="klasTable">\n';
-  html += '<tr><th>Klas</th><th>Jaar</th><th>Niveau</th><th>Nummer</th><th>Delete</th></tr>\n';
+  html += '<tr><th>Klas</th><th>Jaarlaag</th></tr>\n';
   for (var i = 0; i < data.length; i++) {
     html += '<tr>\
-    <td>' + data[i].jaar + data[i].niveau + data[i].nummer + '</td>\
+    <td>' + data[i].naam + '</td>\
     <td>' + data[i].jaar + '</td>\
-    <td>' + data[i].niveau + '</td>\
-    <td>' + data[i].nummer + '</td>\
     <td>\
     <div class="actions" data-klas=\'' + JSON.stringify(data[i]).replace(/\'/g, "&#39;") + '\'>\
     <img src="/img/closeBlack.svg" alt="remove" onclick="deleteKlas(this.parentElement.dataset.klas)">\
@@ -345,41 +343,27 @@ function addUser(config) {
 
 function addKlas() {
   load(true);
-  let jaarObj = document.getElementById('addklasJaar');
-  let niveauObj = document.getElementById('addklasNiveau');
-  let nummerObj = document.getElementById('addklasNummer');
+  let jaarObj = document.getElementById('addKlasJaar')
+  let naamObj = document.getElementById('addKlasNaam')
 
-  let jaar = jaarObj.value;
-  let niveau = niveauObj.value;
-  let nummer = nummerObj.value;
+  let jaar = jaarObj.value
+  let naam = naamObj.value
 
-  jaarObj.value = '';
-  niveauObj.value = '';
-  nummerObj.value = '';
+  naamObj.value = ""
+  jaarObj.value = ""
 
   //check of alle variables wel een value
-  if (jaar == '' || niveau == '' || nummer == '') {
+  if (jaar == '' || naam == '') {
     load(false);
     message('Niet alle velden zijn ingevuld');
     return 0;
   }
-  let POST = 'jaar=' + encodeURIComponent(jaar) +
-    '&niveau=' + encodeURIComponent(niveau) +
-    '&nummer=' + encodeURIComponent(nummer);
+  let POST = 'jaar=' + encodeURIComponent(jaar) + '&naam=' + encodeURIComponent(naam)
 
-
-  let xhttp = new XMLHttpRequest();
-  //laad list met alle docenten en klassen
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      load(false);
-      message(this.responseText);
-    }
-  };
-  xhttp.open("POST", '/admin/api.php?addKlas=true', true);
-  xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
-  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhttp.send(POST);
+  sendPostReq("/admin/api.php?addKlas=true", POST, function(resp) {
+    load(false)
+    message(resp)
+  })
 }
 
 function addLokaal() {
@@ -625,8 +609,6 @@ function updateDays() {
   for (var i = 1; i < dagen.length; i++) {
     url += "&dag[]=" + encodeURIComponent(dagen[i])
   }
-
-  console.log(url);
 
   sendReq(url, function(resp) {
     load(false)

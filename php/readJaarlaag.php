@@ -11,11 +11,10 @@ erg vergelijkbaar met readAll maar deze neemt twee inputs, jaar en niveau
   - output JSON
 */
 require('funcLib.php');
-if (!_GETIsset(['jaar', 'niveau'])) {
+if (!_GETIsset(['jaar'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 $jaar = $_GET['jaar'];
-$niveau = $_GET['niveau'];
 
 $out = new stdClass;
 
@@ -23,7 +22,7 @@ require('db-connect.php');
 $stmt = $conn->prepare(
     'SELECT
   daypart,
-  klas1nummer,
+  klas,
   docent1,
   docent2,
   lokaal1,
@@ -33,22 +32,19 @@ $stmt = $conn->prepare(
   notes,
   ID
   FROM week
-  WHERE (klas1jaar = ?
-  AND klas1niveau = ?)/* OR (klas2jaar=? AND klas2niveau = ?)*/'
+  WHERE klas IN (SELECT klasNaam FROM klassen WHERE jaar = ?)'
 );
-$stmt->bind_param(/*'ssss'*/ 'ss', $jaar, $niveau/*, $jaar, $niveau*/);
+$stmt->bind_param('s', $jaar);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resDaypart, $resKlas1Nummer, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);
+$stmt->bind_result($resDaypart, $resKlasNaam, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);
 while ($stmt->fetch()) {
     if (!isset($out->$resDaypart)) {
         $out->$resDaypart = array();
     }
     $obj = new stdClass;
     $klasObj = new stdClass;
-    $klasObj->j = $jaar;
-    $klasObj->ni = $niveau;
-    $klasObj->nu = $resKlas1Nummer;
+    $klasObj->n = $resKlasNaam;
 
     $obj->k = [$klasObj];
 

@@ -159,7 +159,7 @@ function enlargeHour(data) {
   let json = JSON.parse(data);
   let text = 'Docent1: ' + escapeHTML(json.d[0]);
   text += '\nDocent2: ' + escapeHTML(json.d[1]);
-  text += '\n\nKlas: ' + escapeHTML(json.k[0].j + json.k[0].ni + json.k[0].nu);
+  text += '\n\nKlas: ' + escapeHTML(json.k[0].n);
   text += '\n\nLokaal1: ' + escapeHTML(json.l[0]);
   text += '\nLokaal2: ' + escapeHTML(json.l[0]);
   text += '\n\nProjectCode: ' + escapeHTML(json.p);
@@ -202,7 +202,6 @@ function deleteHour(data, mode = 0) {
 
 function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') {
   let title = [];
-  let value = [];
   let html = '';
   let lijst = [];
   if (type == 'p') {
@@ -212,10 +211,9 @@ function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') 
   }
   if (type == 'k') {
     for (var i = 0; i < lijst.length; i++) {
-      title.push(lijst[i].j + lijst[i].ni + lijst[i].nu);
-      value.push('klas' + i);
+      title.push(lijst[i].n);
     }
-    html = buildDropdown(title, value, lable, name, dataset)
+    html = buildDropdown(title, false, lable, name, dataset)
   } else {
     for (var i = 0; i < lijst.length; i++) {
       title.push(lijst[i]);
@@ -228,7 +226,7 @@ function makeList(dagdeel, type, lable, listAvailable, name = '', dataset = '') 
 function sendHour(name, dagdeel, mode = 0) {
   load(true);
   //we moeten nu de values van alle selections/input uit het parent element halen
-  let inputs = ['docent1', 'docent2', 'klas1', /* 'klas2',*/ 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
+  let inputs = ['docent1', 'docent2', 'klas1', 'lokaal1', 'lokaal2', 'laptops', 'projectCode', 'note'];
   let url = '/api.php?insert=true&daypart=' + dagdeel;
   let value;
   let klassen = 0;
@@ -239,23 +237,7 @@ function sendHour(name, dagdeel, mode = 0) {
       value = "None"
     };
     //als de value een klas is moeten we wat meer doen om het jaar, niveau en nummer er uit te krijgen
-    if (inputs[i].substring(0, 4) == 'klas') {
-      klassen++;
-      if (value !== 'None') {
-        let pos = Number(value.substring(4, 5));
-        let json = JSON.parse(document.getElementsByName(name + inputs[i])[0].dataset.k);
-        url += '&klas' + klassen + 'jaar=' + json.data[pos].j;
-        url += '&klas' + klassen + 'niveau=' + json.data[pos].ni;
-        url += '&klas' + klassen + 'nummer=' + json.data[pos].nu;
-      } else {
-        url += '&klas' + klassen + 'jaar=None';
-        url += '&klas' + klassen + 'niveau=None';
-        url += '&klas' + klassen + 'nummer=None';
-      }
-    } else {
-      //voeg de key en value toe aan de url
-      url += '&' + encodeURIComponent(inputs[i]) + '=' + encodeURIComponent(value);
-    }
+    url += '&' + encodeURIComponent(inputs[i]) + '=' + encodeURIComponent(value);
   }
   let xhttp4 = new XMLHttpRequest();
   //laad list met alle docenten en klassen
@@ -282,7 +264,7 @@ function sendHour(name, dagdeel, mode = 0) {
 
 
 //function om de table te sorten
-function sortTable(table) {
+function sortTable(table, addHeaders, conf) {
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
   /* Make a loop that will continue until
@@ -313,6 +295,15 @@ function sortTable(table) {
       and mark that a switch has been done: */
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
+    }
+  }
+  if (!addHeaders) {
+    return;
+  }
+  let tr = table.getElementsByTagName("tr")
+  for (var j = 0; j < tr.length; j++) {
+    if ( ( j + 1 ) % 8 == 0 ) {
+      tr[j].insertAdjacentHTML("afterend", gridDaypartHeader(conf))
     }
   }
 }
@@ -500,7 +491,7 @@ function notNone(inp = "None", isKlas = false) {
   let none = ["None", "none", "NONE", "", " "];
   if (none.includes(inp))
     return false;
-  if (isKlas && inp.j == "0" && inp.ni == !notNone(inp.ni) && inp.nu == "0")
+  if (isKlas == true && !notNone(inp.n))
     return false;
   return true;
 }
@@ -513,19 +504,19 @@ function editHour(json, mode = 0) {
     let mode = arg[1]
     let klas = json.k[0] //de klas
     //zorg er voor dat alles in klas een string is
-    klas.j = klas.j.toString()
-    klas.nu = klas.nu.toString()
+    klas.n = klas.n.toString()
     list.k = list.k[json["daypart"]] //beschikbare klassen op dagdeel
     list.d = list.d[json["daypart"]] //beschikbare docenten op dagdeel
     list.l = list.l[json["daypart"]] //beschikbare lokalen op dagdeel
+
     list.k.push(klas)
+
+    for (var i = 0; i < list.k.length; i++) {
+      list.k[i] = list.k[i].n
+    }
+
     let listKstring = []
     let listKname = []
-    //maak appart array met values en met titles
-    for (var i = 0; i < list.k.length; i++) {
-      listKstring.push(JSON.stringify(list.k[i]))
-      listKname.push(list.k[i].j.toString() + list.k[i].ni + list.k[i].nu.toString())
-    }
     //maak laptops string
     if (typeof json.la == "string") {
       json.la = json.la.replaceChar()
@@ -541,7 +532,7 @@ function editHour(json, mode = 0) {
     html += buildDropdown(list.d, false, "Docent1", "updateDocent1", '', json.d[0]) +
       buildDropdown(list.d, false, "Docent2", "updateDocent2", '', json.d[1])
     //klas 1
-    html += buildDropdown(listKname, listKstring, 'Klas', "updateKlas1", '', JSON.stringify(json.k[0]))
+    html += buildDropdown(list.k, false, 'Klas', "updateKlas1", '', json.k[0].n)
     //lokaal 1 & 2
     html += buildDropdown(list.l, false, "Lokaal1", "updateLokaal1", '', json.l[0]) +
       buildDropdown(list.l, false, "Lokaal2", "updateLokaal2", '', json.l[0])
@@ -584,13 +575,8 @@ function updateHour(id = "-1", mode = 0) {
     "&lokaal2=" + val("updateLokaal2") +
 
     "&laptops=" + val("updateLaptops") +
-    "&projectCode=" + val("updatePC")
-
-  //klas
-  let klas = JSON.parse(document.getElementsByName("updateKlas1")[0].value)
-  url += "&klas1jaar=" + klas.j +
-    "&klas1niveau=" + klas.ni +
-    "&klas1nummer=" + klas.nu;
+    "&projectCode=" + val("updatePC") +
+    "&klas=" + val("updateKlas1")
 
   if (val("updateNote") == "") {
     url += "&note=" + "None";

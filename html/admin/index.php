@@ -97,10 +97,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
         <p>Klas Toevoegen</p>
         <p>Vul de velden in om een klas toe te voegen</p>
         <div class="inputParent">
-          <span class="col_3">
-            <span><input type="number" placeholder="Jaarlaag" id="addklasJaar"></span>
-            <span><input type="text" placeholder="Niveau" id="addklasNiveau"></span>
-            <span><input type="number" placeholder="Nummer" id="addklasNummer"></span>
+          <span class="col_2">
+            <span><input type="number" placeholder="Jaarlaag" id="addKlasJaar"></span>
+            <span><input type="text" placeholder="Volledige Naam (bv. 1H1)" id="addKlasNaam"></span>
           </span>
           <span class="buttonContaier">
             <button type="button" class="button" onclick="addKlas()">Add</button>

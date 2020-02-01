@@ -14,9 +14,7 @@ require('db-connect.php');
 $stmt = $conn->prepare(
     'SELECT
   daypart,
-  klas1jaar,
-  klas1niveau,
-  klas1nummer,
+  klas,
   docent1,
   docent2,
   lokaal1,
@@ -29,16 +27,14 @@ $stmt = $conn->prepare(
 );
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resDaypart, $resKlas1Jaar, $resKlas1Niveau, $resKlas1Nummer, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);
+$stmt->bind_result($resDaypart, $resKlasNaam, $resDocent1, $resDocent2, $resLokaal1, $resLokaal2, $resLaptop, $resProjectCode, $resNote, $resID);
 while ($stmt->fetch()) {
     if (!isset($out->$resDaypart)) {
         $out->$resDaypart = array();
     }
     $obj = new stdClass;
     $klasObj = new stdClass;
-    $klasObj->j = $resKlas1Jaar;
-    $klasObj->ni = $resKlas1Niveau;
-    $klasObj->nu = $resKlas1Nummer;
+    $klasObj->n = $resKlasNaam;
 
     $obj->k = [$klasObj];
 

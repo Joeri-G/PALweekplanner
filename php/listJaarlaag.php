@@ -12,16 +12,12 @@ script om alle jaarlagden te listen
 $out = new stdClass;
 $out->k = array();
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau FROM klassen');
+$stmt = $conn->prepare('SELECT DISTINCT jaar FROM klassen');
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resJaar, $resNiveau);
+$stmt->bind_result($resJaar);
 while ($stmt->fetch()) {
-    $tmpObj = new stdClass;
-    $tmpObj->j = $resJaar;
-    $tmpObj->ni = $resNiveau;
-    $tmpObj->nu = '';
-    $out->k[] = $tmpObj;
+    $out->k[] = $resJaar;
 }
 
 //set JSON header

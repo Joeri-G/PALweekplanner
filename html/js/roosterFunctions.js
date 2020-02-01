@@ -114,7 +114,8 @@ function modeJaarlaag() {
   load(true);
   //build jaarlaag input
   select.style.display = 'block';
-  document.body.className = 'full jaarlaag';
+  document.body.className = 'full';
+  document.body.style.display = "flex"
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -127,7 +128,7 @@ function modeJaarlaag() {
             <input type="hidden" name="selectJaarlaag" onChange="setWeekTimetable(this.value)">\
             <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">';
         for (var i = 0; i < jaarlagen.k.length; i++) {
-          html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>' + jaarlagen.k[i].j + jaarlagen.k[i].ni + '</a>\n';
+          html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>' + jaarlagen.k[i] + '</a>\n';
         }
         html += '<span>Geen resultaten...</span>\
           </div>\
@@ -154,9 +155,9 @@ function modeJaarlaag() {
 }
 
 function buildJaarlaag(input) {
+  document.body.style.display = ""
   load(true);
   let main = document.getElementsByTagName('main')[0];
-  let jaarlaag = JSON.parse(input);
   let xhttp = new XMLHttpRequest();
   //laad list met alle docenten en klassen
   xhttp.onreadystatechange = function() {
@@ -164,7 +165,7 @@ function buildJaarlaag(input) {
       try {
         let afspraken = JSON.parse(this.responseText);
         //nu we de afspraken hebben kunnen we beginnen met de table maken
-        setGridTimetable(afspraken, modeJaarlaag, jaarlaag);
+        setGridTimetable(afspraken, modeJaarlaag, input);
         //stop loading animatie
         load(false);
       } catch (e) {
@@ -174,7 +175,7 @@ function buildJaarlaag(input) {
       }
     }
   };
-  xhttp.open("GET", "/api.php?readJaarlaag=true&jaar=" + encodeURIComponent(jaarlaag.j) + "&niveau=" + encodeURIComponent(jaarlaag.ni), true);
+  xhttp.open("GET", "/api.php?readJaarlaag=true&jaar=" + encodeURIComponent(input), true);
   xhttp.setRequestHeader("Content-Encoding", "gzip, x-gzip, identity");
   xhttp.send();
 }

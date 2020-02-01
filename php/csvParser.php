@@ -37,9 +37,7 @@ $stmt = $conn->prepare(
   daypart,
   docent1,
   docent2,
-  klas1jaar,
-  klas1niveau,
-  klas1nummer,
+  klas,
   lokaal1,
   lokaal2,
   laptops,
@@ -58,9 +56,7 @@ $stmt->bind_result(
     $resDaypart,
     $resDocent1,
     $resDocent2,
-    $resKlas1Jaar,
-    $resKlas1Niveau,
-    $resKlas1Nummer,
+    $resKlas,
     $resLokaal1,
     $resLokaal2,
     $resLaptop,
@@ -76,7 +72,7 @@ while ($stmt->fetch()) {
 
     $arr['dagdeel'] = $resDaypart;
 
-    $arr['klas'] = "$resKlas1Jaar$resKlas1Niveau$resKlas1Nummer";
+    $arr['klas'] = $resKlas;
 
     $arr['docent1'] = $resDocent1;
     $arr['docent2'] = $resDocent2;

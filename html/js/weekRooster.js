@@ -33,7 +33,7 @@ function buildSelect(type = 'klas', list = {
   if (type == 'k') {
     for (var i = 0; i < list.k.length; i++) {
       //maak option met klas en als value klas object
-      html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].j + list[type][i].ni + list[type][i].nu + '</a>';
+      html += '<a href="javascript:void(0)" onclick="setValue(this);setWeekTimetable(this.dataset.value)" data-value=\'' + JSON.stringify(list[type][i]).replaceChar() + '\'>' + list[type][i].n + '</a>';
     }
     button.value = 'Selecteer een klas';
     button.dataset.title = 'Selecteer een klas';
@@ -67,7 +67,7 @@ function setWeekTimetable(input) {
   let inputObj = JSON.parse(input);
   //klas
   if (mode == 'k') {
-    url = '/api.php?readKlas=true&jaar=' + encodeURIComponent(inputObj.j) + '&niveau=' + encodeURIComponent(inputObj.ni) + '&nummer=' + encodeURIComponent(inputObj.nu);
+    url = '/api.php?readKlas=true&klas=' + encodeURIComponent(inputObj.n);
   }
   //docent
   else if (mode == 'd') {
@@ -199,7 +199,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     html += '<span>Docent1:</span><span>' + escapeHTML(data[dagdeel].d[0]) + '</span>\n';
     html += '<span>Docent2:</span><span>' + escapeHTML(data[dagdeel].d[1]) + '</span>\n';
     //klassen
-    html += '<span>Klas:</span><span>' + escapeHTML(data[dagdeel].k[0].j) + data[dagdeel].k[0].ni + data[dagdeel].k[0].nu + '</span>';
+    html += '<span>Klas:</span><span>' + escapeHTML(data[dagdeel].k[0].n) + '</span>';
     //lokalen
     html += '<span>Lokaal1:</span><span>' + escapeHTML(data[dagdeel].l[0]) + '</span>\n';
     html += '<span>Lokaal2:</span><span>' + escapeHTML(data[dagdeel].l[1]) + '</span>\n';
@@ -216,7 +216,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
   //de bovenste row hangt af van de geselecterde mode
   if (mode == 'k') {
     //klas input
-    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="klas0" data-k=\'{"data":[' + JSON.stringify(obj).replaceChar() + ']}\'>\n';
+    html += '<input type="hidden" name="' + dagdeel + 'klas1" value="'+obj.n+'">\n';
     //build select en voeg options toe
     html += makeList(dagdeel, 'd', 'Docent1', listAvailable, dagdeel + 'docent1');
     html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2');
@@ -224,7 +224,7 @@ function buildHour(conf, data, mode, obj, dagdeel, uur, listAvailable) {
     //docent input
     html += '<input type="hidden" name="' + dagdeel + 'docent1" value="' + obj.username + '">\n';
     html += makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + 'docent2');
-    html += makeList(dagdeel, 'k', 'Klas', listAvailable, dagdeel + 'klas1', 'data-k=\'{"data":' + JSON.stringify(listAvailable.k[dagdeel]).replaceChar() + '}\'');
+    html += makeList(dagdeel, 'k', 'Klas', listAvailable, dagdeel + 'klas1');
   } else {
     message('Mode Error');
     load(false);

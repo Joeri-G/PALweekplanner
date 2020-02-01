@@ -26,45 +26,37 @@ foreach ($dagen as $dag) {
 }
 
 require('db-connect.php');
-//maak list met klassen
-$klassen = [];
-$stmt = $conn->prepare('SELECT jaar, niveau, nummer FROM klassen');
-$stmt->execute();
-$stmt->bind_result($resJaar, $resNiveau, $resNummer);
-while ($stmt->fetch()) {
-    $klas = new stdClass;
-    $klas->j = $resJaar;
-    $klas->ni = $resNiveau;
-    $klas->nu = $resNummer;
-    $klassen[] = $klas;
-}
-$stmt->close();
-
 //select alle vrije klassen per dagdeel
 foreach ($dagdelen as $dagdeel) {
     //klassen
-    $out->k->$dagdeel = $klassen;   //alle klassen zijn beschikbaar, de bezette klassen worden er laten tussenuit gehaald
+    $out->k->$dagdeel = [];   //alle klassen zijn beschikbaar, de bezette klassen worden er laten tussenuit gehaald
     $out->d->$dagdeel = [];
     $out->l->$dagdeel = [];
-    $stmt = $conn->prepare('SELECT klas1jaar, klas1niveau, klas1nummer FROM week WHERE daypart = ?');
+    $stmt = $conn->prepare(
+      "SELECT
+        DISTINCT jaar,
+        klasNaam
+      FROM
+        klassen
+      WHERE
+        klasNaam NOT IN (
+          SELECT
+            klas
+          FROM
+            week
+          WHERE
+            daypart = ?
+        )
+        ");
     $stmt->bind_param('s', $dagdeel);
     $stmt->execute();
-    $stmt->bind_result($resJaar, $resNiveau, $resNummer);
+    $stmt->bind_result($resJaar, $resNaam);
     while ($stmt->fetch()) {
-        $klas = new stdClass;
-        $klas->j = $resJaar;
-        $klas->ni = $resNiveau;
-        $klas->nu = $resNummer;
-        if (($key = array_search($klas, $out->k->$dagdeel)) !== false) {
-            //als deze klas deel maakt van het beschikbaar array haal deze er dan uit
-            unset($out->k->$dagdeel[$key]);
-            //omdat php om de een of andere reden het array aanpast van [val, val, val] naar {0:val, 1:val, 2:val} moeten we moeilijk gaan doen
-            $tempArr = [];
-            foreach ($out->k->$dagdeel as $klas) {
-                $tempArr[] = $klas;
-            }
-            $out->k->$dagdeel = $tempArr;
-        }
+      $klas = new stdClass;
+      $klas->j = $resJaar;
+      $klas->n = $resNaam;
+
+      $out->k->$dagdeel[] = $klas;
     }
     $stmt->close();
     //docenten
@@ -134,7 +126,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 $conn->close();
 //zet header
-// header('Content-Type: application/json');
+header('Content-Type: application/json');
 
 //als als input ?format is gezet doe dan prettyp print
 //we doen dit niet meteen omdat het het bestand aanzienlijk groter maakt

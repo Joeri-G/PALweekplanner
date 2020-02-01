@@ -1,37 +1,40 @@
 <?php
 require('funcLib.php');
-if (!_POSTIsset(['jaar', 'niveau', 'nummer'])) {
+if (!_POSTIsset(['jaar', 'naam'])) {
+    var_dump($_POST);
+    var_dump($_GET);
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
 $jaar = $_POST['jaar'];
-$niveau = $_POST['niveau'];
-$nummer = $_POST['nummer'];
+$naam = $_POST["naam"];
 
-if (empty($jaar) || empty($niveau) || empty($nummer)) {
+if (empty($jaar) || empty($naam)) {
     die("[INPUT]\tNOT ALL PARAMETERS SET\n");
 }
 
-// echo "[INPUT]\tOK\n";
+if ("$jaar" !== substr($naam, 0, strlen("$jaar"))) {
+  echo "[WARNING] naam komt niet overeen met jaarlaag, dit kan problemen opleveren tijdens het zoeken";
+}
 
 //check of klas al bestaat
 require('db-connect.php');
-$stmt = $conn->prepare('SELECT ID FROM klassen WHERE jaar = ? AND niveau = ? AND nummer = ?');
-$stmt->bind_param('sss', $jaar, $niveau, $nummer);
+$stmt = $conn->prepare('SELECT ID FROM klassen WHERE klasNaam = ?');
+$stmt->bind_param('s', $naam);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->close();
     $conn->close();
-    die("[KLAS]\BEZET\n");
+    die("[NAAM]\tBEZET\n");
 }
 // echo "[KLAS]\tOK\n";
 $stmt->close();
 
 // echo "INSERTING...\n";
 
-$stmt = $conn->prepare('INSERT INTO klassen (jaar, niveau, nummer) VALUES (?, ?, ?)');
-$stmt->bind_param('sss', $jaar, $niveau, $nummer);
+$stmt = $conn->prepare('INSERT INTO klassen (jaar, klasNaam) VALUES (?, ?)');
+$stmt->bind_param('ss', $jaar, $naam);
 $stmt->execute();
 $stmt->store_result();
 

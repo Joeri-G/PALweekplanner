@@ -20,6 +20,9 @@ Script met functions om het volledige rooster te bouwen
 
   - buildGridTimetableInput()
     * als er geen afspraak bestaat, build dan een entry met inputs voor afspraak
+
+  - gridDaypartHeader()
+    * functie om dagdeel headers toe te voegen
 */
 function setGridTimetable(data, modeJaarlaag = false, dataJaarlaag = null) {
   let xhttp = new XMLHttpRequest();
@@ -28,7 +31,7 @@ function setGridTimetable(data, modeJaarlaag = false, dataJaarlaag = null) {
     if (this.readyState == 4 && this.status == 200) {
       try {
         let conf = JSON.parse(this.responseText);
-        buildGridTimetableHead(conf, data);
+        buildGridTimetableHead(conf);
         setGridTimetableBody(conf, data, modeJaarlaag, dataJaarlaag);
       } catch (e) {
         //stop loading animatie
@@ -63,7 +66,7 @@ function setGridTimetableBody(conf, data, modeJaarlaag, dataJaarlaag) {
   xhttp.send();
 }
 
-function buildGridTimetableHead(conf, data) {
+function buildGridTimetableHead(conf) {
   let main = document.getElementsByTagName('main')[0];
   let html = '<table id="gridRooster">\n<tr>\n';
   for (var i = 0; i < conf.dagen.length; i++) {
@@ -88,10 +91,9 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
         for (var i = 0; i < listAll.k.length; i++) {
           let klas = listAll.k[i];
           html += buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag);
-          html += '</tr>\n';
         }
         table.innerHTML += html;
-        sortTable(document.getElementById('gridRooster'));
+        sortTable(document.getElementById('gridRooster'), true, conf);
       } catch (e) {
         //stop loading animatie
         load(false);
@@ -100,7 +102,7 @@ function buildGridTimetableBody(conf, data, table, listAvailable, modeJaarlaag, 
     }
   };
   if (modeJaarlaag)
-    xhttp.open("GET", "/api.php?listJaarlaagKlassen=true&jaar=" + encodeURIComponent(dataJaarlaag.j) + "&niveau=" + encodeURIComponent(dataJaarlaag.ni), true);
+    xhttp.open("GET", "/api.php?listJaarlaagKlassen=true&jaar=" + encodeURIComponent(dataJaarlaag), true);
   else
     xhttp.open("GET", "/api.php?listAll=true", true);
 
@@ -112,14 +114,14 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
   let html = '';
   for (var i = 0; i < conf.dagen.length; i++) {
     for (var j = 0; j < conf.uren; j++) {
-      html += '\n<td class="klas">' + klas.j + klas.ni + klas.nu + '</td>\n';
+      html += '\n<td class="klas">' + klas.n + '</td>\n';
       let heeftAfspraak = false;
       let dagdeel = conf.dagen[i] + j;
       //check of er afspraken zijn op het dagdeel
       if (typeof data[dagdeel] !== 'undefined' && data[dagdeel] !== null) {
         for (var x = 0; x < data[dagdeel].length; x++) {
           let afspraak = data[dagdeel][x];
-          if (afspraak.k[0].j == klas.j && afspraak.k[0].ni == klas.ni && afspraak.k[0].nu == klas.nu) {
+          if (afspraak.k[0].n == klas.n) {
             heeftAfspraak = true;
             html += buildGridTimetableAfspraak(afspraak, dagdeel, modeJaarlaag);
             // break;
@@ -133,6 +135,7 @@ function buildGridTimetableKlas(conf, data, listAvailable, klas, modeJaarlaag) {
     }
     //voeg nog een keer de klas toe
   }
+  html += "</tr>\n"
   return html;
 }
 
@@ -171,7 +174,7 @@ function buildGridTimetableAfspraak(data, dagdeel, modeJaarlaag = false) {
 }
 
 function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
-  let klasTitle = klas.j + klas.ni + klas.nu;
+  let klasTitle = klas.n;
   let html = '';
   html += '<td>' + makeList(dagdeel, 'd', 'Docent1', listAvailable, dagdeel + klasTitle + 'docent1') + '</td>\
   <td>' + makeList(dagdeel, 'd', 'Docent2', listAvailable, dagdeel + klasTitle + 'docent2') + '</td>\
@@ -182,7 +185,7 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
   html += '<td><input type="text" name="' + dagdeel + klasTitle + 'note" placeholder="Note"></td>';
   html += '<td>';
   //voeg een hidden input toe aan de laatste cell omdat de function anders in de war raakt
-  html += '<input type="hidden" name="' + dagdeel + klasTitle + 'klas1" value="klas0" data-k=\'{"data":[' + JSON.stringify(klas).replace(/\'/g, "&#39;") + ']}\'>';
+  html += '<input type="hidden" name="' + dagdeel + klasTitle + 'klas1" value="'+klasTitle+'">';
   if (modeJaarlaag)
     html += '<img src="/img/save.svg" alt="Save" onclick="sendHour(\'' + dagdeel + klasTitle + '\', \'' + dagdeel + '\', 2)" class="svgButton">';
   else
@@ -191,4 +194,17 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
   html += '</td>';
 
   return html;
+}
+
+function gridDaypartHeader(conf) {
+  //voeg headers met dagdeel en tijden toe
+  let html = "<tr>"
+  for (var i = 0; i < conf.dagen.length; i++) {
+    for (var j = 0; j < conf.uren; j++) {
+      //offset van 1 omdat de dagdelen vanaf 0 worden geteld maar vanaf 1 weergegeven
+      html += '<td colspan="9">\n' + conf.dagen[i] + (j + 1) + ' - ' + conf.lestijden[j] + '\n</td>\n';
+    }
+  }
+  html += "</tr>"
+  return html
 }

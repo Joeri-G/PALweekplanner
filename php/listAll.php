@@ -42,25 +42,20 @@ $stmt->close();
 //plaats docenten in out;
 $out->d = $d;
 
-
-$stmt = $conn->prepare('SELECT DISTINCT jaar, niveau, nummer FROM klassen');
+$stmt = $conn->prepare("SELECT DISTINCT jaar, klasNaam FROM klassen");
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($resJaar, $resNiveau, $resNummer);
-while ($stmt->fetch()) {
-    //tijdelijk object
-    $klas = new stdClass;
-    //jaar
-    $klas->j = $resJaar;
-    //niveau
-    $klas->ni = htmlentities($resNiveau);
-    //nummer
-    $klas->nu = $resNummer;
-    //plaats in klassen
-    $k[] = $klas;
+$stmt->bind_result($resJaar, $resNaam);
+while($stmt->fetch()) {
+  $klas = new stdClass;
+  $klas->j = $resJaar;
+  $klas->n = $resNaam;
+
+  $k[] = $klas;
 }
 $out->k = $k;
-
+$stmt->close();
+$conn->close();
 //set JSON header
 header('Content-Type: application/json');
 //als als input ?format is gezet doe dan prettyp print

@@ -37,12 +37,7 @@ CREATE TABLE `week` (
   `daypart` varchar(16) NOT NULL COMMENT 'day and part of day',
   `docent1` varchar(16) NOT NULL,
   `docent2` varchar(16) NOT NULL,
-  `klas1jaar` int(4) NOT NULL,
-  `klas1niveau` varchar(16) NOT NULL,
-  `klas1nummer` int(4) NOT NULL,
-  /*`klas2jaar` int(4) NOT NULL,
-    `klas2niveau` varchar(16) NOT NULL,
-    `klas2nummer` int(4) NOT NULL,*/
+  `klas` varchar(16) NOT NULL,
   `lokaal1` varchar(16) NOT NULL,
   `lokaal2` varchar(16) NOT NULL,
   `laptops` int(4) NOT NULL COMMENT 'laptops',
@@ -122,22 +117,22 @@ AUTO_INCREMENT = 0;COMMIT;
 
   SQL:
   */
-  CREATE TABLE `klassen` (
-    `jaar` varchar(16) NOT NULL,
-    `niveau` varchar(16) NOT NULL,
-    `nummer` varchar(16) NOT NULL,
-    `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    `ID` int(11) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+CREATE TABLE `klassen` (
+  `jaar` varchar(16) NOT NULL,
+  `klasNaam` varchar(16) NOT NULL,
+  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `ID` int(11) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
-  `klassen`
+`klassen`
 ADD
-  PRIMARY KEY (`ID`);
+PRIMARY KEY (`ID`);
 ALTER TABLE
-  `klassen`
+`klassen`
 MODIFY
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  AUTO_INCREMENT = 0;COMMIT;
+`ID` int(11) NOT NULL AUTO_INCREMENT,
+AUTO_INCREMENT = 0;COMMIT;
+
   /*
   planner -> lokalen
     - lokaal
@@ -166,12 +161,7 @@ MODIFY
     `daypart` varchar(16) NOT NULL,
     `docent1` varchar(16) NOT NULL,
     `docent2` varchar(16) NOT NULL,
-    `klas1jaar` varchar(16) NOT NULL,
-    `klas1niveau` varchar(16) NOT NULL,
-    `klas1nummer` varchar(16) NOT NULL,
-    /*`klas2jaar` varchar(16) NOT NULL,
-      `klas2niveau` varchar(16) NOT NULL,
-      `klas2nummer` varchar(16) NOT NULL,*/
+    `klas` varchar(16) NOT NULL,
     `lokaal1` varchar(16) NOT NULL,
     `lokaal2` varchar(16) NOT NULL,
     `laptops` varchar(32) NOT NULL,

@@ -73,7 +73,7 @@ body.full {
   position: sticky;
 }
 
-.full img {
+.full main img {
   height: 1.5rem;
   cursor: pointer;
 }
@@ -90,8 +90,12 @@ body.full {
   display: absolute;
 }
 
-body.jaarlaag {
+.full .dropSelect {
+  display: block;
+  width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .select .drop {

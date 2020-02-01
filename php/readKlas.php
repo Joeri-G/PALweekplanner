@@ -10,23 +10,16 @@ erg vergelijkbaar met readDocent
   - output JSON
 */
 require('funcLib.php');
-if (!_GETIsset(['jaar', 'niveau', 'nummer'])) {
+if (!_GETIsset(['klas'])) {
     die("[INPUT]\tNOT ALL PARAMETERS SET");
 }
 require('db-connect.php');
-$klasJaar = $_GET['jaar'];
-$klasNiveau = $_GET['niveau'];
-$klasNummer = $_GET['nummer'];
+$klas = $_GET['klas'];
 $stmt = $conn->prepare('SELECT
     daypart,
     docent1,
     docent2,
-    klas1jaar,
-    klas1niveau,
-    klas1nummer,
-    /*klas2jaar,
-    klas2niveau,
-    klas2nummer,*/
+    klas,
     lokaal1,
     lokaal2,
     laptops,
@@ -37,18 +30,10 @@ $stmt = $conn->prepare('SELECT
     week
   WHERE
     (
-      klas1jaar = ?
-      AND klas1niveau = ?
-      AND klas1nummer = ?
+      klas = ?
     )
-  /*OR
-    (
-      klas2jaar = ?
-      AND klas2niveau = ?
-      AND klas2nummer = ?
-    )*/
   ');
-$stmt->bind_param(/*'isiisi'*/'isi', $klasJaar, $klasNiveau, $klasNummer/*, $klasJaar, $klasNiveau, $klasNummer*/);
+$stmt->bind_param('s', $klas);
 //execute query
 $stmt->execute();
 $stmt->store_result();
@@ -60,13 +45,8 @@ $stmt->bind_result(
     $resDaypart,
     $resDocent1,
     $resDocent2,
-    $resKlas1jaar,
-    $resKlas1niveau,
-    $resKlas1nummer,
-  // $resKlas2jaar,
-  // $resKlas2niveau,
-  // $resKlas2nummer,
-  $resLokaal1,
+    $resKlas,
+    $resLokaal1,
     $resLokaal2,
     $resLaptop,
     $resProjectCode,
@@ -75,23 +55,11 @@ $stmt->bind_result(
 );
 while ($stmt->fetch()) {
     $klas1 = new stdClass;
-    // $klas2 = new stdClass;
     //object daarin alle data en loop er door zolang er nog entries terug komen
     $data->$resDaypart = new stdClass;
     $data->$resDaypart->d = array($resDocent1, $resDocent2);
-
-    $klas1->j = $resKlas1jaar;
-    $klas1->ni = $resKlas1niveau;
-    $klas1->nu = $resKlas1nummer;
-
-    // $klas2->jaar = $resKlas2jaar;
-    // $klas2->niveau = $resKlas2niveau;
-    // $klas2->nummer = $resKlas2nummer;
-
-    $data->$resDaypart->k = array(
-    $klas1,
-    // $klas2
-  );
+    $klas1->n = $resKlas;
+    $data->$resDaypart->k = array($klas1);
     $data->$resDaypart->l = array($resLokaal1, $resLokaal2);
     $data->$resDaypart->la = $resLaptop;
     $data->$resDaypart->p = $resProjectCode;
