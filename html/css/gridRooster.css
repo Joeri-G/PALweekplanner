@@ -82,12 +82,16 @@ body.full {
   background: inherit;
   border: none;
   float: none;
-  /* height: auto; */
   width: auto;
 }
 
 .full td:first-of-type, full tr:first-of-type {
   display: absolute;
+}
+
+body.full {
+  display: flex;
+  height: 130%;
 }
 
 .full .dropSelect {
