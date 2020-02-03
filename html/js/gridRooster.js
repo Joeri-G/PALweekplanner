@@ -198,13 +198,16 @@ function buildGridTimetableInput(dagdeel, klas, listAvailable, modeJaarlaag) {
 
 function gridDaypartHeader(conf) {
   //voeg headers met dagdeel en tijden toe
-  let html = "<tr>"
-  for (var i = 0; i < conf.dagen.length; i++) {
-    for (var j = 0; j < conf.uren; j++) {
+  let tr = document.createElement("tr")
+  let td
+  for (let i = 0; i < conf.dagen.length; i++) {
+    for (let j = 0; j < conf.uren; j++) {
+      td = document.createElement("td")
+      td.colSpan = 9
       //offset van 1 omdat de dagdelen vanaf 0 worden geteld maar vanaf 1 weergegeven
-      html += '<td colspan="9">\n' + conf.dagen[i] + (j + 1) + ' - ' + conf.lestijden[j] + '\n</td>\n';
+      td.innerHTML = conf.dagen[i] + (j + 1) + ' - ' + conf.lestijden[j]
+      tr.appendChild(td)
     }
   }
-  html += "</tr>"
-  return html
+  return tr
 }

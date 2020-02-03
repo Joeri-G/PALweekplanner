@@ -303,7 +303,7 @@ function sortTable(table, addHeaders, conf) {
   let tr = table.getElementsByTagName("tr")
   for (var j = 0; j < tr.length; j++) {
     if ( ( j + 1 ) % 8 == 0 ) {
-      tr[j].insertAdjacentHTML("afterend", gridDaypartHeader(conf))
+      tr[j].insertAdjacentElement("afterend", gridDaypartHeader(conf))
     }
   }
 }
