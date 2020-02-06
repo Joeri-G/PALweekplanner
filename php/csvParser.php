@@ -2,7 +2,7 @@
 
 //haal data uit database
 require("db-connect.php");
-
+require("funcLib.php");
 $data = array();
 
 // plaats headers in data
@@ -24,7 +24,7 @@ $data['INFO'][] = array(
 );
 
 
-$config = json_decode(file_get_contents('../conf/conf.json'));
+$config = getConf();
 
 foreach ($config->dagen as $dag) {
     for ($i=0; $i < $config->uren; $i++) {
@@ -91,10 +91,8 @@ while ($stmt->fetch()) {
     $data[$resDaypart][] = $arr;
 }
 
-// var_dump($data);
-
 //5MB is in memory, als het groter word wordt er geschreven naar een temp file
-$csv = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+$csv = fopen('php://temp/maxmemory:'. (5242880), 'r+');
 
 // var_dump($data);
 
@@ -108,8 +106,7 @@ foreach ($data as $dagdeel) {
 rewind($csv);
 
 // put it all in a variable
-$out = stream_get_contents($csv);
-echo "$out";
+echo stream_get_contents($csv);
 
 //Download headers
 header('Content-Type: text/csv');
