@@ -4,6 +4,28 @@
 script om te exporten naar somToday format
 Official:     <Docent>  <Jaar>  <Maand> <Dag> <Lesuur>  <Vak/Project> <Klas>  <Lokaal>  <Leeg>    <Leeg>  <Leeg>  <Starttijd> <Duur (min)>  <Leeg>
 Alternative:  <Docent>  <Jaar>  <Maand> <Dag> <Lesuur>  <Vak/Project> <Klas>  <Lokaal>  <Laptops> <Info>  <Leeg>  <Starttijd> <Duur (min)>  <Leeg>
+
+
+UITTREKSEL VAN SOMTODAY SPEC
+Bestandsspecificaties Import Velden voorafgegaan door een * zijn verplicht.
+Het aantal velden, zoals bij elk voorbeeld wordt vermeld, moet altijd aanwezig zijn.
+Dit is te controleren door het aantal scheidingstekens te tellen, het aantal scheidingstekens is altijd 1 minder dan het aantal velden: bij 7 scheidingstekens zijn er 8 velden.
+
+  * Docentenafkorting
+  * Jaar
+  * Maand
+  * Dag
+  * Lesuur
+  * Vakafkorting
+  * Klas/lesgroep
+  * Lokaal
+  <leeg>
+  <leeg>
+  <leeg>
+  * Starttijd
+  * Duur in minuten
+
+
  */
 require('funcLib.php');
 if (!_GETIsset(['startDate'])) {
