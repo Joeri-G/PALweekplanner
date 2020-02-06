@@ -1,4 +1,8 @@
 <?php
+//Download headers
+header('Content-Type: text/csv');
+header("Content-Transfer-Encoding: Binary");
+header("Content-disposition: attachment; filename=\"planner-export-".date('Y-m-d_H.i.s').".csv\"");
 
 //haal data uit database
 require("db-connect.php");
@@ -107,8 +111,3 @@ rewind($csv);
 
 // put it all in a variable
 echo stream_get_contents($csv);
-
-//Download headers
-header('Content-Type: text/csv');
-header("Content-Transfer-Encoding: Binary");
-header("Content-disposition: attachment; filename=\"planner-export-".date('Y-m-d_H.i.s').".csv\"");
