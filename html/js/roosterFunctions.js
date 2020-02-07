@@ -41,7 +41,7 @@ function modeDefault() {
     <input type="button" value="Selecteer een klas" onclick="toggleDrop(this)" data-title="Selecteer een klas" style="display:none">\
     <div class="drop" id="selectKlasDocent">\
       <input type="hidden" name="displayModeFinal" onChange="setWeekTimetable(this.value)">\
-      <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
+      <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)" onkeypress="enterSelectValue(event, this)">\
       <span>Geen resultaten...</span>\
     </div>\
   </div>';
@@ -126,7 +126,7 @@ function modeJaarlaag() {
           <input type="button" value="Jaar" onclick="toggleDrop(this)" data-title="Jaar">\
           <div class="drop" id="selectKlasDocent">\
             <input type="hidden" name="selectJaarlaag" onChange="setWeekTimetable(this.value)">\
-            <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">';
+            <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)" onkeypress="enterSelectValue(event, this)">';
         for (var i = 0; i < jaarlagen.k.length; i++) {
           html += '<a href="javascript:void(0)" onclick="setValue(this);buildJaarlaag(this.dataset.value)" data-value=' + JSON.stringify(jaarlagen.k[i]).replace(/\'/g, "&#39;") + '>' + jaarlagen.k[i] + '</a>\n';
         }

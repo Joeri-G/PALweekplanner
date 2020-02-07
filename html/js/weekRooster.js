@@ -26,7 +26,7 @@ function buildSelect(type = 'klas', list = {
   };
   let button = document.getElementById('selectKlasDocent').parentElement.children[0];
   let html = '<input type="hidden" name="displayModeFinal" onChange="" value="">\
-  <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
+  <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)" onkeypress="enterSelectValue(event, this)">\
   <span>Geen resultaten...</span>'
   // de select moet anders gedaan worden afhangend van de type
   //select voor klas

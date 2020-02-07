@@ -40,6 +40,9 @@ script met functions die door alle "viewModes" en paginas gebruikt worden
   - buildDropdown()
     * functie om de html van de dropdown te bouwen
 
+  - enterSelectValue()
+    * functie om wanneer er op enter geklikt wordt in de search box de bovenste opstie te selecteren
+
   - toggleDrop()
     * functie om een dropdown te openen/sluiten
       + check of geselecteerde element dezelfde is als de huidige open element
@@ -356,7 +359,7 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
   <input type="button" value=\'' + title.replaceChar() + '\' onclick="toggleDrop(this)">\
   <div class="drop">\
   <input type="hidden" name=\'' + name.replaceChar() + '\' value=\'' + st.replaceChar() + '\' ' + dataset + '>\
-  <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)">\
+  <input type="search" placeholder="Filter..." onkeyup="filterDropdown(this)" onkeypress="enterSelectValue(event, this)">\
   <a href="javascript:void(0)" onclick="setValue(this)" class="shown" data-value="None">Geen Selectie</a>';
   for (var i = 0; i < data.length; i++) {
     html += '<a href="javascript:void(0)" onclick="setValue(this)" data-value=\'' + value[i].replaceChar() + '\'>' + data[i].replaceChar(true) + '</a>';
@@ -365,6 +368,26 @@ function buildDropdown(data = [], value = false, title = 'Title', name = 'Name',
   </div></div>';
   return html;
 }
+
+function enterSelectValue(event, el) {
+  //als key niet enter -> return
+  if (event.keyCode !== 13) {
+    return
+  }
+  let options = el.parentElement.getElementsByTagName("a")
+  let option
+  //loop door alle opties en selecteer de eerste die nog zichtbaar is
+  for (var i = 0; i < options.length; i++) {
+    option = options[i]
+    if (option.style.display == "" && option.innerHTML !== "Geen Selectie") {
+      option.click()
+      return
+    }
+  }
+  //als de alle opties doorlopen zijn selecteer dan Geen Selectie
+  options[0].click()
+}
+
 
 function toggleDrop(el) {
   let drop = el.parentElement.children[1];
@@ -376,14 +399,15 @@ function toggleDrop(el) {
   if (!isOpen) {
     drop.classList.toggle('show');
     drop.getElementsByTagName('input')[1].value = '';
-    // //maak value leeg
-    // drop.getElementsByTagName('input')[0].value = '';
-    //laat alle items zien
+    //maak filter leeg
     filterDropdown(drop.getElementsByTagName('input')[1], '');
     sortDropdown(drop);
 
     activeDrop = drop;
   }
+
+  //focus filter
+  drop.getElementsByTagName('input')[1].focus()
 }
 
 function filterDropdown(el) {
