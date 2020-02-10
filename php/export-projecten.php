@@ -1,4 +1,8 @@
 <?php
+//Download headers
+header('Content-Type: text/csv');
+header("Content-Transfer-Encoding: Binary");
+header("Content-disposition: attachment; filename=\"projecten-export-".date('Y-m-d_H.i.s').".csv\"");
 
 //haal data uit database
 require("db-connect.php");
@@ -74,10 +78,4 @@ foreach ($data as $project) {
 
 rewind($csv);
 
-// put it all in a variable
-$out = stream_get_contents($csv);
-echo "$out";
-//Download headers
-header('Content-Type: text/csv');
-header("Content-Transfer-Encoding: Binary");
-header("Content-disposition: attachment; filename=\"projecten-export-".date('Y-m-d_H.i.s').".csv\"");
+echo stream_get_contents($csv);
