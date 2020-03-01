@@ -90,6 +90,10 @@ function buildTable(data, out) {
 
 function deleteProject(data) {
   load(true)
+  if (!confirm("Wilt u dit project verwijderen?")) {
+    load(false)
+    return null
+  }
   let id = JSON.parse(data).ID
   let url = "/api.php?deleteProject=true&id="+encodeURIComponent(id)
   sendReq(url, function(resp) {
