@@ -85,10 +85,10 @@ class classes {
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT year, name, userCreate, created, GUID FROM classes WHERE GUID = :id");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, created, GUID FROM classes WHERE GUID = :id LIMIT 1");
       }
       else {
-        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :id");
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :id LIMIT 1");
       }
       $stmt->bindParam("id", $this->selector);
     }
@@ -97,10 +97,12 @@ class classes {
 
     header('Content-Type: application/json');
     if (!$data) {
-      echo "[]";
+      //if the selector is a wildcard return an empty array, else return an empty object
+      echo ($selector === "*") ? "[]" : "{}";
       return true;
     }
-    echo json_encode($data);
+    //if the selector is a wildcard return the array with the data, else return only the first item in the array
+    echo json_encode(($this->selector === "*") ? $data : $data[0]);
   }
 
   private function add() {
@@ -128,11 +130,10 @@ class classes {
     ]);
 
     $data = [];
-    $data[] = [];
-    $data[0]["name"] = $name;
-    $data[0]["year"] = $year;
-    $data[0]["userCreate"] = $userCreate;
-    $data[0]["GUID"] = $GUID;
+    $data["name"] = $name;
+    $data["year"] = $year;
+    $data["userCreate"] = $userCreate;
+    $data["GUID"] = $GUID;
     header('Content-Type: application/json');
     echo json_encode($data);
   }
@@ -160,6 +161,17 @@ class classes {
   }
 
   public function update() {
+    parse_str(file_get_contents("php://input"), $_PUT);
+    //because the data is provided via a PUT request we cannot acces the data in the body through the $_POST variable and we have to manually parse and store it
+    $keys = ["year", "name"];
+    if (!$this->request->PUTisset($keys)) {
+      echo "Please set all keys";
+      foreach ($keys as $key) {
+        echo "<br><b>".htmlentities($key)."</b>";
+      }
+      http_response_code(405);
+      return false;
+    }
     //check selector for validity
     if (!$this->request->checkSelector()) {
       echo "Invalid selector";
@@ -167,17 +179,30 @@ class classes {
       return false;
     }
     //check if the user has sufficient permissions
-    //we cannot update every class so a wildcard is not permitted
-    if ($_SESSION["userLVL"] < 3 && $this->selector == "*") {
-      echo "Cannot update with a wildcard";
+    //we cannot update every classroom so a wildcard is not permitted
+    if ($_SESSION["userLVL"] < 3 || $this->selector === "*") {
       http_response_code(405);
       return false;
     }
+    $name = $_PUT["name"];
+    $year = $_PUT["year"];
+    $userCreate = $_SESSION["GUID"];
+    $created = date('Y-m-d H:i:s');
+    $GUID = $this->selector;
+    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, created = :created WHERE GUID = :GUID");
+    $stmt->execute([
+      "name" => $name,
+      "year" => $year,
+      "userCreate" => $userCreate,
+      "created" => $created,
+      "GUID" => $GUID
+    ]);
+    $data = [];
+    $data["name"] = $name;
+    $data["year"] = $year;
+    $data["userCreate"] = $userCreate;
+    $data["GUID"] = $GUID;
+    header('Content-Type: application/json');
+    echo json_encode($data);
   }
-
 }
-
-
-
-
- ?>

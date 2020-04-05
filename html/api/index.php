@@ -3,9 +3,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 use joeri_g\palweekplanner\v2 as v2;
 define("acceptedMethods", ["GET", "POST", "PUT", "DELETE"]); //all the accepted HTTP Request Methods
 define("versions", ["v2"]); //all supported api versions
-define("allowedGroups", ["classes", "classrooms", "teachers", "projects", "laptops", "admin", "users", "config"]); //allowed groupings
+define("allowedCollections", ["classes", "classrooms", "teachers", "projects", "laptops", "admin", "users", "config"]); //allowed collectionings
 define("tables", ["classes"/*, "classrooms", "users", "deleted", "lessons", "projects", "teachers", "users"*/]);
-define("groupException", ["icon"]);
+define("collectionException", ["icon"]);
 
 
 
@@ -15,8 +15,8 @@ define("groupException", ["icon"]);
 $request = new v2\act\requestActions();
 $request->allowedVersionPrefixes = versions;
 $request->acceptedMethods = acceptedMethods;
-$request->allowedGroups = allowedGroups;
-$request->groupException = groupException;
+$request->allowedCollections = allowedCollections;
+$request->collectionException = collectionException;
 
 $request->init();
 
@@ -40,13 +40,16 @@ if (!$auth->check(3, $db)) {
 }
 
 
-switch ($request->group) {
+switch ($request->collection) {
   case 'classes':
-    $group = new v2\act\classes();
+    $collection = new v2\act\classes();
+    break;
+  case 'classrooms':
+    $collection = new v2\act\classrooms();
     break;
 
   default:
-    die("Group could not be found");
+    die("collection could not be found");
     break;
 }
-$group->act($db, $request);
+$collection->act($db, $request);

@@ -7,12 +7,12 @@ namespace joeri_g\palweekplanner\v2\act;
 class requestActions {
   public $method;
   public $version;
-  public $group;
+  public $collection;
   public $selector = "*";
   public $allowedVersionPrefixes = ["v1", "v2"];
   public $allowedMethods = ["GET", "POST", "PUT", "DELETE"];
-  public $allowedGroups = ["users", "admin"];
-  public $groupException = [];
+  public $allowedCollections = ["users", "admin"];
+  public $collectionException = [];
 
   private $parts = [];
 
@@ -30,7 +30,7 @@ class requestActions {
       $this->version = $this->parts[0];
     }
     if (count($this->parts) > 1) {
-      $this->group = $this->parts[1];
+      $this->collection = $this->parts[1];
     }
     if (count($this->parts) > 2) {
       $this->selector = $this->parts[2];
@@ -45,9 +45,20 @@ class requestActions {
   }
 
   public function POSTisset($keys = []) {
-    //quick and fast function to check if a bunch of POST variables have been set
+    //quick and fast function to check if a bunch of POST keys have been set
     foreach ($keys as $key) {
       if (!isset($_POST[$key])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public function PUTisset($keys = []) {
+    parse_str(file_get_contents("php://input"), $_PUT);
+    //quick and fast function to check if a bunch of PUT variables have been set
+    foreach ($keys as $key) {
+      if (!isset($_PUT[$key])) {
         return false;
       }
     }
@@ -77,7 +88,7 @@ class requestActions {
         return false;
       }
     }
-    return ((in_array($this->group, $this->allowedGroups) && count($this->parts) >= 2) || in_array($this->group, $this->groupException)) ? true : false;
+    return ((in_array($this->collection, $this->allowedCollections) && count($this->parts) >= 2) || in_array($this->collection, $this->collectionException)) ? true : false;
   }
 
   public function checkVersion() {
