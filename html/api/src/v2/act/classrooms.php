@@ -1,22 +1,21 @@
 <?php
 namespace joeri_g\palweekplanner\v2\act;
-
 /**
  * Class with all classroom related actions.
  */
-class classrooms {
+class Classrooms {
   public $selector;
   public $action;
+  public $output;
+
   private $db;
   private $conn;
-  function __construct() {
-  }
 
   public function act($db = null, $request = null) {
     //make sure the db and PDO objects are provided and add them
     if (is_null($db) || is_null($db->conn)) {
       http_response_code(500);
-      echo "No db connection provided";
+      $this->output = ["successful" => false, "error" => "No db connection provided"];
       return false;
     }
     $this->db = $db;
@@ -25,7 +24,7 @@ class classrooms {
 
     if (is_null($request)) {
       http_response_code(500);
-      echo "No request object connection provided";
+      $this->output = ["successful" => false, "error" => "No request object provided"];
       return false;
     }
 
@@ -34,8 +33,8 @@ class classrooms {
     $this->selector = $this->request->selector;
 
     if (is_null($this->selector)) {
-      http_response_code(405);
-      echo "No selector provided";
+      http_response_code(400);
+      $this->output = ["successful" => false, "error" => "No selector provided"];
       return false;
     }
 
@@ -58,7 +57,7 @@ class classrooms {
 
       default:
         http_response_code(405);
-        echo "Action could not be found";
+        $this->output = ["successful" => false, "error" => "Action could not be found"];
         break;
     }
   }
@@ -66,8 +65,8 @@ class classrooms {
   private function list() {
     //check selector for validity
     if (!$this->request->checkSelector()) {
-      echo "INVALID SELECTOR";
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Invalid selector"];
+      http_response_code(400);
       return false;
     }
     //statement depends on selector
@@ -94,22 +93,19 @@ class classrooms {
     $stmt->execute();
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    header('Content-Type: application/json');
+
     if (!$data) {
-      echo ($selector === "*") ? "[]" : "{}";
+      $this->output = ($this->selector === "*") ? ["successful" => true, "data" => []] : ["successful" => false, "error" => "GUID does not exist in this collection"];
       return true;
     }
-    echo json_encode(($this->selector === "*") ? $data : $data[0]);
+    $this->output = ["successful" => true, "data" => ($this->selector === "*") ? $data : $data[0]];
   }
 
   private function add() {
     $keys = ["classroom"];
     if (!$this->request->POSTisset($keys)) {
-      echo "Please set all keys";
-      foreach ($keys as $key) {
-        echo "<br><b>".htmlentities($key)."</b>";
-      }
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Please set all keys", "keys" => $keys];
+      http_response_code(400);
       return false;
     }
 
@@ -124,24 +120,25 @@ class classrooms {
       "GUID" => $GUID
     ]);
 
-    $data = [];
-    $data["classroom"] = $classroom;
-    $data["userCreate"] = $userCreate;
-    $data["GUID"] = $GUID;
-    header('Content-Type: application/json');
-    echo json_encode($data);
+    $data = ["successful" => true, "data" => []];
+    $data["data"]["classroom"] = $classroom;
+    $data["data"]["userCreate"] = $userCreate;
+    $data["data"]["GUID"] = $GUID;
+
+    $this->output = $data;
   }
 
   private function delete() {
     //check selector for validity
     if (!$this->request->checkSelector()) {
-      echo "INVALID SELECTOR";
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Invalid selector"];
+      http_response_code(400);
       return false;
     }
     //check if the user has sufficient permissions
     if ($_SESSION["userLVL"] < 3) {
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Insufficient permissions"];
+      http_response_code(400);
       return false;
     }
     if ($this->selector == "*") {
@@ -159,24 +156,25 @@ class classrooms {
     //because the data is provided via a PUT request we cannot acces the data in the body through the $_POST variable and we have to manually parse and store it
     $keys = ["classroom"];
     if (!$this->request->PUTisset($keys)) {
-      echo "Please set all keys";
-      foreach ($keys as $key) {
-        echo "<br><b>".htmlentities($key)."</b>";
-      }
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Please set all keys", "keys" => $keys];
+      http_response_code(400);
       return false;
     }
     //check selector for validity
     if (!$this->request->checkSelector()) {
-      echo "Invalid selector";
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Invalid selector"];
+      http_response_code(400);
       return false;
     }
     //check if the user has sufficient permissions
     //we cannot update every classroom so a wildcard is not permitted
+    //check if the user has sufficient permissions
+    //we cannot update every classroom so a wildcard is not permitted
     if ($_SESSION["userLVL"] < 3 || $this->selector === "*") {
-      http_response_code(405);
+      $this->output = ["successful" => false, "error" => "Insufficient permissions"];
+      http_response_code(400);
       return false;
+    }return false;
     }
     $classroom = $_PUT["classroom"];
     $userCreate = $_SESSION["GUID"];
@@ -189,11 +187,11 @@ class classrooms {
       "created" => $created,
       "GUID" => $GUID
     ]);
-    $data = [];
-    $data["classroom"] = $classroom;
-    $data["userCreate"] = $userCreate;
-    $data["GUID"] = $GUID;
-    header('Content-Type: application/json');
-    echo json_encode($data);
+    $data = ["successful" => true, "data" => []];
+    $data["data"]["classroom"] = $classroom;
+    $data["data"]["userCreate"] = $userCreate;
+    $data["data"]["GUID"] = $GUID;
+
+    $this->output = $data;
   }
 }

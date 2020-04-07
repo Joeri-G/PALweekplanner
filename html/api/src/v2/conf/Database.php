@@ -31,13 +31,13 @@ namespace joeri_g\palweekplanner\v2\conf;
             $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             break;
           default:
-            echo "Unknown ERRMODE; please eneter 0 for lowest and 2 for highest";
+            echo json_encode(["succesful" => false, "error" => "Unknown ERRMODE; please eneter 0 for lowest and 2 for highest"]);
             break;
         }
         $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
       } catch (\PDOException $error) {
         http_response_code(500);
-        echo "Connection Error:".$error->getMessage();
+        echo json_encode(["succesful" => false, "error" => "Connection Error:".$error->getMessage()]);
         return false;
       }
       return $this->conn;
@@ -60,14 +60,14 @@ namespace joeri_g\palweekplanner\v2\conf;
         //make sure the table does not contain any illegal characters
         foreach ([" ", ";", "'", "\""] as $forbidden) {
           if (strpos($table, $forbidden)) {
-            echo "FORBIDDEN TABLE NAME <b>".htmlentities($table)."</b>";
+            echo json_encode(["succesful" => false, "error" => "Forbidden table name".htmlentities($table)]);
             return false;
           }
         }
         //THIS IS BAD PRACTICE BUT RN I DONT KNOW OF ANY OTHER WAY TO DO IT
         //Check all tables for GUID
-        $stmt = $this->conn->prepare("SELECT 1 FROM $table WHERE GUID = :guid");
-        $stmt->execute(["guid" => $guid]);
+        $stmt = $this->conn->prepare("SELECT 1 FROM $table WHERE GUID = :GUID");
+        $stmt->execute(["GUID" => $guid]);
         if ($stmt->rowCount() > 0) {
           return true;
         }

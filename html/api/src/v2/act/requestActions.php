@@ -107,8 +107,4 @@ class requestActions {
     }
     return true;
   }
-
 }
-
-
- ?>

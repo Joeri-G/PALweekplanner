@@ -18,6 +18,35 @@ class authCheck {
     if (!isset($_SESSION[$this->loggedinkey]) || !$_SESSION[$this->loggedinkey]) {
       return false;
     }
+    //update session data
+    $stmt = $this->conn->prepare("SELECT username, userLVL FROM users WHERE GUID = :GUID");
+    $stmt->execute(["GUID" => $_SESSION["GUID"]]);
+    //check if user has been found
+    //
+    //
+    if ($stmt->rowCount() !== 1) {
+      return false;
+    }
+    //check if user has been found
+    if ($stmt->rowCount() !== 1) {
+      return false;
+    }
+    $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+    //update ip
+    $stmt = null;
+    $stmt = $this->conn->prepare("UPDATE users SET lastLoginTime = current_timestamp, lastLoginIP = :ip WHERE GUID = :GUID");
+    $stmt->execute(
+      ["ip" => $_SERVER['REMOTE_ADDR'],
+      "GUID" => $_SESSION["GUID"]]
+    );
+    if ($stmt->rowCount() !== 1) {
+      return false;
+    }
+    $_SESSION['loggedin'] = true;
+    $_SESSION['username'] = $data["username"];
+    $_SESSION['userLVL'] = $data["userLVL"];
+    $_SESSION['GUID'] = $_SESSION["GUID"];
+    $this->userLVL = $data["userLVL"];
     return true;
   }
 
@@ -56,10 +85,10 @@ class authCheck {
 
     //update ip
     $stmt = null;
-    $stmt = $this->conn->prepare("UPDATE users SET lastLoginTime = current_timestamp, lastLoginIP = :ip WHERE GUID = :id");
+    $stmt = $this->conn->prepare("UPDATE users SET lastLoginTime = current_timestamp, lastLoginIP = :ip WHERE GUID = :GUID");
     $stmt->execute(
       ["ip" => $_SERVER['REMOTE_ADDR'],
-      "id" => $data['GUID']]
+      "GUID" => $data['GUID']]
     );
     if ($stmt->rowCount() !== 1) {
       return false;
@@ -78,7 +107,6 @@ class authCheck {
 
   public function check($methods = 3, $db = null, $loggedinkey = 'loggedin') {
     if (is_null($db) || is_null($db->conn)) {
-      echo "No db connection provided";
       return false;
     }
     $this->db = $db;
@@ -100,11 +128,9 @@ class authCheck {
         return false;
         break;
       default:
-        echo "Please select what authentication methods are allowed. 1 for php session, 2 for headers and 3 for both";
         return false;
         break;
     }
 
   }
 }
- ?>

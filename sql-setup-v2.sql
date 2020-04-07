@@ -33,7 +33,7 @@ planner -> week
 
 SQL:
 */
-CREATE TABLE `lessons` (
+CREATE TABLE `appointments` (
   `starttime` timestamp(6) NOT NULL COMMENT 'start timestamp',
   `duration` int(11) NOT NULL COMMENT 'duration in minures',
   `docent1` varchar(16) NOT NULL,
@@ -49,38 +49,50 @@ CREATE TABLE `lessons` (
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added',
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
-  /*
-  planner -> users
-    - username
-    - password
-    - role
-    - userLVL
-    - lastLoginTime
-    - lastLoginIP
-    - GUID
+ALTER TABLE
+  `appointments`
+ADD
+  PRIMARY KEY (`GUID`);
+/*
+planner -> users
+  - username
+  - password
+  - role
+  - userLVL
+  - lastLoginTime
+  - lastLoginIP
+  - GUID
 
-  SQL:
-  */
-  CREATE TABLE `users` (
-    `username` varchar(64) NOT NULL,
-    `password` varchar(256) NOT NULL,
-    /*`role` varchar(16) NOT NULL,*/
-    `userLVL` int(1) NOT NULL,
-    /*`userAvailability` varchar(64) NOT NULL,*/
-    `lastLoginIP` varchar(64) NOT NULL,
-    `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    `GUID` VARCHAR(36) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+SQL:
+*/
+CREATE TABLE `users` (
+  `username` varchar(64) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  /*`role` varchar(16) NOT NULL,*/
+  `userLVL` int(1) NOT NULL,
+  /*`userAvailability` varchar(64) NOT NULL,*/
+  `lastLoginIP` varchar(64) NOT NULL,
+  `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `GUID` VARCHAR(36) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `users`
+ADD
+  PRIMARY KEY (`GUID`);
 
 /*
 planner -> docenten
 */
 CREATE TABLE `teachers` (
   `name` varchar(16) NOT NULL,
-  `userAvailability` varchar(64) NOT NULL,
+  `teacherAvailability` varchar(64) NOT NULL,
   `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `teachers`
+ADD
+  PRIMARY KEY (`GUID`);
 
   /*
   planner -> klassen
@@ -99,55 +111,72 @@ CREATE TABLE `classes` (
   `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `classes`
+ADD
+  PRIMARY KEY (`GUID`);
 
-  /*
-  planner -> lokalen
-    - lokaal
-    - created
-    - GUID
-  */
-  CREATE TABLE `classrooms` (
-    `classroom` varchar(16) NOT NULL,
-    `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    `GUID` VARCHAR(36) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
-  /*
-  planner -> deleted
-  Hier komen alle entries die verwijderd worden uit de table week
-  */
-  CREATE TABLE `deleted` (
-    `starttime` timestamp(6) NOT NULL COMMENT 'start timestamp',
-    `duration` int(11) NOT NULL COMMENT 'duration in minures',
-    `docent2` varchar(16) NOT NULL,
-    `klas` varchar(16) NOT NULL,
-    `lokaal1` varchar(16) NOT NULL,
-    `lokaal2` varchar(16) NOT NULL,
-    `laptops` varchar(32) NOT NULL,
-    `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
-    `notes` varchar(128) NOT NULL,
-    `userCreate` varchar(36) NOT NULL COMMENT 'user who added original entry',
-    `userDelete` varchar(36) NOT NULL COMMENT 'user who deleted original entry',
-    `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was deleted',
-    `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
-    `GUID` VARCHAR(36) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
-  /*
-  planner -> projectCodes
-    - afkorting
-    - beschrijving
-    - USER
-    - TIME
-    - IP
-    - GUID
-  */
-  CREATE TABLE `projects` (
-    `projectTitle` varchar(64) NOT NULL,
-    `projectCode` varchar(6) NOT NULL,
-    `projectDescription` TEXT NOT NULL,
-    `projectInstruction` TEXT NOT NULL,
-    `responsibleTeacher` varchar(64) NOT NULL,
-    `user` varchar(64) NOT NULL,
-    `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    `IP` varchar(64) NOT NULL,
-    `GUID` VARCHAR(36) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+/*
+planner -> lokalen
+  - lokaal
+  - created
+  - GUID
+*/
+CREATE TABLE `classrooms` (
+  `classroom` varchar(16) NOT NULL,
+  `userCreate` varchar(36) NOT NULL COMMENT 'GUID of user that added the class',
+  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `GUID` VARCHAR(36) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `classrooms`
+ADD
+  PRIMARY KEY (`GUID`);
+/*
+planner -> deleted
+Hier komen alle entries die verwijderd worden uit de table week
+*/
+CREATE TABLE `deleted` (
+  `starttime` timestamp(6) NOT NULL COMMENT 'start timestamp',
+  `duration` int(11) NOT NULL COMMENT 'duration in minures',
+  `docent2` varchar(16) NOT NULL,
+  `klas` varchar(16) NOT NULL,
+  `lokaal1` varchar(16) NOT NULL,
+  `lokaal2` varchar(16) NOT NULL,
+  `laptops` varchar(32) NOT NULL,
+  `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
+  `notes` varchar(128) NOT NULL,
+  `userCreate` varchar(36) NOT NULL COMMENT 'user who added original entry',
+  `userDelete` varchar(36) NOT NULL COMMENT 'user who deleted original entry',
+  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was deleted',
+  `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
+  `GUID` VARCHAR(36) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `deleted`
+ADD
+  PRIMARY KEY (`GUID`);
+/*
+planner -> projectCodes
+  - afkorting
+  - beschrijving
+  - USER
+  - TIME
+  - IP
+  - GUID
+*/
+CREATE TABLE `projects` (
+  `projectTitle` varchar(64) NOT NULL,
+  `projectCode` varchar(6) NOT NULL,
+  `projectDescription` TEXT NOT NULL,
+  `projectInstruction` TEXT NOT NULL,
+  `responsibleTeacher` varchar(64) NOT NULL,
+  `user` varchar(64) NOT NULL,
+  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `IP` varchar(64) NOT NULL,
+  `GUID` VARCHAR(36) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+ALTER TABLE
+  `projects`
+ADD
+  PRIMARY KEY (`GUID`);
