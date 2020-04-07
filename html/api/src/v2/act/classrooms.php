@@ -149,6 +149,7 @@ class Classrooms {
       $stmt = $this->conn->prepare("DELETE FROM classrooms WHERE GUID = :GUID");
       $stmt->execute(["GUID" => $this->selector]);
     }
+    $this->output = ["successful" => true];
   }
 
   public function update() {
@@ -174,7 +175,6 @@ class Classrooms {
       $this->output = ["successful" => false, "error" => "Insufficient permissions"];
       http_response_code(400);
       return false;
-    }return false;
     }
     $classroom = $_PUT["classroom"];
     $userCreate = $_SESSION["GUID"];

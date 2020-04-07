@@ -155,6 +155,7 @@ class Classes {
       $stmt = $this->conn->prepare("DELETE FROM classes WHERE GUID = :GUID");
       $stmt->execute(["GUID" => $this->selector]);
     }
+    $this->output = ["successful" => true];
   }
 
   public function update() {
