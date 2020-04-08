@@ -75,7 +75,7 @@ class Classes {
     if ($this->selector === "*") {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT year, name, userCreate, created, GUID FROM classes");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes");
       }
       else {
         $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes");
@@ -84,7 +84,7 @@ class Classes {
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT year, name, userCreate, created, GUID FROM classes WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE GUID = :id LIMIT 1");
       }
       else {
         $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :id LIMIT 1");
@@ -118,20 +118,15 @@ class Classes {
     $GUID = $this->db->generateGUID();
 
     $stmt = $this->conn->prepare("INSERT INTO classes (name, year, userCreate, GUID) VALUES (:name, :year, :userCreate, :GUID)");
-    $stmt->execute([
+
+    $data = [
       "name" => $name,
       "year" => $year,
       "userCreate" => $userCreate,
       "GUID" => $GUID
-    ]);
-
-    $data = ["successful" => true, "data" => []];
-    $data["data"]["name"] = $name;
-    $data["data"]["year"] = $year;
-    $data["data"]["userCreate"] = $userCreate;
-    $data["data"]["GUID"] = $GUID;
-
-    $this->output = $data;
+    ];
+    $stmt->execute($data);
+    $this->output = ["successful" => true, "data" => $data];
   }
 
   private function delete() {
@@ -183,22 +178,18 @@ class Classes {
     $name = $_PUT["name"];
     $year = $_PUT["year"];
     $userCreate = $_SESSION["GUID"];
-    $created = date('Y-m-d H:i:s');
+    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->selector;
-    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, created = :created WHERE GUID = :GUID");
-    $stmt->execute([
+    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, lastChanged = :lastChanged WHERE GUID = :GUID");
+    $data = [
       "name" => $name,
       "year" => $year,
       "userCreate" => $userCreate,
-      "created" => $created,
+      "lastChanged" => $lastChanged,
       "GUID" => $GUID
-    ]);
-    $data = ["successful" => true, "data" => []];
-    $data["data"]["name"] = $name;
-    $data["data"]["year"] = $year;
-    $data["data"]["userCreate"] = $userCreate;
-    $data["data"]["GUID"] = $GUID;
-
+    ];
+    $stmt->execute($data);
+    $data = ["successful" => true, "data" => $data];
     $this->output = $data;
   }
 }

@@ -74,7 +74,7 @@ class Users {
     if ($this->selector === "*") {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, GUID FROM users");
+        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, lastChanged, GUID FROM users");
       }
       else {
         $stmt = $this->conn->prepare("SELECT username, userLVL, GUID FROM users");
@@ -83,7 +83,7 @@ class Users {
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, GUID FROM users WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, lastChanged, GUID FROM users WHERE GUID = :id LIMIT 1");
       }
       else {
         $stmt = $this->conn->prepare("SELECT username, userLVL, GUID FROM users WHERE GUID = :id LIMIT 1");
@@ -120,6 +120,7 @@ class Users {
     $userLVL = $_POST["userLVL"];
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $lastLoginIP = "127.0.0.1";
+    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->db->generateGUID();
 
     $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username");
@@ -131,26 +132,18 @@ class Users {
     }
     $stmt = null;
 
-    $stmt = $this->conn->prepare("INSERT INTO users (username, password, userLVL, lastLoginIP, GUID)
+    $stmt = $this->conn->prepare("INSERT INTO users (username, password, userLVL, lastLoginIP, lastChanged, GUID)
     VALUES (:username, :password, :userLVL, :lastLoginIP, :GUID)");
-    $stmt->execute([
+    $data = [
       "username" => $username,
       "password" => $password,
       "userLVL" => $userLVL,
       "lastLoginIP" => $lastLoginIP,
+      "lastChanged" => $lastChanged,
       "GUID" => $GUID
-    ]);
-    $data = ["successful" => true, "data" => []];
-    $data["data"] = [
-      "successful" => true,
-      "data" => [
-        "username" => $username,
-        "userLVL" => $userLVL,
-        "lastLoginIP" => $lastLoginIP,
-        "GUID" => $GUID
-      ]
     ];
-
+    $stmt->execute($data);
+    $data = ["successful" => true, "data" => $data];
 
     $this->output = $data;
   }
@@ -209,7 +202,7 @@ class Users {
     $username = $_PUT["username"];
     $userLVL = $_PUT["userLVL"];
     $GUID = $this->selector;
-
+    $lastChanged = date('Y-m-d H:i:s');
 
     //make sure the username has not already been taken
     $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username AND GUID != :GUID");
@@ -226,20 +219,24 @@ class Users {
     $data = [
       "username" => $username,
       "userLVL" => $userLVL,
+      "lastChanged" => $lastChanged,
       "GUID" => $GUID
     ];
     if (isset($_PUT["password"])) {
       $stmt = null;
-      $stmt = $this->conn->prepare("UPDATE users SET username = :username, password = :password, userLVL = :userLVL WHERE GUID = :GUID");
+      $stmt = $this->conn->prepare("UPDATE users SET username = :username, password = :password, userLVL = :userLVL, lastChanged = :lastChanged WHERE GUID = :GUID");
       $password = password_hash($_PUT["password"], PASSWORD_DEFAULT);
       $data["password"] = $password;
     }
     $stmt->execute($data);
 
-    $data = ["successful" => true, "data" => []];
-    $data["data"]["username"] = $username;
-    $data["data"]["userLVL"] = $userLVL;
-    $data["data"]["GUID"] = $GUID;
+    $data = ["successful" => true, "data" => [
+      "username" => $username,
+      "userLVL" => $userLVL,
+      "lastChanged" => $lastChanged,
+      "GUID" => $GUID
+      ]
+    ];
 
     $this->output = $data;
   }

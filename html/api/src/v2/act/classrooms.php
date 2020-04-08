@@ -74,7 +74,7 @@ class Classrooms {
     if ($this->selector === "*") {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT classroom, userCreate, created, GUID FROM classrooms");
+        $stmt = $this->conn->prepare("SELECT classroom, userCreate, lastChanged, GUID FROM classrooms");
       }
       else {
         $stmt = $this->conn->prepare("SELECT classroom, GUID FROM classrooms");
@@ -83,7 +83,7 @@ class Classrooms {
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT classroom, userCreate, created, GUID FROM classrooms WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT classroom, userCreate, lastChanged, GUID FROM classrooms WHERE GUID = :id LIMIT 1");
       }
       else {
         $stmt = $this->conn->prepare("SELECT classroom, GUID FROM classrooms WHERE GUID = :id LIMIT 1");
@@ -178,13 +178,13 @@ class Classrooms {
     }
     $classroom = $_PUT["classroom"];
     $userCreate = $_SESSION["GUID"];
-    $created = date('Y-m-d H:i:s');
+    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->selector;
-    $stmt = $this->conn->prepare("UPDATE classrooms SET classroom = :classroom, userCreate = :userCreate, created = :created WHERE GUID = :GUID");
+    $stmt = $this->conn->prepare("UPDATE classrooms SET classroom = :classroom, userCreate = :userCreate, lastChanged = :lastChanged WHERE GUID = :GUID");
     $stmt->execute([
       "classroom" => $classroom,
       "userCreate" => $userCreate,
-      "created" => $created,
+      "lastChanged" => $lastChanged,
       "GUID" => $GUID
     ]);
     $data = ["successful" => true, "data" => []];

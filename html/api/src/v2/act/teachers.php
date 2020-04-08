@@ -74,7 +74,7 @@ class Teachers {
     if ($this->selector === "*") {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT name, teacherAvailability, created, GUID FROM teachers");
+        $stmt = $this->conn->prepare("SELECT name, teacherAvailability, lastChanged, GUID FROM teachers");
       }
       else {
         $stmt = $this->conn->prepare("SELECT name, teacherAvailability, GUID FROM teachers");
@@ -83,7 +83,7 @@ class Teachers {
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT name, teacherAvailability, created, GUID FROM teachers WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT name, teacherAvailability, lastChanged, GUID FROM teachers WHERE GUID = :id LIMIT 1");
       }
       else {
         $stmt = $this->conn->prepare("SELECT name, teacherAvailability, GUID FROM teachers WHERE GUID = :id LIMIT 1");
@@ -100,6 +100,13 @@ class Teachers {
     }
     //if the selector is a wildcard return the array with the data, else return only the first item in the array
     $data = ["successful" => true, "data" => ($this->selector === "*") ? $data : $data[0]];
+
+    //since we want to make sure the teacherAvailability array is parsed to json and not stringified, loop through the array and parse it
+    foreach ($data["data"] as $i => $teacher) {
+      $data["data"][$i]["teacherAvailability"] = json_decode($teacher["teacherAvailability"]);
+    }
+
+
     $this->output = $data;
   }
 
@@ -204,9 +211,18 @@ class Teachers {
     $teacherAvailability = json_encode($teacherAvailability);
     $name = $_PUT["name"];
     $GUID = $this->selector;
-    $stmt = $this->conn->prepare("UPDATE teachers SET name = :name, teacherAvailability = :teacherAvailability WHERE GUID = :GUID");
-    $data = ["name" => $name, "teacherAvailability" => $teacherAvailability, "GUID" => $GUID];
+    $lastChanged = date('Y-m-d H:i:s');
+
+    $stmt = $this->conn->prepare("UPDATE teachers SET name = :name, teacherAvailability = :teacherAvailability, lastChanged = :lastChanged WHERE GUID = :GUID");
+    $data = [
+      "name" => $name,
+      "teacherAvailability" => $teacherAvailability,
+      "GUID" => $GUID,
+      "lastChanged" => $lastChanged
+    ];
     $stmt->execute($data);
-    $this->output = ["successful" => true, "data" => [$data]];
+    //parse the JSON back to an array
+    $data["teacherAvailability"] = json_decode($data["teacherAvailability"]);
+    $this->output = ["successful" => true, "data" => $data];
   }
 }

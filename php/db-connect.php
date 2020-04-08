@@ -6,7 +6,7 @@ script om te verbinden met een MySQL database via mysqli
 $dbServername = "localhost";
 $dbUsername = "root";
 $dbPassword = "";
-$db = "planner";
+$db = "planner_old";
 
 // Create connection
 $conn = new mysqli($dbServername, $dbUsername, $dbPassword, $db);

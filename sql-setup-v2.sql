@@ -45,7 +45,7 @@ CREATE TABLE `appointments` (
   `projectCode` varchar(128) NOT NULL COMMENT 'projectCode',
   `notes` varchar(128) NOT NULL COMMENT 'notes',
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
-  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was added',
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added',
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
@@ -73,6 +73,7 @@ CREATE TABLE `users` (
   /*`userAvailability` varchar(64) NOT NULL,*/
   `lastLoginIP` varchar(64) NOT NULL,
   `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
@@ -86,7 +87,7 @@ planner -> docenten
 CREATE TABLE `teachers` (
   `name` varchar(16) NOT NULL,
   `teacherAvailability` varchar(64) NOT NULL,
-  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
@@ -108,7 +109,7 @@ CREATE TABLE `classes` (
   `year` varchar(16) NOT NULL,
   `name` varchar(16) NOT NULL,
   `userCreate` varchar(36) NOT NULL COMMENT 'GUID of user that added the class',
-  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
@@ -125,7 +126,7 @@ planner -> lokalen
 CREATE TABLE `classrooms` (
   `classroom` varchar(16) NOT NULL,
   `userCreate` varchar(36) NOT NULL COMMENT 'GUID of user that added the class',
-  `created` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
@@ -148,7 +149,7 @@ CREATE TABLE `deleted` (
   `notes` varchar(128) NOT NULL,
   `userCreate` varchar(36) NOT NULL COMMENT 'user who added original entry',
   `userDelete` varchar(36) NOT NULL COMMENT 'user who deleted original entry',
-  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'timestamp when entry was deleted',
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
@@ -172,7 +173,7 @@ CREATE TABLE `projects` (
   `projectInstruction` TEXT NOT NULL,
   `responsibleTeacher` varchar(64) NOT NULL,
   `user` varchar(64) NOT NULL,
-  `TIME` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL,
   `GUID` VARCHAR(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
