@@ -76,7 +76,7 @@ class Database {
   }
 
   /**
-  * https://www.php.net/manual/en/function.com-create-guid.php#119168
+  * modified funtion from https://www.php.net/manual/en/function.com-create-guid.php#119168
   * Returns a GUIDv4 string
   *
   * Uses the best cryptographically secure method
@@ -86,7 +86,7 @@ class Database {
   * @param bool $trim
   * @return string
   */
-  function GUIDv4 ($trim = true){
+  public function GUIDv4($trim = true){
       // Windows
       if (function_exists('com_create_guid') === true) {
           if ($trim === true)
@@ -100,7 +100,8 @@ class Database {
           $data = openssl_random_pseudo_bytes(16);
           $data[6] = chr(ord($data[6]) & 0x0f | 0x40);    // set version to 0100
           $data[8] = chr(ord($data[8]) & 0x3f | 0x80);    // set bits 6-7 to 10
-          return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+          //dont forget about the trim
+          return $trim ? vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4)) : "{".vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4))."}";
       }
 
       // Fallback (PHP 4.2+)
