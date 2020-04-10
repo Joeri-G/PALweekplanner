@@ -13,6 +13,7 @@ class requestActions {
   public $allowedMethods = ["GET", "POST", "PUT", "DELETE"];
   public $allowedCollections = ["users", "admin"];
   public $collectionException = [];
+  public $selector2 = null;
 
   private $parts = [];
 
@@ -34,6 +35,9 @@ class requestActions {
     }
     if (count($this->parts) > 2) {
       $this->selector = $this->parts[2];
+    }
+    if (count($this->parts) > 3) {
+      $this->selector2 = $this->parts[3];
     }
   }
 
