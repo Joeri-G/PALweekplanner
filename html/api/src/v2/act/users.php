@@ -120,7 +120,6 @@ class Users {
     $userLVL = $_POST["userLVL"];
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $lastLoginIP = "127.0.0.1";
-    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->db->generateGUID();
 
     $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username");
@@ -132,18 +131,18 @@ class Users {
     }
     $stmt = null;
 
-    $stmt = $this->conn->prepare("INSERT INTO users (username, password, userLVL, lastLoginIP, lastChanged, GUID)
+    $stmt = $this->conn->prepare("INSERT INTO users (username, password, userLVL, lastLoginIP, GUID)
     VALUES (:username, :password, :userLVL, :lastLoginIP, :GUID)");
     $data = [
       "username" => $username,
       "password" => $password,
       "userLVL" => $userLVL,
       "lastLoginIP" => $lastLoginIP,
-      "lastChanged" => $lastChanged,
       "GUID" => $GUID
     ];
     $stmt->execute($data);
-    $data = ["successful" => true, "data" => $data];
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
 
     $this->output = $data;
   }
@@ -202,7 +201,6 @@ class Users {
     $username = $_PUT["username"];
     $userLVL = $_PUT["userLVL"];
     $GUID = $this->selector;
-    $lastChanged = date('Y-m-d H:i:s');
 
     //make sure the username has not already been taken
     $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username AND GUID != :GUID");
@@ -215,16 +213,15 @@ class Users {
     $stmt = null;
 
     //depending on wether or not the password has been set update all the userdata or the userdata minus the password
-    $stmt = $this->conn->prepare("UPDATE users SET username = :username, userLVL = :userLVL WHERE GUID = :GUID");
+    $stmt = $this->conn->prepare("UPDATE users SET username = :username, userLVL = :userLVL, lastChanged = current_timestamp WHERE GUID = :GUID");
     $data = [
       "username" => $username,
       "userLVL" => $userLVL,
-      "lastChanged" => $lastChanged,
       "GUID" => $GUID
     ];
     if (isset($_PUT["password"])) {
       $stmt = null;
-      $stmt = $this->conn->prepare("UPDATE users SET username = :username, password = :password, userLVL = :userLVL, lastChanged = :lastChanged WHERE GUID = :GUID");
+      $stmt = $this->conn->prepare("UPDATE users SET username = :username, password = :password, userLVL = :userLVL, lastChanged = current_timestamp WHERE GUID = :GUID");
       $password = password_hash($_PUT["password"], PASSWORD_DEFAULT);
       $data["password"] = $password;
     }
@@ -233,11 +230,10 @@ class Users {
     $data = ["successful" => true, "data" => [
       "username" => $username,
       "userLVL" => $userLVL,
-      "lastChanged" => $lastChanged,
       "GUID" => $GUID
       ]
     ];
-
+    $data["data"]["lastChanged"] = date('Y-m-d H:i:s');
     $this->output = $data;
   }
 

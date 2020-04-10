@@ -136,17 +136,15 @@ class Teachers {
 
 
     $stmt = $this->conn->prepare("INSERT INTO teachers (name, teacherAvailability, GUID) VALUES (:name, :teacherAvailability, :GUID)");
-    $stmt->execute([
+    $data = [
       "name" => $name,
       "teacherAvailability" => $teacherAvailability,
       "GUID" => $GUID
-    ]);
+    ];
+    $stmt->execute($data);
 
-    $this->output = ["successful" => true, "data" => [
-      "name" => $name,
-      "teacherAvailability" => $teacherAvailability,
-      "GUID" => $GUID
-    ]];
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
 
   }
 
@@ -211,18 +209,17 @@ class Teachers {
     $teacherAvailability = json_encode($teacherAvailability);
     $name = $_PUT["name"];
     $GUID = $this->selector;
-    $lastChanged = date('Y-m-d H:i:s');
 
-    $stmt = $this->conn->prepare("UPDATE teachers SET name = :name, teacherAvailability = :teacherAvailability, lastChanged = :lastChanged WHERE GUID = :GUID");
+    $stmt = $this->conn->prepare("UPDATE teachers SET name = :name, teacherAvailability = :teacherAvailability, lastChanged = current_timestamp WHERE GUID = :GUID");
     $data = [
       "name" => $name,
       "teacherAvailability" => $teacherAvailability,
       "GUID" => $GUID,
-      "lastChanged" => $lastChanged
     ];
     $stmt->execute($data);
     //parse the JSON back to an array
     $data["teacherAvailability"] = json_decode($data["teacherAvailability"]);
+    $data["lastChanged"] = date('Y-m-d H:i:s');
     $this->output = ["successful" => true, "data" => $data];
   }
 }
