@@ -86,7 +86,7 @@ class Database {
   * @param bool $trim
   * @return string
   */
-  public function GUIDv4($trim = true){
+  public function GUIDv4($trim = true) {
       // Windows
       if (function_exists('com_create_guid') === true) {
           if ($trim === true)
