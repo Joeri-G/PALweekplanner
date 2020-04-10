@@ -25,13 +25,14 @@ class Classes {
 
     if (is_null($request)) {
       http_response_code(500);
-      $this->output = ["successful" => false, "error" => "No request object connection provided"];
+      $this->output = ["successful" => false, "error" => "No request object provided"];
       return false;
     }
 
     $this->request = $request;
     $this->action = $this->request->action;
     $this->selector = $this->request->selector;
+    $this->selector2 = $this->request->selector2;
 
     if (is_null($this->selector)) {
       http_response_code(400);
@@ -64,8 +65,8 @@ class Classes {
   }
 
   private function list() {
-    //check selector for validity
-    if (!$this->request->checkSelector()) {
+    //check selector for validity, can be a wildcard, GUID or year with yearSelector
+    if (!$this->request->checkSelector() && !($this->selector === "year" && !is_null($this->selector2))) {
       $this->output = ["successful" => false, "error" => "Invalid selector"];
       http_response_code(400);
       return false;
@@ -81,27 +82,37 @@ class Classes {
         $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes");
       }
     }
+    elseif ($this->selector === "year") {
+      //year selector, return all classes where the year is equal to the 2nd selector
+      if ($_SESSION["userLVL"] >= 3) {
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE year = :year");
+      }
+      else {
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE year = :year");
+      }
+      $stmt->bindParam("year", $this->selector2);
+    }
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE GUID = :GUID LIMIT 1");
       }
       else {
-        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :GUID LIMIT 1");
       }
-      $stmt->bindParam("id", $this->selector);
+      $stmt->bindParam("GUID", $this->selector);
     }
     $stmt->execute();
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     if (!$data) {
       //if the selector is a wildcard return an empty array, else return an empty object
-      $this->output = ($this->selector === "*") ? ["successful" => true, "data" => []] : ["successful" => false, "error" => "GUID does not exist in this collection"];
+      $this->output = ($this->selector === "*") ? ["successful" => true, "data" => []] : ["successful" => false, "error" => "GUID or year does not exist in this collection"];
       return true;
     }
     //if the selector is a wildcard return the array with the data, else return only the first item in the array
-    $data = ["successful" => true, "data" => ($this->selector === "*") ? $data : $data[0]];
-    $this->output = $data;
+    $data = ($this->selector === "*" || $this->selector === "year") ? $data : $data[0];
+    $this->output = ["successful" => true, "data" => $data];
   }
 
   private function add() {
@@ -126,6 +137,7 @@ class Classes {
       "GUID" => $GUID
     ];
     $stmt->execute($data);
+    $data["lastChanged"] = date('Y-m-d H:i:s');
     $this->output = ["successful" => true, "data" => $data];
   }
 
@@ -178,18 +190,17 @@ class Classes {
     $name = $_PUT["name"];
     $year = $_PUT["year"];
     $userCreate = $_SESSION["GUID"];
-    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->selector;
-    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, lastChanged = :lastChanged WHERE GUID = :GUID");
+    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, lastChanged = current_timestamp WHERE GUID = :GUID");
     $data = [
       "name" => $name,
       "year" => $year,
       "userCreate" => $userCreate,
-      "lastChanged" => $lastChanged,
       "GUID" => $GUID
     ];
     $stmt->execute($data);
-    $data = ["successful" => true, "data" => $data];
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
     $this->output = $data;
   }
 }
