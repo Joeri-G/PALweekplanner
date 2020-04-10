@@ -53,6 +53,10 @@ switch ($request->collection) {
   case 'teachers':
     $collection = new v2\act\Teachers();
     break;
+  case 'projects':
+    $collection = new v2\act\Projects();
+    break;
+
 
   default:
     die(json_encode(["successful" => false, "error" => "Collection could not be found"]));
