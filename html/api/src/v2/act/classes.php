@@ -105,9 +105,9 @@ class Classes {
     $stmt->execute();
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    if (!$data) {
-      //if the selector is a wildcard return an empty array, else return an empty object
-      $this->output = ($this->selector === "*") ? ["successful" => true, "data" => []] : ["successful" => false, "error" => "GUID or year does not exist in this collection"];
+    if (!$data && !($this->selector === "*" || $this->selector === "year")) {
+      //if the selector is a wildcard or year selector return an empty array, else return an empty object
+      $this->output = ["successful" => false, "error" => "GUID does not exist in this collection"];
       return true;
     }
     //if the selector is a wildcard return the array with the data, else return only the first item in the array
