@@ -114,18 +114,14 @@ class Classrooms {
     $GUID = $this->db->generateGUID();
 
     $stmt = $this->conn->prepare("INSERT INTO classrooms (classroom, userCreate, GUID) VALUES (:classroom, :userCreate, :GUID)");
-    $stmt->execute([
+    $data = [
       "classroom" => $classroom,
       "userCreate" => $userCreate,
       "GUID" => $GUID
-    ]);
-
-    $data = ["successful" => true, "data" => []];
-    $data["data"]["classroom"] = $classroom;
-    $data["data"]["userCreate"] = $userCreate;
-    $data["data"]["GUID"] = $GUID;
-
-    $this->output = $data;
+    ];
+    $stmt->execute($data);
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
   }
 
   private function delete() {
@@ -178,20 +174,15 @@ class Classrooms {
     }
     $classroom = $_PUT["classroom"];
     $userCreate = $_SESSION["GUID"];
-    $lastChanged = date('Y-m-d H:i:s');
     $GUID = $this->selector;
-    $stmt = $this->conn->prepare("UPDATE classrooms SET classroom = :classroom, userCreate = :userCreate, lastChanged = :lastChanged WHERE GUID = :GUID");
-    $stmt->execute([
+    $stmt = $this->conn->prepare("UPDATE classrooms SET classroom = :classroom, userCreate = :userCreate, lastChanged = current_timestamp WHERE GUID = :GUID");
+    $data = [
       "classroom" => $classroom,
       "userCreate" => $userCreate,
-      "lastChanged" => $lastChanged,
       "GUID" => $GUID
-    ]);
-    $data = ["successful" => true, "data" => []];
-    $data["data"]["classroom"] = $classroom;
-    $data["data"]["userCreate"] = $userCreate;
-    $data["data"]["GUID"] = $GUID;
-
-    $this->output = $data;
+    ];
+    $stmt->execute($data);
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
   }
 }
