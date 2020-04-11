@@ -4,7 +4,7 @@ namespace joeri_g\palweekplanner\v2\lib;
 /**
  * Object with all request related actions
  */
-class requestActions {
+class RequestActions {
   public $method;
   public $version;
   public $collection;
