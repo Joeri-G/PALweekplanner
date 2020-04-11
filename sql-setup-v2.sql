@@ -47,7 +47,7 @@ CREATE TABLE `appointments` (
   `USER` varchar(16) NOT NULL COMMENT 'user who added entry',
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was added',
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `appointments`
@@ -74,7 +74,7 @@ CREATE TABLE `users` (
   `lastLoginIP` varchar(64) NOT NULL,
   `lastLoginTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `users`
@@ -88,7 +88,7 @@ CREATE TABLE `teachers` (
   `name` varchar(16) NOT NULL,
   `teacherAvailability` varchar(64) NOT NULL,
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `teachers`
@@ -110,7 +110,7 @@ CREATE TABLE `classes` (
   `name` varchar(16) NOT NULL,
   `userCreate` varchar(36) NOT NULL COMMENT 'GUID of user that added the class',
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `classes`
@@ -127,7 +127,7 @@ CREATE TABLE `classrooms` (
   `classroom` varchar(16) NOT NULL,
   `userCreate` varchar(36) NOT NULL COMMENT 'GUID of user that added the class',
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `classrooms`
@@ -151,7 +151,7 @@ CREATE TABLE `deleted` (
   `userDelete` varchar(36) NOT NULL COMMENT 'user who deleted original entry',
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL COMMENT 'ip from where entry was deleted',
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `deleted`
@@ -175,7 +175,7 @@ CREATE TABLE `projects` (
   `user` varchar(64) NOT NULL,
   `lastChanged` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `IP` varchar(64) NOT NULL,
-  `GUID` VARCHAR(36) NOT NULL
+  `GUID` varchar(36) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 ALTER TABLE
   `projects`

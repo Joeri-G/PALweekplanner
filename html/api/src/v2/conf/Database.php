@@ -6,12 +6,39 @@ namespace joeri_g\palweekplanner\v2\conf;
 class Database {
   //DB Param
   private $host = "localhost";
-  private $db_name = "planner_v2";
+  private $db_name = "planner_settings";
   private $username = "root";
   private $password = "";
   public $conn = null;
 
   public $tables = ["users"];
+
+  function __construct() {
+    //the db depends on the domain, school1.example.com > planner_school1, school2.example.com > planner_school2, etc.
+    //To lookup the database we take the domain and check it against the `domain` column in `planner_settings.plannerclients`
+    $domain = $_SERVER['SERVER_NAME'];
+    //the cell can only hold a finite amount of data (64 chars)
+    if (strlen($domain) > 64) {
+      echo json_encode(["succesful" => false, "error" => "Domain is too long"]);
+      die();
+    }
+
+    $conn = $this->connect();
+    $stmt = $conn->prepare("SELECT databaseName FROM plannerclients WHERE domain = :d AND active = 1");
+
+    $stmt->execute(["d" => $domain]);
+
+    $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    $this->conn = $conn = null;
+
+    if (!$data) {
+      echo json_encode(["succesful" => false, "error" => "Domain could not be found"]);
+      die();
+    }
+    $this->db_name = $data["databaseName"];
+  }
+
 
   public function connect($errmode = 0) {
     $this->conn = null;
