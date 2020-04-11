@@ -1,5 +1,5 @@
 <?php
-namespace joeri_g\palweekplanner\v2\act;
+namespace joeri_g\palweekplanner\v2\lib;
 
 /**
  * Object with all request related actions

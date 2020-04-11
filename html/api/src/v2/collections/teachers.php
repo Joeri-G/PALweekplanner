@@ -1,5 +1,5 @@
 <?php
-namespace joeri_g\palweekplanner\v2\act;
+namespace joeri_g\palweekplanner\v2\collections;
 /**
  * Class with all teacher related actions
  */

@@ -1,5 +1,5 @@
 <?php
-namespace joeri_g\palweekplanner\v2\conf;
+namespace joeri_g\palweekplanner\v2\lib;
 /**
  * Object with all the functions that are needed to directly interface with the database
  */

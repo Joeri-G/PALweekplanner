@@ -1,9 +1,10 @@
 <?php
-namespace joeri_g\palweekplanner\v2\act;
+namespace joeri_g\palweekplanner\v2\collections;
 /**
- * Class with all user related actions
+ * Class with all class related actions.
+ * Confusion imminent
  */
-class Users {
+class Classes {
   public $selector;
   public $action;
   public $output;
@@ -24,13 +25,14 @@ class Users {
 
     if (is_null($request)) {
       http_response_code(500);
-      $this->output = ["successful" => false, "error" => "No selector provided"];
+      $this->output = ["successful" => false, "error" => "No request object provided"];
       return false;
     }
 
     $this->request = $request;
     $this->action = $this->request->action;
     $this->selector = $this->request->selector;
+    $this->selector2 = $this->request->selector2;
 
     if (is_null($this->selector)) {
       http_response_code(400);
@@ -62,9 +64,9 @@ class Users {
     }
   }
 
-  public function list() {
-    //check selector for validity
-    if (!$this->request->checkSelector()) {
+  private function list() {
+    //check selector for validity, can be a wildcard, GUID or year with yearSelector
+    if (!$this->request->checkSelector() && !($this->selector === "year" && !is_null($this->selector2))) {
       $this->output = ["successful" => false, "error" => "Invalid selector"];
       http_response_code(400);
       return false;
@@ -74,77 +76,69 @@ class Users {
     if ($this->selector === "*") {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, lastChanged, GUID FROM users");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes");
       }
       else {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, GUID FROM users");
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes");
       }
+    }
+    elseif ($this->selector === "year") {
+      //year selector, return all classes where the year is equal to the 2nd selector
+      if ($_SESSION["userLVL"] >= 3) {
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE year = :year");
+      }
+      else {
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE year = :year");
+      }
+      $stmt->bindParam("year", $this->selector2);
     }
     else {
       //is user is admin return more data
       if ($_SESSION["userLVL"] >= 3) {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, lastLoginIP, lastLoginTime, lastChanged, GUID FROM users WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT year, name, userCreate, lastChanged, GUID FROM classes WHERE GUID = :GUID LIMIT 1");
       }
       else {
-        $stmt = $this->conn->prepare("SELECT username, userLVL, GUID FROM users WHERE GUID = :id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT year, name, GUID FROM classes WHERE GUID = :GUID LIMIT 1");
       }
-      $stmt->bindParam("id", $this->selector);
+      $stmt->bindParam("GUID", $this->selector);
     }
     $stmt->execute();
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    if (!$data) {
-      //if the selector is a wildcard return an empty array, else return an error because the GUID does not exist
-      $this->output = ($this->selector === "*") ? ["successful" => true, "data" => []] : ["successful" => false, "error" => "GUID does not exist in this collection"];
+    if (!$data && !($this->selector === "*" || $this->selector === "year")) {
+      //if the selector is a wildcard or year selector return an empty array, else return an empty object
+      $this->output = ["successful" => false, "error" => "GUID does not exist in this collection"];
       return true;
     }
     //if the selector is a wildcard return the array with the data, else return only the first item in the array
-    $data = ["successful" => true, "data" => ($this->selector === "*") ? $data : $data[0]];
-    $this->output = $data;
+    $data = ($this->selector === "*" || $this->selector === "year") ? $data : $data[0];
+    $this->output = ["successful" => true, "data" => $data];
   }
 
-  public function add() {
-    $keys = ["username", "password", "userLVL"];
+  private function add() {
+    $keys = ["name", "year"];
     if (!$this->request->POSTisset($keys)) {
-    $this->output = ["successful" => false, "error" => "Please set all keys", "keys" => $keys];
+      $this->output = ["successful" => false, "error" => "Please set all keys", "keys" => $keys];
       http_response_code(400);
       return false;
     }
 
-    if (!is_int((int) $_POST["userLVL"])) {
-      http_response_code(400);
-      return false;
-    }
-
-    $username = $_POST["username"];
-    $userLVL = $_POST["userLVL"];
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $lastLoginIP = "127.0.0.1";
+    $name = $_POST["name"];
+    $year = $_POST['year'];
+    $userCreate = $_SESSION["GUID"];
     $GUID = $this->db->generateGUID();
 
-    $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username");
-    $stmt->execute(["username" => $username]);
+    $stmt = $this->conn->prepare("INSERT INTO classes (name, year, userCreate, GUID) VALUES (:name, :year, :userCreate, :GUID)");
 
-    if ($stmt->rowCount() > 0) {
-      $this->output = ["successful" => false, "error" => "Username already taken"];
-      return false;
-    }
-    $stmt = null;
-
-    $stmt = $this->conn->prepare("INSERT INTO users (username, password, userLVL, lastLoginIP, GUID)
-    VALUES (:username, :password, :userLVL, :lastLoginIP, :GUID)");
     $data = [
-      "username" => $username,
-      "password" => $password,
-      "userLVL" => $userLVL,
-      "lastLoginIP" => $lastLoginIP,
+      "name" => $name,
+      "year" => $year,
+      "userCreate" => $userCreate,
       "GUID" => $GUID
     ];
     $stmt->execute($data);
     $data["lastChanged"] = date('Y-m-d H:i:s');
     $this->output = ["successful" => true, "data" => $data];
-
-    $this->output = $data;
   }
 
   private function delete() {
@@ -157,27 +151,24 @@ class Users {
     }
     //check if the user has sufficient permissions
     if ($_SESSION["userLVL"] < 3) {
-
-      $this->output = ["successful" => false, "error" => "Insufficient permissions"];
       http_response_code(400);
       return false;
     }
     if ($this->selector == "*") {
-      $stmt = $this->conn->prepare("TRUNCATE TABLE users");
+      $stmt = $this->conn->prepare("TRUNCATE TABLE classes");
       $stmt->execute();
     }
     else {
-      $stmt = $this->conn->prepare("DELETE FROM users WHERE GUID = :GUID");
+      $stmt = $this->conn->prepare("DELETE FROM classes WHERE GUID = :GUID");
       $stmt->execute(["GUID" => $this->selector]);
     }
-
     $this->output = ["successful" => true];
   }
 
   public function update() {
     parse_str(file_get_contents("php://input"), $_PUT);
     //because the data is provided via a PUT request we cannot acces the data in the body through the $_POST variable and we have to manually parse and store it
-    $keys = ["username", "userLVL"];
+    $keys = ["year", "name"];
     if (!$this->request->PUTisset($keys)) {
       $this->output = ["successful" => false, "error" => "Please set all keys", "keys" => $keys];
       http_response_code(400);
@@ -196,45 +187,20 @@ class Users {
       http_response_code(400);
       return false;
     }
-
-
-    $username = $_PUT["username"];
-    $userLVL = $_PUT["userLVL"];
+    $name = $_PUT["name"];
+    $year = $_PUT["year"];
+    $userCreate = $_SESSION["GUID"];
     $GUID = $this->selector;
-
-    //make sure the username has not already been taken
-    $stmt = $this->conn->prepare("SELECT 1 FROM users WHERE username = :username AND GUID != :GUID");
-    $stmt->execute(["username" => $username, "GUID" => $GUID]);
-
-    if ($stmt->rowCount() > 0) {
-      $this->output = ["successful" => false, "error" => "Username already taken"];
-      return false;
-    }
-    $stmt = null;
-
-    //depending on wether or not the password has been set update all the userdata or the userdata minus the password
-    $stmt = $this->conn->prepare("UPDATE users SET username = :username, userLVL = :userLVL, lastChanged = current_timestamp WHERE GUID = :GUID");
+    $stmt = $this->conn->prepare("UPDATE classes SET name = :name, year = :year, userCreate = :userCreate, lastChanged = current_timestamp WHERE GUID = :GUID");
     $data = [
-      "username" => $username,
-      "userLVL" => $userLVL,
+      "name" => $name,
+      "year" => $year,
+      "userCreate" => $userCreate,
       "GUID" => $GUID
     ];
-    if (isset($_PUT["password"])) {
-      $stmt = null;
-      $stmt = $this->conn->prepare("UPDATE users SET username = :username, password = :password, userLVL = :userLVL, lastChanged = current_timestamp WHERE GUID = :GUID");
-      $password = password_hash($_PUT["password"], PASSWORD_DEFAULT);
-      $data["password"] = $password;
-    }
     $stmt->execute($data);
-
-    $data = ["successful" => true, "data" => [
-      "username" => $username,
-      "userLVL" => $userLVL,
-      "GUID" => $GUID
-      ]
-    ];
-    $data["data"]["lastChanged"] = date('Y-m-d H:i:s');
+    $data["lastChanged"] = date('Y-m-d H:i:s');
+    $this->output = ["successful" => true, "data" => $data];
     $this->output = $data;
   }
-
 }

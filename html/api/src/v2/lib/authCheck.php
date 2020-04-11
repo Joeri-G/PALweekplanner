@@ -1,5 +1,5 @@
 <?php
-namespace joeri_g\palweekplanner\v2\auth;
+namespace joeri_g\palweekplanner\v2\lib;
 /*
 * function to check if user is authenticated via either a cookie bound to the sessionid or a Authorization header in the request
  */

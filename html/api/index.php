@@ -12,7 +12,7 @@ define("collectionException", ["icon"]);
 header('Content-Type: application/json');
 
 //test request on validity
-$request = new v2\act\requestActions();
+$request = new v2\lib\requestActions();
 $request->allowedVersionPrefixes = versions;
 $request->acceptedMethods = acceptedMethods;
 $request->allowedCollections = allowedCollections;
@@ -25,14 +25,14 @@ if (!$request->verifyRequest()) {
   die(json_encode(["successful" => false, "error" => "Invalid request structure"]));
 }
 
-$db = new v2\conf\Database();
+$db = new v2\lib\Database();
 $db->tables = tables;
 
 if (!$db->connect($errmode = 2)) {
   die();
 }
 
-$auth = new v2\auth\authCheck();
+$auth = new v2\lib\authCheck();
 if (!$auth->check(3, $db)) {
   http_response_code(401);
   header("WWW-Authenticate: Basic ream=\"Authentication is required to use this API\"");
@@ -42,19 +42,19 @@ if (!$auth->check(3, $db)) {
 
 switch ($request->collection) {
   case 'classes':
-    $collection = new v2\act\Classes();
+    $collection = new v2\collections\Classes();
     break;
   case 'classrooms':
-    $collection = new v2\act\Classrooms();
+    $collection = new v2\collections\Classrooms();
     break;
   case 'users':
-    $collection = new v2\act\Users();
+    $collection = new v2\collections\Users();
     break;
   case 'teachers':
-    $collection = new v2\act\Teachers();
+    $collection = new v2\collections\Teachers();
     break;
   case 'projects':
-    $collection = new v2\act\Projects();
+    $collection = new v2\collections\Projects();
     break;
 
 
